@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './screens/list_screen.dart';
+import './widgets/dialog_content.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      home: MyHome(),
+      home: const MyHome(),
     );
   }
 }
@@ -43,39 +43,7 @@ class MyHome extends StatelessWidget {
               titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color: Colors.white,
                   ),
-              content: SizedBox(
-                width: 600,
-                height: 200,
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.face_retouching_natural,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Enter list title',
-                              hintStyle: Theme.of(context)
-                                  .textTheme
-                                  .bodyText2!
-                                  .copyWith(
-                                    color: Colors.grey,
-                                  ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
+              content: DialogContent(),
             ),
           );
           // Navigator.of(context).push(
