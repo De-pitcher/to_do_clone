@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../widgets/menu_item.dart';
+import '../widgets/dialog_content.dart';
+import '../models/dialog_color_model.dart';
 
 enum PopMenuValue {
   renameList,
@@ -23,6 +27,69 @@ class ListScreen extends StatefulWidget {
 
 class _ListScreenState extends State<ListScreen> {
   List<PopupMenuEntry<PopMenuValue>> popMenuEntries = [];
+  List<DialogColorModel> colorModel = [
+    DialogColorModel(color: Colors.blue, listOfColors: []),
+    DialogColorModel(color: Colors.purple, listOfColors: []),
+    DialogColorModel(color: Colors.pink, listOfColors: []),
+    DialogColorModel(color: Colors.orange, listOfColors: []),
+    DialogColorModel(color: Colors.green, listOfColors: []),
+    DialogColorModel(color: Colors.teal, listOfColors: []),
+    DialogColorModel(color: Colors.grey, listOfColors: []),
+    DialogColorModel(
+      listOfColors: [
+        Colors.blue,
+        Colors.lightBlue[100],
+      ],
+    ),
+    DialogColorModel(
+      listOfColors: [
+        Colors.purple,
+        Colors.purpleAccent[100],
+      ],
+    ),
+    DialogColorModel(
+      listOfColors: [
+        Colors.orange,
+        Colors.orangeAccent[100],
+      ],
+    ),
+    DialogColorModel(
+      listOfColors: [
+        Colors.green,
+        Colors.greenAccent[100],
+      ],
+    ),
+    DialogColorModel(
+      listOfColors: [
+        Colors.teal,
+        Colors.tealAccent[100],
+      ],
+    ),
+    DialogColorModel(
+      listOfColors: [
+        Colors.grey,
+        Colors.white,
+      ],
+    ),
+  ];
+
+  @override
+  void initState() {
+    Timer.run(() {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          backgroundColor: Colors.black54,
+          title: const Text('New list'),
+          titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Colors.white,
+              ),
+          content: DialogContent(colors: colorModel),
+        ),
+      );
+    });
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -136,6 +203,20 @@ class _ListScreenState extends State<ListScreen> {
             color: Colors.black,
             itemBuilder: (ctx) => popMenuEntries,
           )
+        ],
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: Text(
+              'Untitled list',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline4!
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+          ),
         ],
       ),
     );

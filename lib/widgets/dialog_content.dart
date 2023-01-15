@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../widgets/new_list_theme_card.dart';
 import '../widgets/circular_color_card.dart';
+import '../models/dialog_color_model.dart';
 
 class DialogContent extends StatefulWidget {
+  final Color? selcectedColor;
+  final List<DialogColorModel> colors;
   const DialogContent({
+    this.selcectedColor = Colors.blue,
+    required this.colors,
     Key? key,
   }) : super(key: key);
 
@@ -13,46 +18,11 @@ class DialogContent extends StatefulWidget {
 }
 
 class _DialogContentState extends State<DialogContent> {
-  Map<String, dynamic> colors = {
-    'blue': Colors.blue,
-    'pruple': Colors.purple,
-    'pink': Colors.pink,
-    'orange': Colors.orange,
-    'green': Colors.green,
-    'teal': Colors.teal,
-    'grey': Colors.grey,
-    'custom-blue': [
-      Colors.blue,
-      Colors.lightBlue[100],
-    ],
-    'custom-pruple': [
-      Colors.purple,
-      Colors.purpleAccent[100],
-    ],
-    'custom-pink': [
-      Colors.pink,
-      Colors.pinkAccent[100],
-    ],
-    'custom-orange': [
-      Colors.orange,
-      Colors.orangeAccent[100],
-    ],
-    'custom-green': [
-      Colors.green,
-      Colors.greenAccent[100],
-    ],
-    'custom-teal': [
-      Colors.teal,
-      Colors.tealAccent[100],
-    ],
-    'custom-grey': [
-      Colors.grey,
-      Colors.white,
-    ],
-  };
+  Color _selectedColor = Colors.blue;
+  var _selectedListOfColor = <Color?>[];
   @override
   Widget build(BuildContext context) {
-    print(colors.length);
+    // print(colors.length);
     return SizedBox(
       width: 600,
       height: 200,
@@ -64,9 +34,11 @@ class _DialogContentState extends State<DialogContent> {
             children: [
               IconButton(
                 onPressed: () {},
-                icon: const Icon(
+                icon: Icon(
                   Icons.face_retouching_natural,
-                  color: Colors.white,
+                  color: _selectedListOfColor.isNotEmpty
+                      ? _selectedListOfColor.last!
+                      : _selectedColor,
                 ),
               ),
               const SizedBox(width: 10),
@@ -77,24 +49,32 @@ class _DialogContentState extends State<DialogContent> {
                     hintStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
                           color: Colors.grey,
                         ),
-                    border: const UnderlineInputBorder(
+                    border: UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.white,
+                        color: _selectedListOfColor.isNotEmpty
+                            ? _selectedListOfColor.last!
+                            : _selectedColor,
                       ),
                     ),
-                    focusedBorder: const UnderlineInputBorder(
+                    focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.white,
+                        color: _selectedListOfColor.isNotEmpty
+                            ? _selectedListOfColor.last!
+                            : _selectedColor,
                       ),
                     ),
-                    disabledBorder: const UnderlineInputBorder(
+                    disabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.white,
+                        color: _selectedListOfColor.isNotEmpty
+                            ? _selectedListOfColor.last!
+                            : _selectedColor,
                       ),
                     ),
-                    enabledBorder: const UnderlineInputBorder(
+                    enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.white,
+                        color: _selectedListOfColor.isNotEmpty
+                            ? _selectedListOfColor.last!
+                            : _selectedColor,
                       ),
                     ),
                   ),
@@ -104,23 +84,27 @@ class _DialogContentState extends State<DialogContent> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
+            children: [
               NewListThemeCard(
-                color: Colors.blue,
+                color: _selectedColor,
                 isEnabled: true,
                 text: 'Color',
               ),
               NewListThemeCard(
-                color: Colors.blue,
+                color: _selectedListOfColor.isNotEmpty
+                    ? _selectedListOfColor.last!
+                    : _selectedColor,
                 isEnabled: false,
                 text: 'Photo',
               ),
               NewListThemeCard(
-                color: Colors.blue,
+                color: _selectedListOfColor.isNotEmpty
+                    ? _selectedListOfColor.last!
+                    : _selectedColor,
                 isEnabled: false,
                 text: 'Custom',
               ),
-              SizedBox(
+              const SizedBox(
                 width: 70,
               ),
             ],
@@ -128,19 +112,36 @@ class _DialogContentState extends State<DialogContent> {
           SizedBox(
             height: 35,
             width: double.infinity,
-            child: ListView(
+            child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              children: colors.entries.map<CircularColorCard>((e) {
-                final color =
-                    !e.key.toString().startsWith('c') ? e.value as Color : null;
-                final listOfColor = e.key.toString().startsWith('c')
-                    ? e.value as List<Color?>
-                    : null;
-                return CircularColorCard(
-                  color: color,
-                  listOfColor: listOfColor,
-                );
-              }).toList(),
+              itemCount: widget.colors.length,
+              itemBuilder: (ctx, i) => CircularColorCard(
+                key: ValueKey(i),
+                color: widget.colors[i].color,
+                listOfColor: widget.colors[i].listOfColors,
+                isSelected: widget.colors[i].isSelected,
+                onTap: () {
+                  setState(() {
+                    for (var element in widget.colors) {
+                      if (element == widget.colors[i]) {
+                        widget.colors[i].isSelected =
+                            !widget.colors[i].isSelected!;
+                        _selectedColor = widget.colors[i].color != null
+                            ? widget.colors[i].color!
+                            : widget.colors[i].listOfColors.isNotEmpty
+                                ? widget.colors[i].listOfColors.first!
+                                : Colors.blue;
+                        _selectedListOfColor =
+                            widget.colors[i].listOfColors.isEmpty
+                                ? []
+                                : widget.colors[i].listOfColors;
+                      } else {
+                        element.isSelected = false;
+                      }
+                    }
+                  });
+                },
+              ),
             ),
           )
         ],

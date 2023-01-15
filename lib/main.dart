@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './widgets/dialog_content.dart';
+import './screens/list_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,22 +35,11 @@ class MyHome extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-              backgroundColor: Colors.black,
-              title: const Text('New list'),
-              titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: Colors.white,
-                  ),
-              content: DialogContent(),
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const ListScreen(),
             ),
           );
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //     builder: (_) => const ListScreen(),
-          //   ),
-          // );
         },
         child: const Icon(Icons.add),
       ),

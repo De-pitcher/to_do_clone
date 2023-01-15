@@ -18,8 +18,8 @@ class NewListThemeCard extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        height: 30,
-        width: 50,
+        height: 35,
+        width: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           border: isEnabled ? null : Border.all(color: color, width: 2),
