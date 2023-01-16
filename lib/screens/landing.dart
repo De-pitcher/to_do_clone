@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:to_do_clone/screens/profile.dart';
-import 'package:to_do_clone/widgets/actions_widget.dart';
+
+import './profile.dart';
+import './list_screen.dart';
+import '../widgets/actions_widget.dart';
 
 class MainPage extends StatefulWidget {
   static const String id = '/';
@@ -69,7 +71,9 @@ class _MainPageState extends State<MainPage> {
               children: [
                 Expanded(
                   child: ListTile(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).pushNamed(ListScreen.id);
+                    },
                     leading: Icon(Icons.add, color: Colors.grey[700]),
                     title: Text(
                       'New list',
