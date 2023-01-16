@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CircularColorCard extends StatelessWidget {
   final Color? color;
   final List<Color?> listOfColor;
-  final bool? isSelected;
+  final bool isSelected;
   final Function()? onTap;
   const CircularColorCard({
     this.color,
@@ -38,7 +38,7 @@ class CircularColorCard extends StatelessWidget {
                     )
                   : null,
         ),
-        child: isSelected!
+        child: isSelected
             ? Center(
                 child: Container(
                   height: 20,

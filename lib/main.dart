@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import './screens/list_screen.dart';
+import './providers/app_color.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,16 +13,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        appBarTheme: const AppBarTheme(
-          elevation: 0,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppColor>(
+          create: (_) => AppColor(),
+        )
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          appBarTheme: const AppBarTheme(
+            elevation: 0,
+          ),
         ),
+        home: const MyHome(),
       ),
-      home: const MyHome(),
     );
   }
 }

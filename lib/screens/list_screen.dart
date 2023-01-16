@@ -1,22 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../widgets/menu_item.dart';
+import '../utils/constants/pop_menu_items.dart';
 import '../widgets/dialog_content.dart';
-import '../models/dialog_color_model.dart';
-
-enum PopMenuValue {
-  renameList,
-  sortBy,
-  addShortcut,
-  changeTheme,
-  sendCopy,
-  duplicateList,
-  printList,
-  deleteList,
-  turnOnSuggestion,
-}
+import '../providers/app_color.dart';
 
 class ListScreen extends StatefulWidget {
   const ListScreen({super.key});
@@ -26,52 +15,6 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
-  List<PopupMenuEntry<PopMenuValue>> popMenuEntries = [];
-  List<DialogColorModel> colorModel = [
-    DialogColorModel(color: Colors.blue, listOfColors: []),
-    DialogColorModel(color: Colors.purple, listOfColors: []),
-    DialogColorModel(color: Colors.pink, listOfColors: []),
-    DialogColorModel(color: Colors.orange, listOfColors: []),
-    DialogColorModel(color: Colors.green, listOfColors: []),
-    DialogColorModel(color: Colors.teal, listOfColors: []),
-    DialogColorModel(color: Colors.grey, listOfColors: []),
-    DialogColorModel(
-      listOfColors: [
-        Colors.blue,
-        Colors.lightBlue[100],
-      ],
-    ),
-    DialogColorModel(
-      listOfColors: [
-        Colors.purple,
-        Colors.purpleAccent[100],
-      ],
-    ),
-    DialogColorModel(
-      listOfColors: [
-        Colors.orange,
-        Colors.orangeAccent[100],
-      ],
-    ),
-    DialogColorModel(
-      listOfColors: [
-        Colors.green,
-        Colors.greenAccent[100],
-      ],
-    ),
-    DialogColorModel(
-      listOfColors: [
-        Colors.teal,
-        Colors.tealAccent[100],
-      ],
-    ),
-    DialogColorModel(
-      listOfColors: [
-        Colors.grey,
-        Colors.white,
-      ],
-    ),
-  ];
 
   @override
   void initState() {
@@ -79,12 +22,12 @@ class _ListScreenState extends State<ListScreen> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          backgroundColor: Colors.black54,
+          backgroundColor: Colors.white12,
           title: const Text('New list'),
           titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
                 color: Colors.white,
               ),
-          content: DialogContent(colors: colorModel),
+          content: const DialogContent(),
         ),
       );
     });
@@ -92,116 +35,27 @@ class _ListScreenState extends State<ListScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    popMenuEntries = [
-      PopupMenuItem(
-        value: PopMenuValue.renameList,
-        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: Colors.white,
-            ),
-        child: const PopMenuItem(
-          icon: Icons.edit_outlined,
-          text: 'Rename list',
-        ),
-      ),
-      PopupMenuItem(
-        value: PopMenuValue.sortBy,
-        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: Colors.white,
-            ),
-        child: const PopMenuItem(
-          icon: Icons.filter_list,
-          text: 'Sort by',
-        ),
-      ),
-      PopupMenuItem(
-        value: PopMenuValue.addShortcut,
-        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: Colors.white,
-            ),
-        child: const PopMenuItem(
-          icon: Icons.shortcut,
-          text: 'Add shortcut to homescreen',
-        ),
-      ),
-      PopupMenuItem(
-        value: PopMenuValue.changeTheme,
-        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: Colors.white,
-            ),
-        child: const PopMenuItem(
-          icon: Icons.settings_display_sharp,
-          text: 'Change theme',
-        ),
-      ),
-      PopupMenuItem(
-        value: PopMenuValue.sendCopy,
-        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: Colors.white,
-            ),
-        child: const PopMenuItem(
-          icon: Icons.share,
-          text: 'Send a copy',
-        ),
-      ),
-      PopupMenuItem(
-        value: PopMenuValue.duplicateList,
-        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: Colors.white,
-            ),
-        child: const PopMenuItem(
-          icon: Icons.copy,
-          text: 'Duplicate list',
-        ),
-      ),
-      PopupMenuItem(
-        value: PopMenuValue.printList,
-        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: Colors.white,
-            ),
-        child: const PopMenuItem(
-          icon: Icons.print_outlined,
-          text: 'Print list',
-        ),
-      ),
-      PopupMenuItem(
-        value: PopMenuValue.deleteList,
-        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: Colors.white,
-            ),
-        child: const PopMenuItem(
-          icon: Icons.delete_forever_outlined,
-          text: 'Delete list',
-        ),
-      ),
-      PopupMenuItem(
-        value: PopMenuValue.turnOnSuggestion,
-        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: Colors.white,
-            ),
-        child: const PopMenuItem(
-          icon: Icons.lightbulb_outlined,
-          text: 'Turn on suggestions',
-        ),
-      ),
-    ];
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final colorProvider = Provider.of<AppColor>(context);
+
+    final selectedColor = colorProvider.listOfSelectedColors.isNotEmpty
+        ? colorProvider.listOfSelectedColors.last
+        : colorProvider.selectedColor;
     return Scaffold(
-      backgroundColor: Colors.blue[400],
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.blue[400],
+        backgroundColor: Colors.black,
+        foregroundColor: selectedColor,
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.person_add_alt),
+            icon: Icon(
+              Icons.person_add_alt,
+              color: selectedColor,
+            ),
           ),
           PopupMenuButton(
-            color: Colors.black,
-            itemBuilder: (ctx) => popMenuEntries,
+            itemBuilder: (ctx) => popMenuEntries(ctx),
           )
         ],
       ),
@@ -211,10 +65,10 @@ class _ListScreenState extends State<ListScreen> {
             padding: const EdgeInsets.only(left: 16.0),
             child: Text(
               'Untitled list',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline4!
-                  .copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.headline4!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: selectedColor,
+                  ),
             ),
           ),
         ],
