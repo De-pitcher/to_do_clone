@@ -8,6 +8,8 @@ import '../widgets/dialog_content.dart';
 import '../providers/app_color.dart';
 
 class ListScreen extends StatefulWidget {
+  static const id = '/list-screen';
+  
   const ListScreen({super.key});
 
   @override
@@ -15,7 +17,6 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
-
   @override
   void initState() {
     Timer.run(() {

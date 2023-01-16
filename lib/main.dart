@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import './screens/landing.dart';
+import './screens/profile.dart';
 import './screens/list_screen.dart';
 import './providers/app_color.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ToDoClone());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ToDoClone extends StatelessWidget {
+  const ToDoClone({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,45 +19,29 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AppColor>(
           create: (_) => AppColor(),
-        )
+        ),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
-        debugShowCheckedModeBanner: false,
+        title: 'ToDo Clone',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
-          appBarTheme: const AppBarTheme(
-            elevation: 0,
+          brightness: Brightness.dark,
+          textTheme: const TextTheme(
+            headline5: TextStyle(color: Colors.deepPurpleAccent),
+            headline2: TextStyle(color: Colors.deepPurpleAccent),
+            bodyText2: TextStyle(color: Colors.deepPurpleAccent),
+            subtitle1: TextStyle(color: Colors.pinkAccent),
           ),
         ),
-        home: const MyHome(),
-      ),
-    );
-  }
-}
-
-class MyHome extends StatelessWidget {
-  const MyHome({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => const ListScreen(),
-            ),
-          );
+        darkTheme: ThemeData(
+          scaffoldBackgroundColor: Colors.black,
+        ),
+        debugShowCheckedModeBanner: false,
+        initialRoute: MainPage.id,
+        routes: {
+          MainPage.id: (context) => const MainPage(),
+          ProfileAccount.id: (context) => const ProfileAccount(),
+          ListScreen.id: (_) => const ListScreen()
         },
-        child: const Icon(Icons.add),
-      ),
-      body: Column(
-        children: const [
-          Text('data'),
-        ],
       ),
     );
   }
