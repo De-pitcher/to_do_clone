@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_clone/enums/new_list_theme_value.dart';
@@ -5,6 +7,7 @@ import 'package:to_do_clone/enums/new_list_theme_value.dart';
 import './new_list_theme_card.dart';
 import './circular_color_card.dart';
 import './circular_image_card.dart';
+import './picker.dart';
 import '../providers/app_color.dart';
 
 class DialogContent extends StatefulWidget {
@@ -19,6 +22,12 @@ class _DialogContentState extends State<DialogContent> {
   var _photo = false;
   var _custom = false;
   NewListThemeValue newListThemeValue = NewListThemeValue.color;
+
+  File? _pickedImage;
+
+  void _pickFile(File image) {
+    _pickedImage = image;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +102,7 @@ class _DialogContentState extends State<DialogContent> {
                 onPressed: () {
                   setState(() {
                     newListThemeValue = NewListThemeValue.color;
-                    _color = !_color;
+                    _color = true;
                     _photo = false;
                     _custom = false;
                   });
@@ -108,7 +117,7 @@ class _DialogContentState extends State<DialogContent> {
                 onPressed: () {
                   setState(() {
                     newListThemeValue = NewListThemeValue.photo;
-                    _photo = !_photo;
+                    _photo = true;
                     _color = false;
                     _custom = false;
                   });
@@ -123,7 +132,7 @@ class _DialogContentState extends State<DialogContent> {
                 onPressed: () {
                   setState(() {
                     newListThemeValue = NewListThemeValue.custom;
-                    _custom = !_custom;
+                    _custom = true;
                     _color = false;
                     _photo = false;
                   });
@@ -137,40 +146,67 @@ class _DialogContentState extends State<DialogContent> {
           SizedBox(
             height: 35,
             width: double.infinity,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                // itemCount: colorsProvider.colors.length,
-                itemCount: newListThemeValue == NewListThemeValue.color
-                    ? colorsProvider.colors.length
-                    : newListThemeValue == NewListThemeValue.photo
-                        ? colorsProvider.images.length
-                        : 0,
-                itemBuilder: (ctx, i) {
-                  switch (newListThemeValue) {
-                    case NewListThemeValue.photo:
-                      return CircularImageCard(
-                        colorsProvider.images[i],
-                        () {
-                          colorsProvider.selectImage(i);
-                        },
+            child:
+                //  newListThemeValue == NewListThemeValue.custom
+                //     ? ListView(
+                //         children: [
+                //           Picker(
+                //             colorsProvider.selectedColor,
+                //             (_) {},
+                //           ),
+                //           ...customImage
+                //         ],
+                //       )
+                //     :
+                ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: newListThemeValue == NewListThemeValue.color
+                  ? colorsProvider.colors.length
+                  : newListThemeValue == NewListThemeValue.photo
+                      ? colorsProvider.images.length
+                      : 1,
+              itemBuilder: (ctx, i) {
+                // if (newListThemeValue == NewListThemeValue.photo) {
+
+                // }
+
+                switch (newListThemeValue) {
+                  case NewListThemeValue.photo:
+                    return CircularImageCard(
+                      image: colorsProvider.images[i],
+                      onTap: () {
+                        colorsProvider.selectImage(i);
+                      },
+                      isPickedImage: false,
+                    );
+                  case NewListThemeValue.custom:
+                    if (i == 0) {
+                      return Picker(
+                        colorsProvider.selectedColor,
+                        _pickFile,
                       );
-                    case NewListThemeValue.custom:
-                      return Container();
-                    default:
-                      return CircularColorCard(
-                        key: ValueKey(colorsProvider.colors[i].id),
-                        color: colorsProvider.colors[i].color,
-                        listOfColor: colorsProvider.colors[i].listOfColors,
-                        isSelected: colorsProvider.colors[i].isSelected,
-                        onTap: () {
-                          Provider.of<AppColor>(context, listen: false)
-                              .selectCurrentColor(colorsProvider.colors[i]);
-                        },
-                      );
-                  }
+                    }
+                    return CircularImageCard(
+                      fileImage: _pickedImage,
+                      onTap: () {
+                        colorsProvider.selectImage(i);
+                      },
+                      isPickedImage: true,
+                    );
+                  default:
+                    return CircularColorCard(
+                      key: ValueKey(colorsProvider.colors[i].id),
+                      color: colorsProvider.colors[i].color,
+                      listOfColor: colorsProvider.colors[i].listOfColors,
+                      isSelected: colorsProvider.colors[i].isSelected,
+                      onTap: () {
+                        Provider.of<AppColor>(context, listen: false)
+                            .selectCurrentColor(colorsProvider.colors[i]);
+                      },
+                    );
                 }
-                // itemBuilder: (ctx, i) => const CircularImageCard(),
-                ),
+              },
+            ),
           )
         ],
       ),

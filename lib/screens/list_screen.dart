@@ -62,7 +62,7 @@ class _ListScreenState extends State<ListScreen> {
       ],
     );
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color.fromARGB(255, 25, 48, 74),
       extendBodyBehindAppBar: true,
       appBar: appBar,
       body: Container(
