@@ -53,3 +53,13 @@ List<AppColorModel> colorModels = [
     ],
   ),
 ];
+
+List<String> themeImages = [
+  'assets/images/image.jpeg',
+  'assets/images/image2.jpeg',
+  'assets/images/image3.jpeg',
+  'assets/images/image4.jpeg',
+  'assets/images/image5.jpeg',
+  'assets/images/image6.jpeg',
+  'assets/images/image7.jpeg',
+];

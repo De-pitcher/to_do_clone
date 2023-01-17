@@ -12,6 +12,12 @@ class AppColor extends ChangeNotifier {
 
   List<AppColorModel> get colors => [..._colors];
 
+  final List<String> _images = [...themeImages];
+
+  List<String> get images => [..._images];
+
+  String selectedImage = '';
+
   void selectCurrentColor(AppColorModel currentColorModel) {
     List<AppColorModel> tempColor = List.from(_colors);
 
@@ -23,14 +29,27 @@ class AppColor extends ChangeNotifier {
             (tempColor[i].listOfColors.isNotEmpty
                 ? tempColor[i].listOfColors.first
                 : Colors.blue));
+
         listOfSelectedColors =
             tempColor[i].listOfColors.isEmpty ? [] : tempColor[i].listOfColors;
+
+        selectedImage = '';
       } else {
         tempColor[i].isSelected = false;
       }
     }
     _colors = tempColor;
 
+    notifyListeners();
+  }
+
+  void selectImage(int cIndex) {
+    for (var i = 0; i < _images.length; i++) {
+      if (cIndex == i) {
+        selectedImage = _images[i];
+        break;
+      }
+    }
     notifyListeners();
   }
 }

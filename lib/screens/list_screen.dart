@@ -9,7 +9,7 @@ import '../providers/app_color.dart';
 
 class ListScreen extends StatefulWidget {
   static const id = '/list-screen';
-  
+
   const ListScreen({super.key});
 
   @override
@@ -23,7 +23,7 @@ class _ListScreenState extends State<ListScreen> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          backgroundColor: Colors.white12,
+          backgroundColor: Colors.black,
           title: const Text('New list'),
           titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
                 color: Colors.white,
@@ -38,41 +38,61 @@ class _ListScreenState extends State<ListScreen> {
   @override
   Widget build(BuildContext context) {
     final colorProvider = Provider.of<AppColor>(context);
+    final selectedImage = Provider.of<AppColor>(context).selectedImage;
 
     final selectedColor = colorProvider.listOfSelectedColors.isNotEmpty
         ? colorProvider.listOfSelectedColors.last
         : colorProvider.selectedColor;
+
+    final appBar = AppBar(
+      backgroundColor: Colors.transparent,
+      foregroundColor: selectedColor,
+      elevation: 0,
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: Icon(
+            Icons.person_add_alt,
+            color: selectedColor,
+          ),
+        ),
+        PopupMenuButton(
+          itemBuilder: (ctx) => popMenuEntries(ctx),
+        )
+      ],
+    );
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        foregroundColor: selectedColor,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.person_add_alt,
-              color: selectedColor,
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      appBar: appBar,
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          image: selectedImage != ''
+              ? DecorationImage(
+                  image: AssetImage(selectedImage),
+                  fit: BoxFit.cover,
+                )
+              : null,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: appBar.preferredSize.height + 10,
             ),
-          ),
-          PopupMenuButton(
-            itemBuilder: (ctx) => popMenuEntries(ctx),
-          )
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: Text(
-              'Untitled list',
-              style: Theme.of(context).textTheme.headline4!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: selectedColor,
-                  ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Text(
+                'Untitled list',
+                style: Theme.of(context).textTheme.headline4!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: selectedColor,
+                    ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
