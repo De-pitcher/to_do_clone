@@ -68,12 +68,18 @@ class _ListScreenState extends State<ListScreen> {
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          image: selectedImage != ''
+          image: selectedImage != null
               ? DecorationImage(
                   image: AssetImage(selectedImage),
                   fit: BoxFit.cover,
                 )
-              : null,
+              : colorProvider.fileImages.isNotEmpty &&
+                      colorProvider.selectedFileImage != null
+                  ? DecorationImage(
+                      image: FileImage(colorProvider.selectedFileImage!),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

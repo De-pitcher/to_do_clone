@@ -1,14 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do_clone/enums/new_list_theme_value.dart';
 
 import './new_list_theme_card.dart';
 import './circular_color_card.dart';
 import './circular_image_card.dart';
 import './picker.dart';
 import '../providers/app_color.dart';
+import '../enums/new_list_theme_value.dart';
 
 class DialogContent extends StatefulWidget {
   const DialogContent({super.key});
@@ -21,18 +19,12 @@ class _DialogContentState extends State<DialogContent> {
   var _color = true;
   var _photo = false;
   var _custom = false;
-  NewListThemeValue newListThemeValue = NewListThemeValue.color;
-
-  File? _pickedImage;
-
-  void _pickFile(File image) {
-    _pickedImage = image;
-  }
 
   @override
   Widget build(BuildContext context) {
     // print(colors.length);
     final colorsProvider = Provider.of<AppColor>(context);
+    // print(colorsProvider.fileImages);
     return SizedBox(
       width: 600,
       height: 200,
@@ -101,7 +93,8 @@ class _DialogContentState extends State<DialogContent> {
                 text: 'Color',
                 onPressed: () {
                   setState(() {
-                    newListThemeValue = NewListThemeValue.color;
+                    colorsProvider
+                        .changeNewListThemeValue(NewListThemeValue.color);
                     _color = true;
                     _photo = false;
                     _custom = false;
@@ -116,7 +109,8 @@ class _DialogContentState extends State<DialogContent> {
                 text: 'Photo',
                 onPressed: () {
                   setState(() {
-                    newListThemeValue = NewListThemeValue.photo;
+                    colorsProvider
+                        .changeNewListThemeValue(NewListThemeValue.photo);
                     _photo = true;
                     _color = false;
                     _custom = false;
@@ -131,7 +125,8 @@ class _DialogContentState extends State<DialogContent> {
                 text: 'Custom',
                 onPressed: () {
                   setState(() {
-                    newListThemeValue = NewListThemeValue.custom;
+                    colorsProvider
+                        .changeNewListThemeValue(NewListThemeValue.custom);
                     _custom = true;
                     _color = false;
                     _photo = false;
@@ -146,31 +141,16 @@ class _DialogContentState extends State<DialogContent> {
           SizedBox(
             height: 35,
             width: double.infinity,
-            child:
-                //  newListThemeValue == NewListThemeValue.custom
-                //     ? ListView(
-                //         children: [
-                //           Picker(
-                //             colorsProvider.selectedColor,
-                //             (_) {},
-                //           ),
-                //           ...customImage
-                //         ],
-                //       )
-                //     :
-                ListView.builder(
+            child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: newListThemeValue == NewListThemeValue.color
+              itemCount: colorsProvider.newListThemeValue ==
+                      NewListThemeValue.color
                   ? colorsProvider.colors.length
-                  : newListThemeValue == NewListThemeValue.photo
+                  : colorsProvider.newListThemeValue == NewListThemeValue.photo
                       ? colorsProvider.images.length
-                      : 1,
+                      : colorsProvider.fileImages.length + 1,
               itemBuilder: (ctx, i) {
-                // if (newListThemeValue == NewListThemeValue.photo) {
-
-                // }
-
-                switch (newListThemeValue) {
+                switch (colorsProvider.newListThemeValue) {
                   case NewListThemeValue.photo:
                     return CircularImageCard(
                       image: colorsProvider.images[i],
@@ -183,13 +163,15 @@ class _DialogContentState extends State<DialogContent> {
                     if (i == 0) {
                       return Picker(
                         colorsProvider.selectedColor,
-                        _pickFile,
+                        (pickedFile) => colorsProvider.addFileImage(pickedFile),
                       );
                     }
+                    // print(colorsProvider.selectedFileImage);
+                    // return Container();
                     return CircularImageCard(
-                      fileImage: _pickedImage,
+                      fileImage: colorsProvider.fileImages[i - 1],
                       onTap: () {
-                        colorsProvider.selectImage(i);
+                        colorsProvider.selectFileImage(i - 1);
                       },
                       isPickedImage: true,
                     );

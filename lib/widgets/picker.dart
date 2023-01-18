@@ -21,16 +21,20 @@ class _PickerState extends State<Picker> {
       imageQuality: 50,
       maxWidth: 150,
     );
+
+    if (pickedImageFile == null) return;
+    // print('....???????????///????/?/?/?/?/?');
     setState(() {
-      _pickedImage = File(pickedImageFile!.path);
+      _pickedImage = File(pickedImageFile.path);
     });
+    // print(_pickedImage);
     widget.imagePickFn(_pickedImage!);
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:  _pickImage,
+      onTap: _pickImage,
       child: Icon(
         Icons.add,
         color: widget.color,
