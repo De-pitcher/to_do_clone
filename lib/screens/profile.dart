@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_clone/res/theme.dart';
 
 class ProfileAccount extends StatefulWidget {
   static const String id = '/profile_account_settings';
@@ -48,10 +49,15 @@ class _ProfileAccountState extends State<ProfileAccount> {
     return ListTile(
       style: ListTileStyle.list,
       onTap: () {},
-      leading: Icon(icon, color: Colors.white),
+      leading: Icon(icon,
+          color: ThemeMode.system == ThemeMode.light
+              ? lightTheme.iconTheme.color
+              : darkTheme.iconTheme.color),
       title: Text(
         action,
-        style: const TextStyle(color: Colors.white),
+        style: ThemeMode.system == ThemeMode.light
+            ? lightTheme.textTheme.bodySmall
+            : darkTheme.textTheme.bodySmall,
       ),
     );
   }

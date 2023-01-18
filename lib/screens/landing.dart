@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:to_do_clone/screens/profile.dart';
 import 'package:to_do_clone/widgets/actions_widget.dart';
 
+import 'activities/tasks.dart';
+
 class MainPage extends StatefulWidget {
   static const String id = '/';
   const MainPage({super.key});
@@ -61,6 +63,7 @@ class _MainPageState extends State<MainPage> {
                     icon: CupertinoIcons.home,
                     iconColor: Colors.deepPurple[300],
                     action: 'Tasks',
+                    routeName: Tasks.id,
                   ),
                 ],
               ),
