@@ -27,7 +27,7 @@ MaterialPageRoute routeGen(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const Planned());
     case Tasks.id:
       return MaterialPageRoute(
-          builder: (_) => Tasks(color: settings.arguments as Color?));
+          builder: (_) => Tasks(color: settings.arguments as Color));
     default:
       return MaterialPageRoute(
         builder: (context) {

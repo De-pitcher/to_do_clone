@@ -11,6 +11,14 @@ class MyDay extends StatefulWidget {
 class _MyDayState extends State<MyDay> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+
+      decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage(''))
+      ),
+      child: Column(
+        children: [],
+      ),
+    );
   }
 }
