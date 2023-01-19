@@ -5,17 +5,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AppColorModel {
+  
   final int id;
   final Color? color;
   final List<Color> listOfColors;
   bool isSelected;
+
   AppColorModel({
-    required this.id,
+    this.isSelected = false,
     this.color,
+    required this.id,
     required this.listOfColors,
-     this.isSelected = false,
   });
-   
 
   AppColorModel copyWith({
     int? id,
@@ -44,14 +45,19 @@ class AppColorModel {
     return AppColorModel(
       id: map['id'] as int,
       color: map['color'] != null ? Color(map['color'] as int) : null,
-      listOfColors: List<Color>.from((map['listOfColors'] as List<int>).map<Color>((x) => Color(x),),),
+      listOfColors: List<Color>.from(
+        (map['listOfColors'] as List<int>).map<Color>(
+          (x) => Color(x),
+        ),
+      ),
       isSelected: map['isSelected'] as bool,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory AppColorModel.fromJson(String source) => AppColorModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory AppColorModel.fromJson(String source) =>
+      AppColorModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -61,19 +67,18 @@ class AppColorModel {
   @override
   bool operator ==(covariant AppColorModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.color == color &&
-      listEquals(other.listOfColors, listOfColors) &&
-      other.isSelected == isSelected;
+
+    return other.id == id &&
+        other.color == color &&
+        listEquals(other.listOfColors, listOfColors) &&
+        other.isSelected == isSelected;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      color.hashCode ^
-      listOfColors.hashCode ^
-      isSelected.hashCode;
+        color.hashCode ^
+        listOfColors.hashCode ^
+        isSelected.hashCode;
   }
 }

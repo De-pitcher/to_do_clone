@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import '../utils/res/theme.dart';
 
 class ActionWidget extends StatefulWidget {
-  final IconData? icon;
   final String action;
+  final String? routeName;
+  final IconData? icon;
   final Color? iconColor;
   final int? counter;
-  const ActionWidget(
-      {super.key,
-      this.icon,
-      this.counter = 0,
-      required this.action,
-      this.iconColor});
+
+  const ActionWidget({
+    super.key,
+    required this.action,
+    this.icon,
+    this.iconColor,
+    this.counter = 0,
+    this.routeName,
+  });
 
   @override
   State<ActionWidget> createState() => _ActionWidgetState();
@@ -20,18 +25,20 @@ class _ActionWidgetState extends State<ActionWidget> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {},
-      leading: Icon(
-        widget.icon,
-        color: widget.iconColor,
-      ),
+      onTap: () => Navigator.of(context)
+          .pushNamed(widget.routeName!, arguments: widget.iconColor),
+      leading: Icon(widget.icon, color: widget.iconColor),
       title: Text(
         widget.action,
-        style: Theme.of(context).textTheme.headline5,
+        style: ThemeMode.system == ThemeMode.light
+            ? lightTheme.textTheme.bodySmall
+            : darkTheme.textTheme.bodySmall,
       ),
       trailing: Text(
         '${widget.counter}',
-        style: const TextStyle(color: Colors.white),
+        style: ThemeMode.system == ThemeMode.light
+            ? lightTheme.textTheme.bodySmall
+            : darkTheme.textTheme.bodySmall,
       ),
     );
   }

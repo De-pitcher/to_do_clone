@@ -9,7 +9,8 @@ import '../providers/app_color.dart';
 import '../enums/new_list_theme_value.dart';
 
 class DialogContent extends StatefulWidget {
-  const DialogContent({super.key});
+  final TextField textField;
+  const DialogContent(this.textField,{super.key});
 
   @override
   State<DialogContent> createState() => _DialogContentState();
@@ -22,9 +23,7 @@ class _DialogContentState extends State<DialogContent> {
 
   @override
   Widget build(BuildContext context) {
-    // print(colors.length);
     final colorsProvider = Provider.of<AppColor>(context);
-    // print(colorsProvider.fileImages);
     return SizedBox(
       width: 600,
       height: 200,
@@ -45,42 +44,7 @@ class _DialogContentState extends State<DialogContent> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter list title',
-                    hintStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          color: Colors.grey,
-                        ),
-                    border: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: colorsProvider.listOfSelectedColors.isNotEmpty
-                            ? colorsProvider.listOfSelectedColors.last
-                            : colorsProvider.selectedColor,
-                      ),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: colorsProvider.listOfSelectedColors.isNotEmpty
-                            ? colorsProvider.listOfSelectedColors.last
-                            : colorsProvider.selectedColor,
-                      ),
-                    ),
-                    disabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: colorsProvider.listOfSelectedColors.isNotEmpty
-                            ? colorsProvider.listOfSelectedColors.last
-                            : colorsProvider.selectedColor,
-                      ),
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: colorsProvider.listOfSelectedColors.isNotEmpty
-                            ? colorsProvider.listOfSelectedColors.last
-                            : colorsProvider.selectedColor,
-                      ),
-                    ),
-                  ),
-                ),
+                child: widget.textField,
               ),
             ],
           ),
@@ -133,9 +97,7 @@ class _DialogContentState extends State<DialogContent> {
                   });
                 },
               ),
-              const SizedBox(
-                width: 70,
-              ),
+              const SizedBox(width: 70),
             ],
           ),
           SizedBox(
@@ -166,8 +128,6 @@ class _DialogContentState extends State<DialogContent> {
                         (pickedFile) => colorsProvider.addFileImage(pickedFile),
                       );
                     }
-                    // print(colorsProvider.selectedFileImage);
-                    // return Container();
                     return CircularImageCard(
                       fileImage: colorsProvider.fileImages[i - 1],
                       onTap: () {
