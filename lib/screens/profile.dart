@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_clone/res/theme.dart';
+import '../utils/res/theme.dart';
 
 class ProfileAccount extends StatefulWidget {
   static const String id = '/profile_account_settings';

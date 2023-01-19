@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_clone/res/theme.dart';
-import 'package:to_do_clone/screens/activities/tasks.dart';
-import 'package:to_do_clone/screens/landing.dart';
-import 'package:to_do_clone/screens/profile.dart';
+import 'utils/res/theme.dart';
+import 'package:provider/provider.dart';
+
+import 'screens/landing.dart';
+import 'providers/app_color.dart';
+import 'utils/constants/routes.dart';
 
 void main() {
   runApp(const ToDoClone());
@@ -13,17 +15,20 @@ class ToDoClone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ToDo Clone',
-      debugShowCheckedModeBanner: false,
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      initialRoute: MainPage.id,
-      routes: {
-        MainPage.id: (context) => const MainPage(),
-        ProfileAccount.id: (context) => const ProfileAccount(),
-        Tasks.id: (context) => const Tasks(),
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppColor>(
+          create: (_) => AppColor(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'ToDo Clone',
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        debugShowCheckedModeBanner: false,
+        initialRoute: MainPage.id,
+        onGenerateRoute: routeGen,
+      ),
     );
   }
 }

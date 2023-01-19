@@ -1,8 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:to_do_clone/screens/profile.dart';
-import 'package:to_do_clone/widgets/actions_widget.dart';
+import 'activities/assigned_to_me.dart';
+import 'activities/important.dart';
+import 'activities/my_day.dart';
 
+import 'profile.dart';
+import 'list_screen.dart';
+import '../widgets/actions_widget.dart';
+
+import 'activities/planned.dart';
 import 'activities/tasks.dart';
 
 class MainPage extends StatefulWidget {
@@ -43,27 +49,32 @@ class _MainPageState extends State<MainPage> {
                     icon: CupertinoIcons.brightness,
                     iconColor: Colors.purple[400],
                     action: 'My Day',
+                    routeName: MyDay.id,
                   ),
                   ActionWidget(
                     icon: CupertinoIcons.star,
                     iconColor: Colors.pink[200],
                     action: 'Important',
+                    routeName: Important.id,
                   ),
                   ActionWidget(
                     icon: Icons.schedule,
                     iconColor: Colors.cyan[300],
                     action: 'Planned',
+                    routeName: Planned.id,
                   ),
                   ActionWidget(
                     icon: CupertinoIcons.person,
                     iconColor: Colors.teal[200],
                     action: 'Assigned to me',
+                    routeName: AssignedPage.id,
                   ),
                   ActionWidget(
                     icon: CupertinoIcons.home,
                     iconColor: Colors.deepPurple[300],
                     action: 'Tasks',
                     routeName: Tasks.id,
+                    
                   ),
                 ],
               ),
@@ -72,7 +83,7 @@ class _MainPageState extends State<MainPage> {
               children: [
                 Expanded(
                   child: ListTile(
-                    onTap: () {},
+                    onTap: () => Navigator.of(context).pushNamed(ListScreen.id),
                     leading: Icon(Icons.add, color: Colors.grey[700]),
                     title: Text(
                       'New list',
