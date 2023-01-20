@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../widgets/dialogs/group_dialog.dart';
 import 'activities/assigned_to_me.dart';
 import 'activities/important.dart';
 import 'activities/my_day.dart';
@@ -20,6 +21,9 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  String _groupTitle = '';
+  var _isButtonEnabled = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,7 +95,18 @@ class _MainPageState extends State<MainPage> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: Text(
+                          'Create a group',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        content: const GroupDialog(),
+                      ),
+                    );
+                  },
                   icon: Icon(Icons.note_add_outlined, color: Colors.grey[700]),
                   style: IconButton.styleFrom(),
                 ),

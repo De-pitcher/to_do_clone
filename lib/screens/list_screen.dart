@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/constants/pop_menu_items.dart';
-import '../widgets/dialog_content.dart';
+import '../widgets/dialogs/list_dialog_content.dart';
 import '../providers/app_color.dart';
 
 class ListScreen extends StatefulWidget {
@@ -32,7 +32,7 @@ class _ListScreenState extends State<ListScreen> {
               titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color: Colors.white,
                   ),
-              content: const DialogContent(),
+              content: const ListDialogContent(),
             );
           });
     });

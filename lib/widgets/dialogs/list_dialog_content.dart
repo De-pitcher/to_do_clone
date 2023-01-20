@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './new_list_theme_card.dart';
-import './circular_color_card.dart';
-import './circular_image_card.dart';
-import './picker.dart';
-import '../providers/app_color.dart';
-import '../enums/new_list_theme_value.dart';
+import '../../utils/res/theme.dart';
+import '../new_list_theme_card.dart';
+import '../circular_color_card.dart';
+import '../circular_image_card.dart';
+import '../picker.dart';
+import '../../providers/app_color.dart';
+import '../../enums/new_list_theme_value.dart';
 
-class DialogContent extends StatefulWidget {
-  const DialogContent({super.key});
+class ListDialogContent extends StatefulWidget {
+  const ListDialogContent({super.key});
 
   @override
-  State<DialogContent> createState() => _DialogContentState();
+  State<ListDialogContent> createState() => _ListDialogContentState();
 }
 
-class _DialogContentState extends State<DialogContent> {
+class _ListDialogContentState extends State<ListDialogContent> {
   var _color = true;
   var _photo = false;
   var _custom = false;
@@ -204,12 +205,10 @@ class _DialogContentState extends State<DialogContent> {
           hintStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
                 color: Colors.grey,
               ),
-          border: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: colorsProvider.listOfSelectedColors.isNotEmpty
-                  ? colorsProvider.listOfSelectedColors.last
-                  : colorsProvider.selectedColor,
-            ),
+          border: AppTheme.underlineInputBorder(
+            colorsProvider.listOfSelectedColors.isNotEmpty
+                ? colorsProvider.listOfSelectedColors.last
+                : colorsProvider.selectedColor,
           ),
           focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(
@@ -218,19 +217,15 @@ class _DialogContentState extends State<DialogContent> {
                   : colorsProvider.selectedColor,
             ),
           ),
-          disabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: colorsProvider.listOfSelectedColors.isNotEmpty
-                  ? colorsProvider.listOfSelectedColors.last
-                  : colorsProvider.selectedColor,
-            ),
+          disabledBorder: AppTheme.underlineInputBorder(
+            colorsProvider.listOfSelectedColors.isNotEmpty
+                ? colorsProvider.listOfSelectedColors.last
+                : colorsProvider.selectedColor,
           ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: colorsProvider.listOfSelectedColors.isNotEmpty
-                  ? colorsProvider.listOfSelectedColors.last
-                  : colorsProvider.selectedColor,
-            ),
+          enabledBorder: AppTheme.underlineInputBorder(
+            colorsProvider.listOfSelectedColors.isNotEmpty
+                ? colorsProvider.listOfSelectedColors.last
+                : colorsProvider.selectedColor,
           ),
         ),
         onChanged: (value) {

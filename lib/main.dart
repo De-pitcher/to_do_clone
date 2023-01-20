@@ -24,7 +24,7 @@ class ToDoClone extends StatelessWidget {
       child: MaterialApp(
         title: 'ToDo Clone',
         theme: ThemeData.dark(),
-        darkTheme: darkTheme,
+        darkTheme: AppTheme.darkTheme,
         debugShowCheckedModeBanner: false,
         initialRoute: MainPage.id,
         onGenerateRoute: routeGen,
