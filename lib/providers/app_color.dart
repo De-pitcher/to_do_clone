@@ -21,6 +21,7 @@ class AppColor extends ChangeNotifier {
   Color selectedColor = Colors.blue;
   String? selectedImage;
   File? selectedFileImage;
+  String listTitle = 'Untitle list';
 
   void changeNewListThemeValue(NewListThemeValue newThemeValue) {
     newListThemeValue = newThemeValue;
@@ -78,6 +79,15 @@ class AppColor extends ChangeNotifier {
         selectedImage = null;
         selectedFileImage = _fileImages[i];
       }
+    }
+    notifyListeners();
+  }
+
+  void updateListTitle(String updatedListTitle) {
+    if (updatedListTitle.isNotEmpty) {
+      listTitle = updatedListTitle;
+    } else {
+      listTitle = 'Untitle list';
     }
     notifyListeners();
   }
