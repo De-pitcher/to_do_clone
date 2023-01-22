@@ -8,6 +8,7 @@ import '../circular_image_card.dart';
 import '../picker.dart';
 import '../../providers/app_color.dart';
 import '../../enums/new_list_theme_value.dart';
+import '../../providers/activities.dart';
 
 class ListDialogContent extends StatefulWidget {
   const ListDialogContent({super.key});
@@ -78,6 +79,14 @@ class _ListDialogContentState extends State<ListDialogContent> {
               ? null
               : () {
                   colorsProvider.updateListTitle(_listTitle);
+                  Provider.of<Activities>(context, listen: false)
+                      .addListActivity(
+                    title: _listTitle,
+                    tasks: [],
+                    color: colorsProvider.selectedColor,
+                    image: colorsProvider.selectedImage,
+                    fileImage: colorsProvider.selectedFileImage,
+                  );
                   _listTitle = '';
                   Navigator.of(context).pop();
                 },

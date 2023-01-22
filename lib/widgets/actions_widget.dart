@@ -35,7 +35,7 @@ class _ActionWidgetState extends State<ActionWidget> {
             : AppTheme.darkTheme.textTheme.bodySmall,
       ),
       trailing: Text(
-        '${widget.counter}',
+        widget.counter == 0 ? '' : '${widget.counter}',
         style: ThemeMode.system == ThemeMode.light
             ? AppTheme.lightTheme.textTheme.bodySmall
             : AppTheme.darkTheme.textTheme.bodySmall,

@@ -1,34 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import './profile.dart';
+import './list_screen.dart';
+import '../screens/activities/assigned_to_me.dart';
+import '../screens/activities/important.dart';
+import '../screens/activities/my_day.dart';
+import '../screens/activities/planned.dart';
+import '../screens/activities/tasks.dart';
 import '../widgets/dialogs/group_dialog.dart';
-import 'activities/assigned_to_me.dart';
-import 'activities/important.dart';
-import 'activities/my_day.dart';
-
-import 'profile.dart';
-import 'list_screen.dart';
 import '../widgets/actions_widget.dart';
+import '../widgets/list_widget.dart';
+import '../providers/activities.dart';
 
-import 'activities/planned.dart';
-import 'activities/tasks.dart';
-
-class MainPage extends StatefulWidget {
+class MainPage extends StatelessWidget {
   static const String id = '/';
   const MainPage({super.key});
-
-  @override
-  State<MainPage> createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
-  String _groupTitle = '';
-  var _isButtonEnabled = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ListTile(
               onTap: () => Navigator.of(context).pushNamed(ProfileAccount.id),
@@ -79,6 +74,31 @@ class _MainPageState extends State<MainPage> {
                     action: 'Tasks',
                     routeName: Tasks.id,
                   ),
+                  const Divider(
+                    color: Colors.grey,
+                    thickness: 1,
+                  ),
+                  Column(
+                    children:
+                        Provider.of<Activities>(context).activities.map((e) {
+                      return ListTile(
+                        leading: const Icon(Icons.list),
+                        title: Text(e.title),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => ListWidget(
+                                title: e.title,
+                                bgColor: e.color,
+                                image: e.image,
+                                fileImage: e.fileImage,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
+                  )
                 ],
               ),
             ),
@@ -87,10 +107,10 @@ class _MainPageState extends State<MainPage> {
                 Expanded(
                   child: ListTile(
                     onTap: () => Navigator.of(context).pushNamed(ListScreen.id),
-                    leading: Icon(Icons.add, color: Colors.grey[700]),
-                    title: Text(
+                    leading: const Icon(Icons.add, color: Colors.white),
+                    title: const Text(
                       'New list',
-                      style: TextStyle(color: Colors.grey[700]),
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),
@@ -107,11 +127,14 @@ class _MainPageState extends State<MainPage> {
                       ),
                     );
                   },
-                  icon: Icon(Icons.note_add_outlined, color: Colors.grey[700]),
+                  icon: const Icon(
+                    Icons.note_add_outlined,
+                    color: Colors.white,
+                  ),
                   style: IconButton.styleFrom(),
                 ),
               ],
-            ),
+            )
           ],
         ),
       ),
