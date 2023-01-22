@@ -2,20 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:to_do_clone/models/task.dart';
 
 class TaskTileState extends ChangeNotifier {
-  bool _isDone = false;
-  bool _isStarred = false;
+  final Task _task = Task();
 
-  bool get isDone => _isDone;
-
-  bool get isStarred => _isStarred;
+  Task get task => _task;
 
   void done() {
-    _isDone = !isDone;
+    _task.isDone = !_task.isDone;
     notifyListeners();
   }
 
   void starred() {
-    _isStarred = !_isStarred;
+    _task.isStarred = !_task.isStarred;
     notifyListeners();
   }
 }

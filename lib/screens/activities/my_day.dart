@@ -12,10 +12,9 @@ class _MyDayState extends State<MyDay> {
   @override
   Widget build(BuildContext context) {
     return Container(
-
       decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage(''))
-      ),
+          // image: DecorationImage(image: AssetImage())
+          ),
       child: Column(
         children: [],
       ),

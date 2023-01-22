@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do_clone/providers/task.dart';
 import 'package:to_do_clone/providers/task_tile.dart';
 
 import '../models/task.dart';
@@ -20,6 +19,7 @@ class TaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final taskState = Provider.of<TaskTileState>(context);
+    // final demo = Provider.of<TaskList>(context);
     return ListTile(
       key: ValueKey(id),
       selected: true,
@@ -29,7 +29,7 @@ class TaskTile extends StatelessWidget {
           taskState.done();
         },
         icon: Icon(
-          taskState.isDone ? Icons.circle : Icons.circle_outlined,
+          taskState.task.isDone ? Icons.circle : Icons.circle_outlined,
           color: color,
         ),
       ),
@@ -45,7 +45,7 @@ class TaskTile extends StatelessWidget {
           taskState.starred();
         },
         icon: Icon(
-          taskState.isStarred ? Icons.star : Icons.star_border,
+          taskState.task.isStarred ? Icons.star : Icons.star_border,
           color: color,
         ),
       ),

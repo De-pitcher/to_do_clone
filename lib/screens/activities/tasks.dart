@@ -61,6 +61,7 @@ class _TasksState extends State<Tasks> {
       ),
       body: SafeArea(
         child: ListView.separated(
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
           itemBuilder: (context, index) {
             return TaskTile(
               id: index,
@@ -68,9 +69,7 @@ class _TasksState extends State<Tasks> {
               task: list.taskList[index],
             );
           },
-          separatorBuilder: (context, index) {
-            return const SizedBox(height: 2);
-          },
+          separatorBuilder: (context, index) => const SizedBox(height: 4),
           itemCount: list.taskList.length,
         ),
       ),
@@ -122,9 +121,9 @@ class _TasksState extends State<Tasks> {
                       size: 32, color: Colors.white12),
                   suffixIcon: GestureDetector(
                     onTap: () {
-                      context.read<TaskList>().addToList(
-                            Task(task: addTaskController.text),
-                          );
+                      context
+                          .read<TaskList>()
+                          .addToList(addTaskController.text);
                       addTaskController.clear();
                     },
                     child: Icon(
