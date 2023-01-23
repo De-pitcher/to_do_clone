@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../enums/pop_menu_value.dart';
+import '../../enums/group_pop_menu_value.dart';
 import '../../widgets/menu_item.dart';
 
 List<PopupMenuEntry<PopMenuValue>> popMenuEntries(BuildContext context) => [
@@ -92,6 +93,41 @@ List<PopupMenuEntry<PopMenuValue>> popMenuEntries(BuildContext context) => [
         child: const PopMenuItem(
           icon: Icons.lightbulb_outlined,
           text: 'Turn on suggestions',
+        ),
+      ),
+    ];
+
+List<PopupMenuEntry<GroupPopMenuValue>> groupPopMenuEntries(
+        BuildContext context) =>
+    [
+      PopupMenuItem(
+        value: GroupPopMenuValue.addOrRemove,
+        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
+              color: Colors.white,
+            ),
+        child: const PopMenuItem(
+          icon: Icons.list,
+          text: 'Add/Remove lists',
+        ),
+      ),
+      PopupMenuItem(
+        value: GroupPopMenuValue.renameGroup,
+        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
+              color: Colors.white,
+            ),
+        child: const PopMenuItem(
+          icon: Icons.task_outlined,
+          text: 'Rename group',
+        ),
+      ),
+      PopupMenuItem(
+        value: GroupPopMenuValue.deleteGroup,
+        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
+              color: Colors.white,
+            ),
+        child: const PopMenuItem(
+          icon: Icons.delete,
+          text: 'Delete group',
         ),
       ),
     ];

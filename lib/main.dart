@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../screens/landing.dart';
-import '../providers/app_color.dart';
-import '../providers/activities.dart';
-import '../utils/res/theme.dart';
-import '../utils/constants/routes.dart';
+import './screens/landing.dart';
+import './providers/app_color.dart';
+import './providers/activities.dart';
+import './providers/groups.dart';
+import './utils/res/theme.dart';
+import './utils/constants/routes.dart';
 
 void main() {
   runApp(const ToDoClone());
@@ -24,6 +25,9 @@ class ToDoClone extends StatelessWidget {
         ChangeNotifierProvider<Activities>(
           create: (_) => Activities(),
         ),
+        ChangeNotifierProvider<Groups>(
+          create: (_) => Groups(),
+        )
       ],
       child: MaterialApp(
         title: 'ToDo Clone',

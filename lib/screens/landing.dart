@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/group_widget.dart';
 import './profile.dart';
 import './list_screen.dart';
 import '../screens/activities/assigned_to_me.dart';
@@ -13,6 +14,7 @@ import '../widgets/dialogs/group_dialog.dart';
 import '../widgets/actions_widget.dart';
 import '../widgets/list_widget.dart';
 import '../providers/activities.dart';
+import '../providers/groups.dart';
 
 class MainPage extends StatelessWidget {
   static const String id = '/';
@@ -77,6 +79,11 @@ class MainPage extends StatelessWidget {
                   const Divider(
                     color: Colors.grey,
                     thickness: 1,
+                  ),
+                  Column(
+                    children: Provider.of<Groups>(context).groups.map((e) {
+                      return GroupWidget(e.name);
+                    }).toList(),
                   ),
                   Column(
                     children:

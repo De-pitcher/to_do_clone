@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/groups.dart';
 
 class GroupDialog extends StatefulWidget {
   const GroupDialog({super.key});
@@ -41,7 +44,13 @@ class _GroupDialogState extends State<GroupDialog> {
                 ),
               ),
               TextButton(
-                onPressed: !_isButtonEnabled ? null : () {},
+                onPressed: !_isButtonEnabled
+                    ? null
+                    : () {
+                        Provider.of<Groups>(context, listen: false)
+                            .createGroup(_groupTitle, []);
+                        Navigator.of(context).pop();
+                      },
                 child: Text(
                   'CREATE GROUP',
                   style: TextStyle(
