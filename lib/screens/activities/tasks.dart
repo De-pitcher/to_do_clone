@@ -5,10 +5,10 @@ import 'package:to_do_clone/providers/task.dart';
 import 'package:to_do_clone/widgets/task_tile.dart';
 
 class Tasks extends StatefulWidget {
-  final Color color;
+  final Map<String, dynamic> args;
   static const String id = '/tasks';
 
-  const Tasks({super.key, required this.color});
+  const Tasks({super.key, required this.args});
 
   @override
   State<Tasks> createState() => _TasksState();
@@ -43,14 +43,14 @@ class _TasksState extends State<Tasks> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        iconTheme: IconThemeData(color: widget.color),
-        actionsIconTheme: IconThemeData(color: widget.color),
+        iconTheme: IconThemeData(color: widget.args['color']),
+        actionsIconTheme: IconThemeData(color: widget.args['color']),
         title: Text(
           'Tasks',
           style: Theme.of(context)
               .textTheme
               .titleMedium!
-              .copyWith(color: widget.color),
+              .copyWith(color: widget.args['color']),
         ),
         actions: [
           IconButton(
@@ -64,8 +64,8 @@ class _TasksState extends State<Tasks> {
           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
           itemBuilder: (context, index) {
             return TaskTile(
-              id: index,
-              color: widget.color,
+              parent: widget.args['parent'],
+              color: widget.args['color'],
               task: list.taskList[index],
             );
           },
@@ -75,7 +75,7 @@ class _TasksState extends State<Tasks> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => addTask(context),
-        backgroundColor: widget.color,
+        backgroundColor: widget.args['color'],
         foregroundColor: Colors.white,
         child: const Icon(Icons.add, size: 32),
       ),

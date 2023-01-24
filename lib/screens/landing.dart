@@ -74,7 +74,6 @@ class _MainPageState extends State<MainPage> {
                     iconColor: Colors.deepPurple[300],
                     action: 'Tasks',
                     routeName: Tasks.id,
-                    
                   ),
                 ],
               ),

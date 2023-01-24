@@ -11,7 +11,9 @@ class TaskList extends ChangeNotifier {
 
   void addToList(String task) {
     Task newTask = Task(task: task);
+
     _taskList.add(newTask);
+
     notifyListeners();
   }
 

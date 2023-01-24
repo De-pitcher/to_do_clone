@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_clone/widgets/task_details.dart';
 
 import '../../screens/activities/assigned_to_me.dart';
 import '../../screens/activities/important.dart';
@@ -27,7 +28,12 @@ MaterialPageRoute routeGen(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const Planned());
     case Tasks.id:
       return MaterialPageRoute(
-          builder: (_) => Tasks(color: settings.arguments as Color));
+          builder: (_) =>
+              Tasks(args: settings.arguments as Map<String, dynamic>));
+    case TaskDetails.id:
+      return MaterialPageRoute(
+          builder: (context) =>
+              TaskDetails(args: settings.arguments as Map<String, dynamic>));
     default:
       return MaterialPageRoute(
         builder: (context) {

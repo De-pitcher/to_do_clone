@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_clone/providers/task_tile.dart';
+import 'package:to_do_clone/widgets/task_details.dart';
 
 import '../models/task.dart';
 
 class TaskTile extends StatelessWidget {
-  final int id;
+
   final Color color;
   final Task task;
-
+  final String? parent;
   const TaskTile({
     super.key,
-    required this.id,
+    this.parent,
+
     required this.color,
     required this.task,
   });
@@ -21,7 +23,11 @@ class TaskTile extends StatelessWidget {
     final taskState = Provider.of<TaskTileState>(context);
     // final demo = Provider.of<TaskList>(context);
     return ListTile(
-      key: ValueKey(id),
+ 
+      onTap: () {
+        Navigator.of(context).pushNamed(TaskDetails.id,
+            arguments: {'color': color, 'parent': parent, });
+      },
       selected: true,
       selectedTileColor: Colors.white12,
       leading: IconButton(
