@@ -18,6 +18,7 @@ class Activities extends ChangeNotifier {
   }) {
     _activities.add(
       Activity(
+          key: DateTime.now(),
           title: title,
           color: color,
           image: image,

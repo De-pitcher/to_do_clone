@@ -7,6 +7,7 @@ import './providers/activities.dart';
 import './providers/groups.dart';
 import './utils/res/theme.dart';
 import './utils/constants/routes.dart';
+import 'models/group.dart';
 
 void main() {
   runApp(const ToDoClone());
@@ -27,7 +28,10 @@ class ToDoClone extends StatelessWidget {
         ),
         ChangeNotifierProvider<Groups>(
           create: (_) => Groups(),
-        )
+        ),
+        // ChangeNotifierProvider<Group>(
+        //   create: (_) => Group(),
+        // ),
       ],
       child: MaterialApp(
         title: 'ToDo Clone',

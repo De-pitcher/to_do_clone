@@ -13,6 +13,7 @@ import '../screens/activities/tasks.dart';
 import '../widgets/dialogs/group_dialog.dart';
 import '../widgets/actions_widget.dart';
 import '../widgets/list_widget.dart';
+import '../widgets/draggable_list_widget.dart';
 import '../providers/activities.dart';
 import '../providers/groups.dart';
 
@@ -80,32 +81,34 @@ class MainPage extends StatelessWidget {
                     color: Colors.grey,
                     thickness: 1,
                   ),
-                  Column(
-                    children: Provider.of<Groups>(context).groups.map((e) {
-                      return GroupWidget(e.name);
-                    }).toList(),
-                  ),
-                  Column(
-                    children:
-                        Provider.of<Activities>(context).activities.map((e) {
-                      return ListTile(
-                        leading: const Icon(Icons.list),
-                        title: Text(e.title),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => ListWidget(
-                                title: e.title,
-                                bgColor: e.color,
-                                image: e.image,
-                                fileImage: e.fileImage,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }).toList(),
-                  )
+                  // Column(
+                  //   children: Provider.of<Groups>(context).groups.map((e) {
+                  //     return GroupWidget(e.name, e.lists);
+                  //   }).toList(),
+                  // ),
+                  // GroupWidget('name'),
+                  DraggableListWidget(),
+                  // Column(
+                  //   children:
+                  //       Provider.of<Activities>(context).activities.map((e) {
+                  //     return ListTile(
+                  //       leading: const Icon(Icons.list),
+                  //       title: Text(e.title),
+                  //       onTap: () {
+                  //         Navigator.of(context).push(
+                  //           MaterialPageRoute(
+                  //             builder: (_) => ListWidget(
+                  //               title: e.title,
+                  //               bgColor: e.color,
+                  //               image: e.image,
+                  //               fileImage: e.fileImage,
+                  //             ),
+                  //           ),
+                  //         );
+                  //       },
+                  //     );
+                  //   }).toList(),
+                  // )
                 ],
               ),
             ),
