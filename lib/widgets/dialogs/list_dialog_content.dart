@@ -79,15 +79,15 @@ class _ListDialogContentState extends State<ListDialogContent> {
               ? null
               : () {
                   colorsProvider.updateListTitle(_listTitle);
-                  Provider.of<Activities>(context, listen: false)
-                      .addListActivity(
+                  final listProvider =
+                      Provider.of<Activities>(context, listen: false);
+                  listProvider.addListActivity(
                     title: _listTitle,
                     tasks: [],
                     color: colorsProvider.selectedColor,
                     image: colorsProvider.selectedImage,
                     fileImage: colorsProvider.selectedFileImage,
                   );
-                  _listTitle = '';
                   Navigator.of(context).pop();
                 },
           child: Text(
@@ -209,6 +209,7 @@ class _ListDialogContentState extends State<ListDialogContent> {
   Expanded _textFieldBuild(BuildContext context, AppColor colorsProvider) {
     return Expanded(
       child: TextField(
+        autofocus: true,
         decoration: InputDecoration(
           hintText: 'Enter list title',
           hintStyle: Theme.of(context).textTheme.bodyText2!.copyWith(

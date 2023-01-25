@@ -84,11 +84,14 @@ class AppColor extends ChangeNotifier {
   }
 
   void updateListTitle(String updatedListTitle) {
-    if (updatedListTitle.isNotEmpty) {
+    if (updatedListTitle.isNotEmpty || listTitle.startsWith('Untitle')) {
       listTitle = updatedListTitle;
-    } else {
-      listTitle = 'Untitle list';
     }
+    notifyListeners();
+  }
+
+  void resetListTitle() {
+    listTitle = 'Untitle list';
     notifyListeners();
   }
 }

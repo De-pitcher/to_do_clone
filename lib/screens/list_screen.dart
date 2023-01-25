@@ -22,6 +22,8 @@ class _ListScreenState extends State<ListScreen> {
     super.initState();
 
     Timer.run(() {
+      Provider.of<AppColor>(context, listen: false).resetListTitle();
+
       showDialog(
           context: context,
           barrierDismissible: false,
