@@ -1,6 +1,7 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:to_do_clone/enums/group_pop_menu_value.dart';
 
 import '../models/activity.dart';
 import '../models/group.dart';
@@ -76,6 +77,47 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
           onHide: () {
             Provider.of<Groups>(context, listen: false).hideList(groups.key);
           },
+          onPopMenuItemSelected: (value) {
+            switch (value) {
+              case GroupPopMenuValue.addOrRemove:
+                final allList = [...activities, ...groups.lists];
+                List<DateTime> listOfKeys = [];
+                for (var e in groups.lists) {
+                  listOfKeys.add(e.key);
+                }
+                return showDialog(
+                    context: context,
+                    builder: (ctx) {
+                      return AlertDialog(
+                        title: const Text('Select lists to add or remove'),
+                        content: Container(
+                          height: 70 * allList.length.toDouble(),
+                          width: 300,
+                          // margin: const EdgeInsets.symmetric(horizontal: 16),
+                          child: ListView.builder(
+                            itemBuilder: (_, i) {
+                              return ListTileWidget(
+                                activity: allList[i],
+                                showTrailingIcon: true,
+                                isSelected: listOfKeys.contains(
+                                  allList[i].key,
+                                ),
+                              );
+                            },
+                            itemCount: allList.length,
+                          ),
+                        ),
+                      );
+                    });
+              case GroupPopMenuValue.renameGroup:
+                break;
+              case GroupPopMenuValue.ungroup:
+                break;
+              case GroupPopMenuValue.deleteGroup:
+                break;
+              default:
+            }
+          },
         ),
         children: groups.showList
             ? groups.lists.isEmpty
@@ -97,6 +139,7 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
           height: 50,
           child: ListTileWidget(
             activity: activity,
+            showTrailingIcon: false,
           ),
         ),
       );
@@ -121,6 +164,7 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
               Expanded(
                 child: ListTileWidget(
                   activity: activity,
+                  showTrailingIcon: false,
                 ),
               ),
             ],

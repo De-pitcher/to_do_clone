@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../enums/group_pop_menu_value.dart';
 import '../utils/constants/pop_menu_items.dart';
 
 class GroupHeaderWidget extends StatefulWidget {
@@ -9,10 +10,12 @@ class GroupHeaderWidget extends StatefulWidget {
   final bool expanded;
   final bool isEmpty;
   final Function()? onHide;
+  final Function(GroupPopMenuValue) onPopMenuItemSelected;
   const GroupHeaderWidget({
     required this.name,
     required this.expanded,
     required this.isEmpty,
+    required this.onPopMenuItemSelected,
     this.onHide,
     super.key,
   });
@@ -40,7 +43,6 @@ class _GroupHeaderWidgetState extends State<GroupHeaderWidget>
       begin: 1,
       end: 0,
     ).animate(
-      // _controller
       CurvedAnimation(
         parent: _controller,
         curve: Curves.linear,
@@ -50,7 +52,6 @@ class _GroupHeaderWidgetState extends State<GroupHeaderWidget>
       begin: 0,
       end: 1,
     ).animate(
-      // _controller
       CurvedAnimation(
         parent: _controller,
         curve: Curves.linear,
@@ -61,7 +62,6 @@ class _GroupHeaderWidgetState extends State<GroupHeaderWidget>
       begin: pi / 2,
       end: 0,
     ).animate(
-      // _controller
       CurvedAnimation(
         parent: _controller,
         curve: Curves.linear,
@@ -71,7 +71,6 @@ class _GroupHeaderWidgetState extends State<GroupHeaderWidget>
       begin: 0,
       end: -48,
     ).animate(
-      // _controller
       CurvedAnimation(
         parent: _controller,
         curve: Curves.linear,
@@ -130,6 +129,7 @@ class _GroupHeaderWidgetState extends State<GroupHeaderWidget>
                   itemBuilder: (ctx) =>
                       groupPopMenuEntries(ctx, widget.isEmpty),
                   position: PopupMenuPosition.under,
+                  onSelected: widget.onPopMenuItemSelected,
                 ),
               ),
             ),

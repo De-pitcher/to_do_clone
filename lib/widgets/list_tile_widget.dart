@@ -5,9 +5,15 @@ import './list_widget.dart';
 
 class ListTileWidget extends StatelessWidget {
   final Activity activity;
+  final bool showTrailingIcon;
+  final bool? isSelected;
+  final Function()? onIconPressed;
   const ListTileWidget({
     Key? key,
     required this.activity,
+    required this.showTrailingIcon,
+    this.isSelected = false,
+    this.onIconPressed,
   }) : super(key: key);
 
   @override
@@ -29,6 +35,11 @@ class ListTileWidget extends StatelessWidget {
           ),
         );
       },
+      trailing: showTrailingIcon
+          ? isSelected!
+              ? const Icon(Icons.check)
+              : const Icon(Icons.add)
+          : null,
     );
   }
 }
