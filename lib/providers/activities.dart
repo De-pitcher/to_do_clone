@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../models/activity.dart';
 
 class Activities extends ChangeNotifier {
-  List<Activity> _activities = [];
+  final List<Activity> _activities = [];
 
   List<Activity> get activities => [..._activities];
 

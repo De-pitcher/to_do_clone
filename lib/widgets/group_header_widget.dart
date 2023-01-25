@@ -1,11 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:to_do_clone/providers/groups.dart';
 
 import '../utils/constants/pop_menu_items.dart';
-import '../models/group.dart';
 
 class GroupHeaderWidget extends StatefulWidget {
   final String name;

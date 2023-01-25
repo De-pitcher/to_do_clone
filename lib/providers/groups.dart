@@ -4,7 +4,7 @@ import '../models/group.dart';
 import '../models/activity.dart';
 
 class Groups extends ChangeNotifier {
-  List<Group> _groups = [];
+  final List<Group> _groups = [];
 
   List<Group> get groups => [..._groups];
 

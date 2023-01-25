@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/activity.dart';
-import './list_widget.dart';
+import '../models/group.dart';
+import './list_tile_widget.dart';
 import './group_header_widget.dart';
 import '../providers/activities.dart';
 import '../providers/groups.dart';
@@ -19,7 +20,40 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
   late List<DragAndDropList> _contents;
   late List<DragAndDropList> _listContents;
   late List<DragAndDropList> _groupContents;
-  var _listContentCurrentIndex = 0;
+
+  final List<DragAndDropItem> _emptyDisplayWidget = [
+    DragAndDropItem(
+      child: Container(),
+    ),
+  ];
+
+  final List<DragAndDropItem> _emptyListDisplayWidget = [
+    DragAndDropItem(
+      child: Padding(
+        key: UniqueKey(),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Row(
+          children: const [
+            SizedBox(
+              height: 70,
+              child: VerticalDivider(
+                width: 5,
+                thickness: 1,
+                color: Colors.grey,
+              ),
+            ),
+            Expanded(
+              child: Text(
+                'Tap and drag here to add lists',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey),
+              ),
+            )
+          ],
+        ),
+      ),
+    ),
+  ];
 
   @override
   void didChangeDependencies() {
@@ -27,38 +61,8 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
     _listContents = [
       DragAndDropList(
         children: activities.isEmpty
-            ? [
-                DragAndDropItem(
-                  child: Container(),
-                ),
-              ]
-            : [
-                ...activities.map((activities) {
-                  return DragAndDropItem(
-                    child: SizedBox(
-                      height: 50,
-                      child: ListTile(
-                        key: Key(activities.key.toString()),
-                        leading: const Icon(Icons.list),
-                        title: Text(activities.title),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => ListWidget(
-                                key: Key(activities.key.toString()),
-                                title: activities.title,
-                                bgColor: activities.color,
-                                image: activities.image,
-                                fileImage: activities.fileImage,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ],
+            ? _emptyDisplayWidget
+            : _buildListTileWidget(context),
       ),
     ];
 
@@ -74,74 +78,9 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
         ),
         children: groups.showList
             ? groups.lists.isEmpty
-                ? [
-                    DragAndDropItem(
-                      child: Padding(
-                        key: UniqueKey(),
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Row(
-                          children: const [
-                            SizedBox(
-                              height: 70,
-                              child: VerticalDivider(
-                                width: 5,
-                                thickness: 1,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Tap and drag here to add lists',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ]
-                : groups.lists.map((activities) {
-                    return DragAndDropItem(
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            height: 60,
-                            child: VerticalDivider(
-                              width: 5,
-                              thickness: 1,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Expanded(
-                            child: ListTile(
-                              key: Key(activities.key.toString()),
-                              leading: const Icon(Icons.list),
-                              title: Text(activities.title),
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => ListWidget(
-                                      key: Key(activities.key.toString()),
-                                      title: activities.title,
-                                      bgColor: activities.color,
-                                      image: activities.image,
-                                      fileImage: activities.fileImage,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList()
-            : [
-                DragAndDropItem(
-                  child: Container(),
-                ),
-              ],
+                ? _emptyListDisplayWidget
+                : _buildGroupWidget(groups)
+            : _emptyDisplayWidget,
       );
     }).toList();
 
@@ -149,12 +88,46 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
     super.didChangeDependencies();
   }
 
-  // void _onReorder(int oldIndex, int newIndex) {
-  //   setState(() {
-  //     Widget row = _contents.removeAt(oldIndex);
-  //     _contents.insert(newIndex, row);
-  //   });
-  // }
+  List<DragAndDropItem> _buildListTileWidget(BuildContext context) {
+    final activities = Provider.of<Activities>(context).activities;
+    return activities.map((activity) {
+      return DragAndDropItem(
+        child: SizedBox(
+          height: 50,
+          child: ListTileWidget(
+            activity: activity,
+          ),
+        ),
+      );
+    }).toList();
+  }
+
+  List<DragAndDropItem> _buildGroupWidget(Group group) {
+    return group.lists.map((activity) {
+      return DragAndDropItem(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            children: [
+              const SizedBox(
+                height: 60,
+                child: VerticalDivider(
+                  width: 5,
+                  thickness: 1,
+                  color: Colors.grey,
+                ),
+              ),
+              Expanded(
+                child: ListTileWidget(
+                  activity: activity,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }).toList();
+  }
 
   _onItemReorder(
     int oldItemIndex,
@@ -168,30 +141,21 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
     final listActivities = activitiesProvider.activities;
     final groups = groupsProvider.groups;
     setState(() {
-      if (oldListIndex == _listContentCurrentIndex &&
-          oldItemIndex <= _listContents.length) {
+      if (oldListIndex == 0 && oldItemIndex <= _listContents.length) {
         currentActivitiy = listActivities[oldItemIndex];
-        print('listContent');
-        print(currentActivitiy.toString());
         activitiesProvider.removeActivity(oldItemIndex);
       } else {
-        print(oldListIndex);
         currentActivitiy = groups[oldListIndex - 1].lists[oldItemIndex];
-        print('groupContent');
-        print(currentActivitiy.toString());
-        groupsProvider.removeList(oldItemIndex, oldItemIndex);
+        groupsProvider.removeList(oldListIndex - 1, oldItemIndex);
       }
       if (newListIndex < 1 && newListIndex <= _listContents.length) {
         activitiesProvider.addActivityFromScreen(currentActivitiy);
-        print('currentListActivity added!');
       } else {
         groupsProvider.addList(
           newListIndex - 1,
           newItemIndex,
           currentActivitiy,
         );
-        // print(groups[newItemIndex].lists.length);
-        print('currentGroupActivity added!');
       }
       var movedItem = _contents[oldListIndex].children.removeAt(oldItemIndex);
       _contents[newListIndex].children.insert(newItemIndex, movedItem);
@@ -202,21 +166,15 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
     int oldListIndex,
     int newListIndex,
   ) {
-    final activitiesProvider = Provider.of<Activities>(context, listen: false);
     final groupsProvider = Provider.of<Groups>(context, listen: false);
-    final listActivities = activitiesProvider.activities;
-    // final groups = groupsProvider.groups;
     setState(() {
-      if (oldListIndex != _listContentCurrentIndex) {
+      if (oldListIndex != 0 && newListIndex != 0) {
         final group = groupsProvider.groups[oldListIndex - 1];
         groupsProvider.swapGroup(
           oldListIndex - 1,
           newListIndex - 1,
           group,
         );
-      } else {
-        _contents.reversed.toList();
-        _listContentCurrentIndex = newListIndex;
       }
       var movedList = _contents.removeAt(oldListIndex);
       _contents.insert(newListIndex, movedList);
@@ -225,17 +183,10 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 800,
-      child: DragAndDropLists(
-        children: _contents,
-        onItemReorder: _onItemReorder,
-        onListReorder: _onListReorder,
-      ),
+    return DragAndDropLists(
+      children: _contents,
+      onItemReorder: _onItemReorder,
+      onListReorder: _onListReorder,
     );
-    // return ReorderableColumn(
-    //   onReorder: _onReorder,
-    //   children: _contents,
-    // );
   }
 }

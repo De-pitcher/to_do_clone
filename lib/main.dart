@@ -7,7 +7,6 @@ import './providers/activities.dart';
 import './providers/groups.dart';
 import './utils/res/theme.dart';
 import './utils/constants/routes.dart';
-import 'models/group.dart';
 
 void main() {
   runApp(const ToDoClone());
