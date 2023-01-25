@@ -19,4 +19,17 @@ class Groups extends ChangeNotifier {
     _groups[itemIndex] = _groups[itemIndex].copyWith(showList: !showList);
     notifyListeners();
   }
+
+  void addList(int groupIndex, int listIndex, Activity activity) {
+    // _groups[groupIndex].lists.add(activity);
+    final currentList = _groups[groupIndex].lists;
+    currentList.add(activity);
+    _groups[groupIndex] = _groups[groupIndex].copyWith(lists: currentList);
+    notifyListeners();
+  }
+
+  void removeList(int groupIndex, int listIndex) {
+    _groups[groupIndex].lists.removeAt(listIndex);
+    notifyListeners();
+  }
 }

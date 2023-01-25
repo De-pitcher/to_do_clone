@@ -18,13 +18,24 @@ class Activities extends ChangeNotifier {
   }) {
     _activities.add(
       Activity(
-          key: DateTime.now(),
-          title: title,
-          color: color,
-          image: image,
-          fileImage: fileImage,
-          tasks: tasks),
+        key: DateTime.now(),
+        title: title,
+        color: color,
+        image: image,
+        fileImage: fileImage,
+        tasks: tasks,
+      ),
     );
+    notifyListeners();
+  }
+
+  void addActivityFromScreen(Activity activity) {
+    _activities.add(activity);
+    notifyListeners();
+  }
+
+  void removeActivity(int activityIndex) {
+    _activities.removeAt(activityIndex);
     notifyListeners();
   }
 }
