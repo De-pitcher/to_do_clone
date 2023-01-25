@@ -98,7 +98,9 @@ List<PopupMenuEntry<PopMenuValue>> popMenuEntries(BuildContext context) => [
     ];
 
 List<PopupMenuEntry<GroupPopMenuValue>> groupPopMenuEntries(
-        BuildContext context) =>
+  BuildContext context,
+  bool isEmpty,
+) =>
     [
       PopupMenuItem(
         value: GroupPopMenuValue.addOrRemove,
@@ -116,18 +118,29 @@ List<PopupMenuEntry<GroupPopMenuValue>> groupPopMenuEntries(
               color: Colors.white,
             ),
         child: const PopMenuItem(
-          icon: Icons.task_outlined,
+          icon: Icons.task_sharp,
           text: 'Rename group',
         ),
       ),
-      PopupMenuItem(
-        value: GroupPopMenuValue.deleteGroup,
-        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: Colors.white,
+      isEmpty
+          ? PopupMenuItem(
+              value: GroupPopMenuValue.deleteGroup,
+              textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
+                    color: Colors.white,
+                  ),
+              child: const PopMenuItem(
+                icon: Icons.delete,
+                text: 'Delete group',
+              ),
+            )
+          : PopupMenuItem(
+              value: GroupPopMenuValue.deleteGroup,
+              textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
+                    color: Colors.white,
+                  ),
+              child: const PopMenuItem(
+                icon: Icons.task_outlined,
+                text: 'Ungroup list',
+              ),
             ),
-        child: const PopMenuItem(
-          icon: Icons.delete,
-          text: 'Delete group',
-        ),
-      ),
     ];

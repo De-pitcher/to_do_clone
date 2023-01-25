@@ -72,6 +72,7 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
         header: GroupHeaderWidget(
           name: groups.name,
           expanded: groups.showList,
+          isEmpty: groups.lists.isEmpty,
           onHide: () {
             Provider.of<Groups>(context, listen: false).hideList(groups.key);
           },

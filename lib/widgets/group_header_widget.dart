@@ -7,10 +7,12 @@ import '../utils/constants/pop_menu_items.dart';
 class GroupHeaderWidget extends StatefulWidget {
   final String name;
   final bool expanded;
+  final bool isEmpty;
   final Function()? onHide;
   const GroupHeaderWidget({
     required this.name,
     required this.expanded,
+    required this.isEmpty,
     this.onHide,
     super.key,
   });
@@ -125,7 +127,9 @@ class _GroupHeaderWidgetState extends State<GroupHeaderWidget>
               builder: (ctx, ch) => Opacity(
                 opacity: _popMenuIconOpacityAnimation.value,
                 child: PopupMenuButton(
-                  itemBuilder: (ctx) => groupPopMenuEntries(ctx),
+                  itemBuilder: (ctx) =>
+                      groupPopMenuEntries(ctx, widget.isEmpty),
+                  position: PopupMenuPosition.under,
                 ),
               ),
             ),

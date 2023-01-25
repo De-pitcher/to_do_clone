@@ -43,7 +43,7 @@ class AppColor extends ChangeNotifier {
         listOfSelectedColors =
             tempColor[i].listOfColors.isEmpty ? [] : tempColor[i].listOfColors;
 
-        selectedImage = '';
+        selectedImage = null;
       } else {
         tempColor[i].isSelected = false;
       }
