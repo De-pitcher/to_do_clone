@@ -19,6 +19,7 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
   late List<DragAndDropList> _contents;
   late List<DragAndDropList> _listContents;
   late List<DragAndDropList> _groupContents;
+  var _listContentCurrentIndex = 0;
 
   @override
   void didChangeDependencies() {
@@ -167,7 +168,8 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
     final listActivities = activitiesProvider.activities;
     final groups = groupsProvider.groups;
     setState(() {
-      if (oldListIndex < 1 && oldItemIndex <= _listContents.length) {
+      if (oldListIndex == _listContentCurrentIndex &&
+          oldItemIndex <= _listContents.length) {
         currentActivitiy = listActivities[oldItemIndex];
         print('listContent');
         print(currentActivitiy.toString());
@@ -200,7 +202,22 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
     int oldListIndex,
     int newListIndex,
   ) {
+    final activitiesProvider = Provider.of<Activities>(context, listen: false);
+    final groupsProvider = Provider.of<Groups>(context, listen: false);
+    final listActivities = activitiesProvider.activities;
+    // final groups = groupsProvider.groups;
     setState(() {
+      if (oldListIndex != _listContentCurrentIndex) {
+        final group = groupsProvider.groups[oldListIndex - 1];
+        groupsProvider.swapGroup(
+          oldListIndex - 1,
+          newListIndex - 1,
+          group,
+        );
+      } else {
+        _contents.reversed.toList();
+        _listContentCurrentIndex = newListIndex;
+      }
       var movedList = _contents.removeAt(oldListIndex);
       _contents.insert(newListIndex, movedList);
     });

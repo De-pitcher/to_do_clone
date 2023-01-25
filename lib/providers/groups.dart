@@ -8,7 +8,10 @@ class Groups extends ChangeNotifier {
 
   List<Group> get groups => [..._groups];
 
-  void createGroup(String name, [List<Activity> lists = const []]) {
+  void createGroup(
+    String name, [
+    List<Activity> lists = const [],
+  ]) {
     _groups.add(Group(key: DateTime.now(), name: name, lists: lists));
     notifyListeners();
   }
@@ -20,7 +23,11 @@ class Groups extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addList(int groupIndex, int listIndex, Activity activity) {
+  void addList(
+    int groupIndex,
+    int listIndex,
+    Activity activity,
+  ) {
     // _groups[groupIndex].lists.add(activity);
     final currentList = _groups[groupIndex].lists;
     currentList.add(activity);
@@ -30,6 +37,16 @@ class Groups extends ChangeNotifier {
 
   void removeList(int groupIndex, int listIndex) {
     _groups[groupIndex].lists.removeAt(listIndex);
+    notifyListeners();
+  }
+
+  void swapGroup(
+    int oldGroupIndex,
+    int newGroupIndex,
+    Group selectedGroup,
+  ) {
+    _groups.removeAt(oldGroupIndex);
+    _groups.insert(newGroupIndex, selectedGroup);
     notifyListeners();
   }
 }
