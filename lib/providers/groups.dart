@@ -23,20 +23,45 @@ class Groups extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addList(
+  void addListUsingIndexs(
     int groupIndex,
     int listIndex,
     Activity activity,
   ) {
-    // _groups[groupIndex].lists.add(activity);
     final currentList = _groups[groupIndex].lists;
     currentList.add(activity);
     _groups[groupIndex] = _groups[groupIndex].copyWith(lists: currentList);
     notifyListeners();
   }
 
+  void addListUsingKey(DateTime key, List<Activity> activities) {
+    // final currentActivityIndex = _groups.indexWhere((e) => e.key == key);
+    // currentList.add(activity);
+    // _groups[currentActivityIndex] =
+    //     _groups[currentActivityIndex].copyWith(lists: currentList);
+    final currentList = _groups.firstWhere((e) => e.key == key).lists;
+    currentList.addAll(activities);
+    notifyListeners();
+  }
+
   void removeList(int groupIndex, int listIndex) {
     _groups[groupIndex].lists.removeAt(listIndex);
+    notifyListeners();
+  }
+
+  void removeListUsingKey(DateTime key, List<Activity> activities) {
+    final currentList = _groups.firstWhere((e) => e.key == key).lists;
+
+    final currentActivityIndex = _groups.indexWhere((e) => e.key == key);
+    for (var activity in activities) {
+      _groups[currentActivityIndex]
+          .lists
+          .removeWhere((e) => e.key == activity.key);
+    }
+    // currentList.removeAt(currentActivityIndex);
+    _groups[currentActivityIndex] =
+        _groups[currentActivityIndex].copyWith(lists: currentList);
+
     notifyListeners();
   }
 

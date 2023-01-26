@@ -37,8 +37,20 @@ class ListTileWidget extends StatelessWidget {
       },
       trailing: showTrailingIcon
           ? isSelected!
-              ? const Icon(Icons.check)
-              : const Icon(Icons.add)
+              ? GestureDetector(
+                  onTap: onIconPressed!(),
+                  child: const Icon(
+                    Icons.check,
+                    color: Colors.blue,
+                  ),
+                )
+              : GestureDetector(
+                  onTap: onIconPressed,
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.blue,
+                  ),
+                )
           : null,
     );
   }

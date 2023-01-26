@@ -38,4 +38,16 @@ class Activities extends ChangeNotifier {
     _activities.removeAt(activityIndex);
     notifyListeners();
   }
+
+  void addListOfActivities(List<Activity> activities) {
+    _activities.addAll(activities);
+    notifyListeners();
+  }
+
+  void removeListOfActivities(List<Activity> activities) {
+    for (var activity in activities) {
+      _activities.removeWhere((e) => e.key == activity.key);
+    }
+    notifyListeners();
+  }
 }

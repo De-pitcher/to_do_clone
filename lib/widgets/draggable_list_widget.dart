@@ -7,6 +7,7 @@ import '../models/activity.dart';
 import '../models/group.dart';
 import './list_tile_widget.dart';
 import './group_header_widget.dart';
+import './dialogs/add_or_remove_dialog.dart';
 import '../providers/activities.dart';
 import '../providers/groups.dart';
 
@@ -67,22 +68,23 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
       ),
     ];
 
-    final group = Provider.of<Groups>(context);
-    _groupContents = group.groups.map((groups) {
+    final groupProvider = Provider.of<Groups>(context);
+    _groupContents = groupProvider.groups.map((group) {
       return DragAndDropList(
         header: GroupHeaderWidget(
-          name: groups.name,
-          expanded: groups.showList,
-          isEmpty: groups.lists.isEmpty,
+          name: group.name,
+          expanded: group.showList,
+          isEmpty: group.lists.isEmpty,
           onHide: () {
-            Provider.of<Groups>(context, listen: false).hideList(groups.key);
+            Provider.of<Groups>(context, listen: false).hideList(group.key);
           },
           onPopMenuItemSelected: (value) {
             switch (value) {
               case GroupPopMenuValue.addOrRemove:
-                final allList = [...activities, ...groups.lists];
+                final allList = [...activities, ...group.lists];
+                List<Activity> selectedList = [];
                 List<DateTime> listOfKeys = [];
-                for (var e in groups.lists) {
+                for (var e in group.lists) {
                   listOfKeys.add(e.key);
                 }
                 return showDialog(
@@ -90,23 +92,8 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
                     builder: (ctx) {
                       return AlertDialog(
                         title: const Text('Select lists to add or remove'),
-                        content: Container(
-                          height: 70 * allList.length.toDouble(),
-                          width: 300,
-                          // margin: const EdgeInsets.symmetric(horizontal: 16),
-                          child: ListView.builder(
-                            itemBuilder: (_, i) {
-                              return ListTileWidget(
-                                activity: allList[i],
-                                showTrailingIcon: true,
-                                isSelected: listOfKeys.contains(
-                                  allList[i].key,
-                                ),
-                              );
-                            },
-                            itemCount: allList.length,
-                          ),
-                        ),
+                        content: AddOrRemoveDialog(
+                            activities: activities, group: group),
                       );
                     });
               case GroupPopMenuValue.renameGroup:
@@ -119,10 +106,10 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
             }
           },
         ),
-        children: groups.showList
-            ? groups.lists.isEmpty
+        children: group.showList
+            ? group.lists.isEmpty
                 ? _emptyListDisplayWidget
-                : _buildGroupWidget(groups)
+                : _buildGroupWidget(group)
             : _emptyDisplayWidget,
       );
     }).toList();
@@ -196,7 +183,7 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
       if (newListIndex < 1 && newListIndex <= _listContents.length) {
         activitiesProvider.addActivityFromScreen(currentActivitiy);
       } else {
-        groupsProvider.addList(
+        groupsProvider.addListUsingIndexs(
           newListIndex - 1,
           newItemIndex,
           currentActivitiy,
