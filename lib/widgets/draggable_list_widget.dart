@@ -1,8 +1,8 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do_clone/enums/group_pop_menu_value.dart';
 
+import '../enums/group_pop_menu_value.dart';
 import '../models/activity.dart';
 import '../models/group.dart';
 import './list_tile_widget.dart';
@@ -81,19 +81,15 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
           onPopMenuItemSelected: (value) {
             switch (value) {
               case GroupPopMenuValue.addOrRemove:
-                final allList = [...activities, ...group.lists];
-                List<Activity> selectedList = [];
-                List<DateTime> listOfKeys = [];
-                for (var e in group.lists) {
-                  listOfKeys.add(e.key);
-                }
                 return showDialog(
                     context: context,
                     builder: (ctx) {
                       return AlertDialog(
                         title: const Text('Select lists to add or remove'),
                         content: AddOrRemoveDialog(
-                            activities: activities, group: group),
+                          activities: activities,
+                          group: group,
+                        ),
                       );
                     });
               case GroupPopMenuValue.renameGroup:

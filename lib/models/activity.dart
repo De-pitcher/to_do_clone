@@ -9,13 +9,15 @@ class Activity {
   final String? image;
   final File? fileImage;
   final List<String> tasks;
-  const Activity({
+  bool isSelected;
+  Activity({
     required this.key,
     required this.title,
     required this.color,
+    required this.tasks,
     this.image,
     this.fileImage,
-    required this.tasks,
+    this.isSelected = false,
   });
 
   Activity copyWith({
@@ -25,6 +27,7 @@ class Activity {
     String? image,
     File? fileImage,
     List<String>? tasks,
+    bool? isSelected,
   }) {
     return Activity(
       key: key ?? this.key,
@@ -33,6 +36,7 @@ class Activity {
       image: image ?? this.image,
       fileImage: fileImage ?? this.fileImage,
       tasks: tasks ?? this.tasks,
+      isSelected: isSelected ?? this.isSelected,
     );
   }
 }
