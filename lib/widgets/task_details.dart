@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do_clone/models/task_details_steps.dart';
+
 import 'package:to_do_clone/widgets/step_tile.dart';
 
+import '../providers/task_steps.dart';
+ 
 class TaskDetails extends StatefulWidget {
   static const String id = '/task_detail';
   final Map<String, dynamic> args;
@@ -21,10 +23,7 @@ class _TaskDetailsState extends State<TaskDetails> {
   Widget taskDetailsOptions(BuildContext context,
       {Function()? onTap, required IconData icon, required String option}) {
     return ListTile(
-      leading: Icon(
-        icon,
-        color: Colors.white38,
-      ),
+      leading: Icon(icon, color: Colors.white38),
       title: Text(
         option,
         style: Theme.of(context)
@@ -72,7 +71,7 @@ class _TaskDetailsState extends State<TaskDetails> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: '');
+    _controller = TextEditingController(text: widget.args["taskValue"]);
     _stepsController = TextEditingController();
   }
 
@@ -84,7 +83,7 @@ class _TaskDetailsState extends State<TaskDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final stepsList = Provider.of<TaskDetailsSteps>(context);
+    final stepsList = Provider.of<TaskSteps>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.args['parent']}'),
@@ -96,10 +95,7 @@ class _TaskDetailsState extends State<TaskDetails> {
               children: [
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(Icons.circle_outlined
-                      // taskState.task.isDone ? Icons.circle : Icons.circle_outlined,
-                      // color: color,
-                      ),
+                  icon: const Icon(Icons.circle_outlined),
                 ),
                 Expanded(
                   child: TextField(
@@ -124,7 +120,9 @@ class _TaskDetailsState extends State<TaskDetails> {
             Flexible(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                children: body(context),
+                children: stepsList.steps.isEmpty
+                    ? body(context)
+                    : [...stepsList.steps, ...body(context)],
               ),
             ),
             actionInfo(context)
@@ -141,10 +139,11 @@ class _TaskDetailsState extends State<TaskDetails> {
         title: TextField(
           controller: _stepsController,
           onSubmitted: (value) {
-            final atn = context.read<TaskDetailsSteps>();
+            final atn = context.read<TaskSteps>();
+            
             atn.addStep(value);
+
             _stepsController.clear();
-  
           },
           decoration: InputDecoration(
             hintText: 'Add step',

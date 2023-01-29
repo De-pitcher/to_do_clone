@@ -6,14 +6,12 @@ import 'package:to_do_clone/widgets/task_details.dart';
 import '../models/task.dart';
 
 class TaskTile extends StatelessWidget {
-
   final Color color;
   final Task task;
   final String? parent;
   const TaskTile({
     super.key,
     this.parent,
-
     required this.color,
     required this.task,
   });
@@ -23,10 +21,14 @@ class TaskTile extends StatelessWidget {
     final taskState = Provider.of<TaskTileState>(context);
     // final demo = Provider.of<TaskList>(context);
     return ListTile(
- 
       onTap: () {
-        Navigator.of(context).pushNamed(TaskDetails.id,
-            arguments: {'color': color, 'parent': parent, });
+        Navigator.of(context).pushNamed(TaskDetails.id, arguments: {
+          'color': color,
+          'parent': parent,
+          'taskValue': task.task,
+          'steps': task.steps,
+          'rands': task
+        });
       },
       selected: true,
       selectedTileColor: Colors.white12,
@@ -44,6 +46,13 @@ class TaskTile extends StatelessWidget {
         style: Theme.of(context)
             .textTheme
             .bodyText2!
+            .copyWith(color: Colors.white),
+      ),
+      subtitle: Text(
+        ' of ',
+        style: Theme.of(context)
+            .textTheme
+            .bodySmall!
             .copyWith(color: Colors.white),
       ),
       trailing: IconButton(

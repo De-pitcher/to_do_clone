@@ -15,25 +15,32 @@ class CircularColorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 35,
-        height: 35,
-        margin: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          color: color == null && listOfColor.isEmpty
-              ? Colors.grey
-              : listOfColor.isNotEmpty
-                  ? listOfColor.last
-                  : color,
-          borderRadius: BorderRadius.circular(20),
-          border: color == null && listOfColor.isEmpty
-              ? null
-              : listOfColor.isNotEmpty
-                  ? Border.all(color: listOfColor.first!, width: 2)
-                  : null,
-        ),
+    return Container(
+      width: 35,
+      height: 35,
+      padding: const EdgeInsets.all(0),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        color: color == null && listOfColor.isEmpty
+            ? Colors.grey
+            : listOfColor.isNotEmpty
+                ? listOfColor.last
+                : color,
+        borderRadius: BorderRadius.circular(20),
+        border: color == null && listOfColor.isEmpty
+            ? null
+            : listOfColor.isNotEmpty
+                ? Border.all(
+                    color: listOfColor.first!,
+                    width: 2,
+                  )
+                : null,
+      ),
+      child: InkWell(
+        onTap: onTap,
+        splashColor: Colors.grey,
+        borderRadius: BorderRadius.circular(10),
+        radius: 50,
         child: isSelected
             ? Center(
                 child: Container(

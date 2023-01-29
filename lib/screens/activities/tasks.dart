@@ -24,11 +24,6 @@ class _TasksState extends State<Tasks> {
     addTaskIcon = true;
     addTaskController = TextEditingController();
 
-    addTaskController.addListener(() {
-      if (addTaskController.value.text.isEmpty) {
-        addTaskIcon = !addTaskIcon;
-      }
-    });
   }
 
   @override
