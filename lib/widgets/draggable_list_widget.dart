@@ -185,8 +185,8 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
           currentActivitiy,
         );
       }
-      var movedItem = _contents[oldListIndex].children.removeAt(oldItemIndex);
-      _contents[newListIndex].children.insert(newItemIndex, movedItem);
+      // var movedItem = _contents[oldListIndex].children.removeAt(oldItemIndex);
+      // _contents[newListIndex].children.insert(newItemIndex, movedItem);
     });
   }
 
@@ -204,8 +204,8 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
           group,
         );
       }
-      var movedList = _contents.removeAt(oldListIndex);
-      _contents.insert(newListIndex, movedList);
+      // var movedList = _contents.removeAt(oldListIndex);
+      // _contents.insert(newListIndex, movedList);
     });
   }
 
