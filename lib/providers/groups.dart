@@ -4,7 +4,7 @@ import '../models/group.dart';
 import '../models/activity.dart';
 
 class Groups extends ChangeNotifier {
-  final List<Group> _groups = [];
+  List<Group> _groups = [];
 
   List<Group> get groups => [..._groups];
 
@@ -35,12 +35,11 @@ class Groups extends ChangeNotifier {
   }
 
   void addListUsingKey(DateTime key, List<Activity> activities) {
-    // final currentActivityIndex = _groups.indexWhere((e) => e.key == key);
-    // currentList.add(activity);
-    // _groups[currentActivityIndex] =
-    //     _groups[currentActivityIndex].copyWith(lists: currentList);
-    final currentList = _groups.firstWhere((e) => e.key == key).lists;
+    List<Activity> currentList = _groups.firstWhere((e) => e.key == key).lists;
     currentList.addAll(activities);
+    currentList =currentList.toSet().toList();
+    _groups = _groups..firstWhere((e) => e.key == key).lists = currentList;
+
     notifyListeners();
   }
 

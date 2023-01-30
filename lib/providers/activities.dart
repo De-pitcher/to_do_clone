@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../models/activity.dart';
 
 class Activities extends ChangeNotifier {
-  final List<Activity> _activities = [];
+  List<Activity> _activities = [];
 
   List<Activity> get activities => [..._activities];
 
@@ -41,6 +41,7 @@ class Activities extends ChangeNotifier {
 
   void addListOfActivities(List<Activity> activities) {
     _activities.addAll(activities);
+    _activities = _activities.toSet().toList();
     notifyListeners();
   }
 

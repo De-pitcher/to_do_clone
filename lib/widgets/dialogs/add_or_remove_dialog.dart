@@ -38,23 +38,14 @@ class _AddOrRemoveDialogState extends State<AddOrRemoveDialog> {
             width: 300,
             child: ListView.builder(
               itemBuilder: (_, i) {
-                return ListTile(
-                  leading: const Icon(Icons.list),
-                  title: Text(allList[i].title),
+                return ListTitleDialogWidget(
+                  title: allList[i].title,
+                  isSelected: allList[i].isSelected,
                   onTap: () {
                     setState(() {
                       allList[i].isSelected = !allList[i].isSelected;
                     });
                   },
-                  trailing: allList[i].isSelected
-                      ? const Icon(
-                          Icons.check,
-                          color: Colors.blue,
-                        )
-                      : const Icon(
-                          Icons.add,
-                          color: Colors.blue,
-                        ),
                 );
               },
               itemCount: allList.length,
@@ -104,12 +95,47 @@ class _AddOrRemoveDialogState extends State<AddOrRemoveDialog> {
                 },
                 child: const Text(
                   'SELECT',
-                  style: TextStyle(),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],
           )
         ],
+      ),
+    );
+  }
+}
+
+class ListTitleDialogWidget extends StatelessWidget {
+  final String title;
+  final bool isSelected;
+  final Function()? onTap;
+  const ListTitleDialogWidget({
+    super.key,
+    required this.title,
+    required this.isSelected,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: const Icon(Icons.list),
+      title: Text(title),
+      onTap: onTap,
+      trailing: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 600),
+        switchInCurve: Curves.easeIn,
+        switchOutCurve: Curves.easeOut,
+        child: isSelected
+            ? const Icon(
+                Icons.check,
+                color: Colors.blue,
+              )
+            : const Icon(
+                Icons.add,
+                color: Colors.blue,
+              ),
       ),
     );
   }

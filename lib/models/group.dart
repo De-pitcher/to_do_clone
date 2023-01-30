@@ -3,7 +3,7 @@ import './activity.dart';
 class Group {
   final String name;
   final DateTime key;
-  final List<Activity> lists;
+  List<Activity> lists;
   bool showList;
   Group({
     required this.key,
