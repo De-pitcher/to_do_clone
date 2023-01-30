@@ -1,7 +1,7 @@
 import './activity.dart';
 
 class Group {
-  final String name;
+  String name;
   final DateTime key;
   List<Activity> lists;
   bool showList;

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import './profile.dart';
 import './list_screen.dart';
@@ -11,6 +12,7 @@ import '../screens/activities/tasks.dart';
 import '../widgets/dialogs/group_dialog.dart';
 import '../widgets/actions_widget.dart';
 import '../widgets/draggable_list_widget.dart';
+import '../providers/groups.dart';
 
 class MainPage extends StatelessWidget {
   static const String id = '/';
@@ -103,7 +105,12 @@ class MainPage extends StatelessWidget {
                           'Create a group',
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        content: const GroupDialog(),
+                        content: GroupDialog(
+                          onCreatePressed: (title) {
+                            Provider.of<Groups>(context, listen: false)
+                                .createGroup(title, []);
+                          },
+                        ),
                       ),
                     );
                   },

@@ -8,12 +8,24 @@ class Groups extends ChangeNotifier {
 
   List<Group> get groups => [..._groups];
 
+  String previousGroupName(DateTime key) {
+    return _groups.firstWhere((e) => e.key == key).name;
+  }
+
   void createGroup(
     String name, [
     List<Activity> lists = const [],
   ]) {
     _groups.add(Group(key: DateTime.now(), name: name, lists: lists));
     notifyListeners();
+  }
+
+  void renameGroup(DateTime key, String name) {
+    if (name.isNotEmpty) {
+      _groups = _groups..firstWhere((e) => e.key == key).name = name;
+      notifyListeners();
+    }
+    return;
   }
 
   void hideList(DateTime key) {
@@ -37,7 +49,7 @@ class Groups extends ChangeNotifier {
   void addListUsingKey(DateTime key, List<Activity> activities) {
     List<Activity> currentList = _groups.firstWhere((e) => e.key == key).lists;
     currentList.addAll(activities);
-    currentList =currentList.toSet().toList();
+    currentList = currentList.toSet().toList();
     _groups = _groups..firstWhere((e) => e.key == key).lists = currentList;
 
     notifyListeners();

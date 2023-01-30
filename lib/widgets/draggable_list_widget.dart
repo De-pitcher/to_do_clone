@@ -1,6 +1,7 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:to_do_clone/widgets/dialogs/group_dialog.dart';
 
 import '../enums/group_pop_menu_value.dart';
 import '../models/activity.dart';
@@ -93,7 +94,22 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
                       );
                     });
               case GroupPopMenuValue.renameGroup:
-                break;
+                return showDialog(
+                    context: context,
+                    builder: (ctx) {
+                      return AlertDialog(
+                        content: GroupDialog(
+                          onCreatePressed: (title) {
+                            Provider.of<Groups>(context, listen: false)
+                                .renameGroup(group.key, title);
+                          },
+                          initialFieldValue:
+                              Provider.of<Groups>(context, listen: false)
+                                  .previousGroupName(group.key),
+                          actionButtonTitle: 'RENAME',
+                        ),
+                      );
+                    });
               case GroupPopMenuValue.ungroup:
                 break;
               case GroupPopMenuValue.deleteGroup:

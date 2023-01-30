@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../providers/groups.dart';
 
 class GroupDialog extends StatefulWidget {
-  const GroupDialog({super.key});
+  final Function(String)? onCreatePressed;
+  final String? actionButtonTitle;
+  final String? initialFieldValue;
+  const GroupDialog({
+    super.key,
+    this.onCreatePressed,
+    this.initialFieldValue,
+    this.actionButtonTitle = 'CREATE GROUP',
+  });
 
   @override
   State<GroupDialog> createState() => _GroupDialogState();
@@ -13,6 +19,19 @@ class GroupDialog extends StatefulWidget {
 class _GroupDialogState extends State<GroupDialog> {
   String _groupTitle = '';
   var _isButtonEnabled = false;
+
+  void onSaveFn(String value) {
+    _groupTitle = value;
+    setState(() {
+      _isButtonEnabled = value.isNotEmpty;
+    });
+  }
+
+  void onPressed(String value) {
+    widget.onCreatePressed!(value);
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -20,15 +39,12 @@ class _GroupDialogState extends State<GroupDialog> {
       height: 120,
       child: Column(
         children: [
-          TextField(
+          TextFormField(
+            initialValue: widget.initialFieldValue ?? '',
             autofocus: true,
             decoration: const InputDecoration(enabled: true),
-            onChanged: (value) {
-              _groupTitle = value;
-              setState(() {
-                _isButtonEnabled = value.isNotEmpty;
-              });
-            },
+            onChanged: onSaveFn,
+            onFieldSubmitted: onPressed,
           ),
           const SizedBox(height: 20),
           Row(
@@ -44,15 +60,10 @@ class _GroupDialogState extends State<GroupDialog> {
                 ),
               ),
               TextButton(
-                onPressed: !_isButtonEnabled
-                    ? null
-                    : () {
-                        Provider.of<Groups>(context, listen: false)
-                            .createGroup(_groupTitle, []);
-                        Navigator.of(context).pop();
-                      },
+                onPressed:
+                    !_isButtonEnabled ? null : () => onPressed(_groupTitle),
                 child: Text(
-                  'CREATE GROUP',
+                  widget.actionButtonTitle!,
                   style: TextStyle(
                     color: !_isButtonEnabled ? Colors.grey : Colors.white,
                   ),
