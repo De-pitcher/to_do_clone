@@ -120,17 +120,20 @@ class _GroupHeaderWidgetState extends State<GroupHeaderWidget>
       trailing: SizedBox(
         width: 100,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             AnimatedBuilder(
               animation: _controller,
               builder: (ctx, ch) => Opacity(
                 opacity: _popMenuIconOpacityAnimation.value,
-                child: PopupMenuButton(
-                  itemBuilder: (ctx) =>
-                      groupPopMenuEntries(ctx, widget.isEmpty),
-                  position: PopupMenuPosition.under,
-                  onSelected: widget.onPopMenuItemSelected,
-                ),
+                child: _popMenuIconOpacityAnimation.value == 0
+                    ? null
+                    : PopupMenuButton(
+                        itemBuilder: (ctx) =>
+                            groupPopMenuEntries(ctx, widget.isEmpty),
+                        position: PopupMenuPosition.under,
+                        onSelected: widget.onPopMenuItemSelected,
+                      ),
               ),
             ),
             AnimatedBuilder(

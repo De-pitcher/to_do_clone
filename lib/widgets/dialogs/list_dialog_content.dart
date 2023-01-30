@@ -24,6 +24,19 @@ class _ListDialogContentState extends State<ListDialogContent> {
   var _isButtonEnabled = false;
   String _listTitle = '';
 
+  void onSubmitted(AppColor colorsProvider) {
+    colorsProvider.updateListTitle(_listTitle);
+    final listProvider = Provider.of<Activities>(context, listen: false);
+    listProvider.addListActivity(
+      title: _listTitle,
+      tasks: [],
+      color: colorsProvider.selectedColor,
+      image: colorsProvider.selectedImage,
+      fileImage: colorsProvider.selectedFileImage,
+    );
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorsProvider = Provider.of<AppColor>(context);
@@ -75,21 +88,8 @@ class _ListDialogContentState extends State<ListDialogContent> {
           ),
         ),
         TextButton(
-          onPressed: !_isButtonEnabled
-              ? null
-              : () {
-                  colorsProvider.updateListTitle(_listTitle);
-                  final listProvider =
-                      Provider.of<Activities>(context, listen: false);
-                  listProvider.addListActivity(
-                    title: _listTitle,
-                    tasks: [],
-                    color: colorsProvider.selectedColor,
-                    image: colorsProvider.selectedImage,
-                    fileImage: colorsProvider.selectedFileImage,
-                  );
-                  Navigator.of(context).pop();
-                },
+          onPressed:
+              !_isButtonEnabled ? null : () => onSubmitted(colorsProvider),
           child: Text(
             'CREATE LIST',
             style: TextStyle(
@@ -244,6 +244,7 @@ class _ListDialogContentState extends State<ListDialogContent> {
             _isButtonEnabled = value.isNotEmpty;
           });
         },
+        onSubmitted: (_) => onSubmitted(colorsProvider),
       ),
     );
   }
