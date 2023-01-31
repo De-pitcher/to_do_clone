@@ -111,6 +111,9 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
                       );
                     });
               case GroupPopMenuValue.ungroup:
+                Provider.of<Activities>(context, listen: false)
+                    .addListOfActivities(group.lists);
+                Provider.of<Groups>(context, listen: false).deleteGroup(group);
                 break;
               case GroupPopMenuValue.deleteGroup:
                 Provider.of<Groups>(context, listen: false).deleteGroup(group);

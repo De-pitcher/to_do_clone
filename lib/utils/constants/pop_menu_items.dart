@@ -134,7 +134,7 @@ List<PopupMenuEntry<GroupPopMenuValue>> groupPopMenuEntries(
               ),
             )
           : PopupMenuItem(
-              value: GroupPopMenuValue.deleteGroup,
+              value: GroupPopMenuValue.ungroup,
               textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
                     color: Colors.white,
                   ),

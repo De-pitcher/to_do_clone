@@ -45,6 +45,11 @@ class Activities extends ChangeNotifier {
   }
 
   void addListOfActivities(List<Activity> activities) {
+    // To make sure that the list is not selected in the list activities in
+    // the group
+    for (var i = 0; i < activities.length; i++) {
+      activities[i].isSelected = false;
+    }
     _activities.addAll(activities);
     _activities = _activities.toSet().toList();
     notifyListeners();

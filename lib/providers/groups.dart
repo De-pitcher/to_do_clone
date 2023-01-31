@@ -41,6 +41,7 @@ class Groups extends ChangeNotifier {
     Activity activity,
   ) {
     final currentList = _groups[groupIndex].lists;
+    activity = activity.copyWith(isSelected: true);
     currentList.insert(listIndex, activity);
     _groups[groupIndex] = _groups[groupIndex].copyWith(lists: currentList);
     notifyListeners();
