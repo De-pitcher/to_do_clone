@@ -34,6 +34,11 @@ class Activities extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addActivityAtIndex(int index, Activity activity) {
+    _activities.insert(index, activity);
+    notifyListeners();
+  }
+
   void removeActivity(int activityIndex) {
     _activities.removeAt(activityIndex);
     notifyListeners();

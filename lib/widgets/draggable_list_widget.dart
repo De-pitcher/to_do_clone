@@ -113,6 +113,7 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
               case GroupPopMenuValue.ungroup:
                 break;
               case GroupPopMenuValue.deleteGroup:
+                Provider.of<Groups>(context, listen: false).deleteGroup(group);
                 break;
               default:
             }
@@ -185,15 +186,16 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
     final listActivities = activitiesProvider.activities;
     final groups = groupsProvider.groups;
     setState(() {
-      if (oldListIndex == 0 && oldItemIndex <= _listContents.length) {
+      if (oldListIndex == 0 && _listContents.isNotEmpty) {
         currentActivitiy = listActivities[oldItemIndex];
         activitiesProvider.removeActivity(oldItemIndex);
       } else {
         currentActivitiy = groups[oldListIndex - 1].lists[oldItemIndex];
         groupsProvider.removeList(oldListIndex - 1, oldItemIndex);
       }
-      if (newListIndex < 1 && newListIndex <= _listContents.length) {
-        activitiesProvider.addActivityFromScreen(currentActivitiy);
+
+      if (oldListIndex == 0 && oldListIndex == newListIndex) {
+        activitiesProvider.addActivityAtIndex(newItemIndex, currentActivitiy);
       } else {
         groupsProvider.addListUsingIndexs(
           newListIndex - 1,

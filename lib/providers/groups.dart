@@ -41,7 +41,7 @@ class Groups extends ChangeNotifier {
     Activity activity,
   ) {
     final currentList = _groups[groupIndex].lists;
-    currentList.add(activity);
+    currentList.insert(listIndex, activity);
     _groups[groupIndex] = _groups[groupIndex].copyWith(lists: currentList);
     notifyListeners();
   }
@@ -83,6 +83,11 @@ class Groups extends ChangeNotifier {
   ) {
     _groups.removeAt(oldGroupIndex);
     _groups.insert(newGroupIndex, selectedGroup);
+    notifyListeners();
+  }
+
+  void deleteGroup(Group group) {
+    _groups.remove(group);
     notifyListeners();
   }
 }
