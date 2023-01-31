@@ -1,13 +1,22 @@
 class Task {
-  String task;
+  final DateTime id;
+  final String task;
+  final List<String> step;
   bool isDone;
   bool isStarred;
 
-  List<String> steps = [];
-
+  
   Task({
+    required this.id,
+    required this.step,
     this.task = '',
     this.isDone = false,
     this.isStarred = false,
   });
+
+  
 }
+
+
+
+

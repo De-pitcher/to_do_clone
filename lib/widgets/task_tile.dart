@@ -26,8 +26,7 @@ class TaskTile extends StatelessWidget {
           'color': color,
           'parent': parent,
           'taskValue': task.task,
-          'steps': task.steps,
-          'rands': task
+          'steps': task.step,
         });
       },
       selected: true,

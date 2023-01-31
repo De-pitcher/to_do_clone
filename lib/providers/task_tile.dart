@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:to_do_clone/models/task.dart';
 
 class TaskTileState extends ChangeNotifier {
-  final Task _task = Task();
+  final Task _task = Task(id: DateTime.now(), step: []);
 
   Task get task => _task;
 
