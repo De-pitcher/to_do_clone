@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-
-import 'package:to_do_clone/providers/task.dart';
-import 'package:to_do_clone/providers/task_steps.dart';
-import 'package:to_do_clone/providers/task_tile.dart';
-import 'utils/res/theme.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/landing.dart';
-import 'providers/app_color.dart';
-import 'utils/constants/routes.dart';
+import './screens/landing.dart';
+import './providers/app_color.dart';
+import './providers/activities.dart';
+import './providers/groups.dart';
+import './utils/res/theme.dart';
+import './utils/constants/routes.dart';
 
 void main() {
   runApp(const ToDoClone());
@@ -24,20 +22,20 @@ class ToDoClone extends StatelessWidget {
         ChangeNotifierProvider<AppColor>(
           create: (_) => AppColor(),
         ),
-        ChangeNotifierProvider<TaskList>(
-          create: (_) => TaskList(),
+        ChangeNotifierProvider<Activities>(
+          create: (_) => Activities(),
         ),
-        ChangeNotifierProvider<TaskTileState>(
-          create: (_) => TaskTileState(),
+        ChangeNotifierProvider<Groups>(
+          create: (_) => Groups(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => TaskSteps(),
-        )
+        // ChangeNotifierProvider<Group>(
+        //   create: (_) => Group(),
+        // ),
       ],
       child: MaterialApp(
         title: 'ToDo Clone',
         theme: ThemeData.dark(),
-        darkTheme: darkTheme,
+        darkTheme: AppTheme.darkTheme,
         debugShowCheckedModeBanner: false,
         initialRoute: MainPage.id,
         onGenerateRoute: routeGen,

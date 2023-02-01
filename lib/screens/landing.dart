@@ -1,30 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'activities/assigned_to_me.dart';
-import 'activities/important.dart';
-import 'activities/my_day.dart';
+import 'package:provider/provider.dart';
 
-import 'profile.dart';
-import 'list_screen.dart';
+import './profile.dart';
+import './list_screen.dart';
+import '../screens/activities/assigned_to_me.dart';
+import '../screens/activities/important.dart';
+import '../screens/activities/my_day.dart';
+import '../screens/activities/planned.dart';
+import '../screens/activities/tasks.dart';
+import '../widgets/dialogs/group_dialog.dart';
 import '../widgets/actions_widget.dart';
+import '../widgets/draggable_list_widget.dart';
+import '../providers/groups.dart';
 
-import 'activities/planned.dart';
-import 'activities/tasks.dart';
-
-class MainPage extends StatefulWidget {
+class MainPage extends StatelessWidget {
   static const String id = '/';
   const MainPage({super.key});
 
-  @override
-  State<MainPage> createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ListTile(
               onTap: () => Navigator.of(context).pushNamed(ProfileAccount.id),
@@ -43,7 +42,7 @@ class _MainPageState extends State<MainPage> {
               ),
             ),
             Flexible(
-              child: ListView(
+              child: Column(
                 children: [
                   ActionWidget(
                     icon: CupertinoIcons.brightness,
@@ -75,6 +74,13 @@ class _MainPageState extends State<MainPage> {
                     action: 'Tasks',
                     routeName: Tasks.id,
                   ),
+                  const Divider(
+                    color: Colors.grey,
+                    thickness: 1,
+                  ),
+                  const Expanded(
+                    child: DraggableListWidget(),
+                  ),
                 ],
               ),
             ),
@@ -83,20 +89,39 @@ class _MainPageState extends State<MainPage> {
                 Expanded(
                   child: ListTile(
                     onTap: () => Navigator.of(context).pushNamed(ListScreen.id),
-                    leading: Icon(Icons.add, color: Colors.grey[700]),
-                    title: Text(
+                    leading: const Icon(Icons.add, color: Colors.white),
+                    title: const Text(
                       'New list',
-                      style: TextStyle(color: Colors.grey[700]),
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.note_add_outlined, color: Colors.grey[700]),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: Text(
+                          'Create a group',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        content: GroupDialog(
+                          onCreatePressed: (title) {
+                            Provider.of<Groups>(context, listen: false)
+                                .createGroup(title, []);
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.note_add_outlined,
+                    color: Colors.white,
+                  ),
                   style: IconButton.styleFrom(),
                 ),
               ],
-            ),
+            )
           ],
         ),
       ),

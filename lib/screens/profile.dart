@@ -51,13 +51,13 @@ class _ProfileAccountState extends State<ProfileAccount> {
       onTap: () {},
       leading: Icon(icon,
           color: ThemeMode.system == ThemeMode.light
-              ? lightTheme.iconTheme.color
-              : darkTheme.iconTheme.color),
+              ? AppTheme.lightTheme.iconTheme.color
+              : AppTheme.darkTheme.iconTheme.color),
       title: Text(
         action,
         style: ThemeMode.system == ThemeMode.light
-            ? lightTheme.textTheme.bodySmall
-            : darkTheme.textTheme.bodySmall,
+            ? AppTheme.lightTheme.textTheme.bodySmall
+            : AppTheme.darkTheme.textTheme.bodySmall,
       ),
     );
   }

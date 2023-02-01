@@ -21,6 +21,7 @@ class AppColor extends ChangeNotifier {
   Color selectedColor = Colors.blue;
   String? selectedImage;
   File? selectedFileImage;
+  String listTitle = 'Untitle list';
 
   void changeNewListThemeValue(NewListThemeValue newThemeValue) {
     newListThemeValue = newThemeValue;
@@ -42,7 +43,7 @@ class AppColor extends ChangeNotifier {
         listOfSelectedColors =
             tempColor[i].listOfColors.isEmpty ? [] : tempColor[i].listOfColors;
 
-        selectedImage = '';
+        selectedImage = null;
       } else {
         tempColor[i].isSelected = false;
       }
@@ -79,6 +80,18 @@ class AppColor extends ChangeNotifier {
         selectedFileImage = _fileImages[i];
       }
     }
+    notifyListeners();
+  }
+
+  void updateListTitle(String updatedListTitle) {
+    if (updatedListTitle.isNotEmpty || listTitle.startsWith('Untitle')) {
+      listTitle = updatedListTitle;
+    }
+    notifyListeners();
+  }
+
+  void resetListTitle() {
+    listTitle = 'Untitle list';
     notifyListeners();
   }
 }

@@ -39,6 +39,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider: ^6.0.5
   image_picker: ^0.8.6
+  drag_and_drop_lists: ^0.3.3
+  reorderables: ^0.5.1
 
 dev_dependencies:
   flutter_test:
