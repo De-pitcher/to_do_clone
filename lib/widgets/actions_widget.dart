@@ -25,8 +25,8 @@ class _ActionWidgetState extends State<ActionWidget> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () => Navigator.of(context)
-          .pushNamed(widget.routeName!, arguments: widget.iconColor),
+      onTap: () => Navigator.of(context).pushNamed(widget.routeName!,
+          arguments: {'color': widget.iconColor, 'parent': widget.action}),
       leading: Icon(widget.icon, color: widget.iconColor),
       title: Text(
         widget.action,
