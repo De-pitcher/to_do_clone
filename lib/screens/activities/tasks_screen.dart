@@ -57,20 +57,53 @@ class _TasksTasksScreenState extends State<TasksScreen> {
         ],
       ),
       body: SafeArea(
-        child: ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-          itemBuilder: (context, index) {
-            return TaskTile(
-              // parent: widget.args['parent'],
-              // color: widget.args['color'],
-              task: tasksProvider.tasks[index],
-            );
-          },
-          separatorBuilder: (context, index) => Container(
-            height: 4,
-          ),
-          itemCount: tasksProvider.tasks.length,
-        ),
+        child: tasksProvider.tasks.isEmpty
+            ? Container(
+                // decoration: const BoxDecoration(
+                //   image: DecorationImage(
+                //     image: AssetImage('assets/images/empty_image.png'),
+                //     fit: BoxFit.fitHeight,
+                //   ),
+                // ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/empty_image.png',
+                      ),
+                      SizedBox(
+                        width: 210,
+                        child: Text(
+                          'Tasks show up here if they aren\'t part of any list you\'ve created.',
+                          textAlign: TextAlign.center,
+                          style:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    color: Colors.deepPurple,
+                                  ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            : ListView.separated(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 4,
+                  horizontal: 4,
+                ),
+                itemBuilder: (context, index) {
+                  return TaskTile(
+                    // parent: widget.args['parent'],
+                    // color: widget.args['color'],
+                    task: tasksProvider.tasks[index],
+                  );
+                },
+                separatorBuilder: (context, index) => Container(
+                  height: 4,
+                ),
+                itemCount: tasksProvider.tasks.length,
+              ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => addTask(context),
