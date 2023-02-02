@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:to_do_clone/providers/task.dart';
+import 'package:to_do_clone/providers/tasks.dart';
 import 'package:to_do_clone/providers/task_steps.dart';
 import 'package:to_do_clone/providers/task_tile.dart';
 import 'utils/res/theme.dart';
@@ -33,8 +33,8 @@ class ToDoClone extends StatelessWidget {
         ChangeNotifierProvider<Groups>(
           create: (_) => Groups(),
         ),
-        ChangeNotifierProvider<TaskList>(
-          create: (_) => TaskList(),
+        ChangeNotifierProvider<Tasks>(
+          create: (_) => Tasks(),
         ),
         ChangeNotifierProvider<TaskTileState>(
           create: (_) => TaskTileState(),

@@ -5,7 +5,7 @@ import '../../screens/activities/assigned_to_me.dart';
 import '../../screens/activities/important.dart';
 import '../../screens/activities/my_day.dart';
 import '../../screens/activities/planned.dart';
-import '../../screens/activities/tasks.dart';
+import '../../screens/activities/tasks_screen.dart';
 import '../../screens/landing.dart';
 import '../../screens/list_screen.dart';
 import '../../screens/profile.dart';
@@ -26,10 +26,10 @@ MaterialPageRoute routeGen(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const MyDay());
     case Planned.id:
       return MaterialPageRoute(builder: (_) => const Planned());
-    case Tasks.id:
+    case TasksScreen.id:
       return MaterialPageRoute(
           builder: (_) =>
-              Tasks(args: settings.arguments as Map<String, dynamic>));
+              TasksScreen(args: settings.arguments as Map<String, dynamic>));
     case TaskDetails.id:
       return MaterialPageRoute(
           builder: (context) =>
