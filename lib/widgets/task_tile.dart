@@ -28,12 +28,13 @@ class TaskTile extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pushNamed(
                 TaskDetails.id,
-                // arguments: {
-                //   'color': color,
-                //   'parent': parent,
-                //   'taskValue': task.task,
-                //   'steps': task.step,
-                // },
+                arguments: {
+                  'color': Colors.deepPurple,
+                  'parent': 'Tasks',
+                  'taskValue': task.task,
+                  'steps': task.step,
+                  'id': task.id,
+                },
               );
             },
             tileColor: Colors.white24,

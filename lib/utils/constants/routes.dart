@@ -32,8 +32,8 @@ MaterialPageRoute routeGen(RouteSettings settings) {
               TasksScreen(args: settings.arguments as Map<String, dynamic>));
     case TaskDetails.id:
       return MaterialPageRoute(
-          builder: (context) =>
-              TaskDetails(args: settings.arguments as Map<String, dynamic>));
+        builder: (_) =>  TaskDetails(args: settings.arguments as Map<String, dynamic>),
+      );
     default:
       return MaterialPageRoute(
         builder: (context) {
