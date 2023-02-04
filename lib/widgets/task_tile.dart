@@ -6,78 +6,75 @@ import '../models/task.dart';
 import '../providers/tasks.dart';
 
 class TaskTile extends StatelessWidget {
-  // final Color color;
   final Task task;
-  // final String? parent;
+  final Animation<double> animation;
   const TaskTile({
     super.key,
-    // this.parent,
-    // required this.color,
     required this.task,
+    required this.animation,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () {
-        Navigator.of(context).pushNamed(
-          TaskDetails.id,
-          // arguments: {
-          //   'color': color,
-          //   'parent': parent,
-          //   'taskValue': task.task,
-          //   'steps': task.step,
-          // },
-        );
-      },
-      // selected: true,
-      // selectedTileColor: Colors.white12,
-      tileColor: Colors.white12,
-      // leading: IconButton(
-      //   onPressed: () {
-      //     context.read<Tasks>().toggleIsDone(task.id);
-      //   },
-      //   icon: Icon(
-      //     task.isDone ? Icons.circle : Icons.circle_outlined,
-      //     color: Colors.grey,
-      //   ),
-      // ),
-      leading: SizedBox(
-        width: 20,
-        child: Checkbox(
-          value: task.isDone,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+    return Column(
+      children: [
+        SizeTransition(
+          axisAlignment: -1,
+          sizeFactor: CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeIn,
           ),
-          splashRadius: 50,
-          onChanged: (_) {
-            context.read<Tasks>().toggleIsDone(task.id);
-          },
+          child: ListTile(
+            onTap: () {
+              Navigator.of(context).pushNamed(
+                TaskDetails.id,
+                // arguments: {
+                //   'color': color,
+                //   'parent': parent,
+                //   'taskValue': task.task,
+                //   'steps': task.step,
+                // },
+              );
+            },
+            tileColor: Colors.white24,
+            leading: Transform.scale(
+              scale: 1.2,
+              child: Checkbox(
+                value: task.isDone,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                splashRadius: 35,
+                activeColor: Colors.deepPurple,
+                checkColor: Colors.black,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                onChanged: (_) {
+                  context.read<Tasks>().toggleIsDone(task.id);
+                },
+              ),
+            ),
+            title: Text(
+              task.task,
+              style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                    color: Colors.white,
+                    decoration: task.isDone
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+                  ),
+            ),
+            trailing: IconButton(
+              onPressed: () {
+                context.read<Tasks>().toggleIsStarred(task.id);
+              },
+              icon: Icon(
+                task.isStarred ? Icons.star : Icons.star_border,
+                color: task.isStarred ? Colors.deepPurple : Colors.grey,
+              ),
+            ),
+          ),
         ),
-      ),
-      title: Text(
-        task.task,
-        style: Theme.of(context)
-            .textTheme
-            .bodyText2!
-            .copyWith(color: Colors.white),
-      ),
-      // subtitle: Text(
-      //   ' of ',
-      //   style: Theme.of(context)
-      //       .textTheme
-      //       .bodySmall!
-      //       .copyWith(color: Colors.white),
-      // ),
-      trailing: IconButton(
-        onPressed: () {
-          context.read<Tasks>().toggleIsStarred(task.id);
-        },
-        icon: Icon(
-          task.isStarred ? Icons.star : Icons.star_border,
-          color: task.isStarred ? Colors.deepPurple : Colors.grey,
-        ),
-      ),
+        const SizedBox(height: 3),
+      ],
     );
   }
 }

@@ -8,13 +8,8 @@ class Tasks extends ChangeNotifier {
 
   List<Task> get tasks => _tasks;
 
-  void addToList(String task) {
-    Task newTask = Task(
-      id: DateTime.now(),
-      task: task,
-      step: [],
-    );
-    _tasks.add(newTask);
+  void addToList(Task task) {
+    _tasks.add(task);
     notifyListeners();
   }
 
