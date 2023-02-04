@@ -24,52 +24,58 @@ class TaskTile extends StatelessWidget {
             parent: animation,
             curve: Curves.easeIn,
           ),
-          child: ListTile(
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                TaskDetails.id,
-                arguments: {
-                  'color': Colors.deepPurple,
-                  'parent': 'Tasks',
-                  'taskValue': task.task,
-                  'steps': task.step,
-                  'id': task.id,
-                },
-              );
-            },
-            tileColor: Colors.white24,
-            leading: Transform.scale(
-              scale: 1.2,
-              child: Checkbox(
-                value: task.isDone,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                splashRadius: 35,
-                activeColor: Colors.deepPurple,
-                checkColor: Colors.black,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                onChanged: (_) {
-                  context.read<Tasks>().toggleIsDone(task.id);
-                },
-              ),
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
             ),
-            title: Text(
-              task.task,
-              style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                    color: Colors.white,
-                    decoration: task.isDone
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none,
-                  ),
-            ),
-            trailing: IconButton(
-              onPressed: () {
-                context.read<Tasks>().toggleIsStarred(task.id);
+            elevation: 0,
+            child: ListTile(
+              onTap: () {
+                Navigator.of(context).pushNamed(
+                  TaskDetails.id,
+                  arguments: {
+                    'color': Colors.deepPurple,
+                    'parent': 'Tasks',
+                    'taskValue': task.task,
+                    'steps': task.step,
+                    'id': task.id,
+                  },
+                );
               },
-              icon: Icon(
-                task.isStarred ? Icons.star : Icons.star_border,
-                color: task.isStarred ? Colors.deepPurple : Colors.grey,
+              tileColor: Colors.white24,
+              leading: Transform.scale(
+                scale: 1.2,
+                child: Checkbox(
+                  value: task.isDone,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  splashRadius: 35,
+                  activeColor: Colors.deepPurple,
+                  checkColor: Colors.black,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  onChanged: (_) {
+                    context.read<Tasks>().toggleIsDone(task.id);
+                  },
+                ),
+              ),
+              title: Text(
+                task.task,
+                style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                      color: Colors.white,
+                      decoration: task.isDone
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
+                    ),
+              ),
+              trailing: IconButton(
+                onPressed: () {
+                  context.read<Tasks>().toggleIsStarred(task.id);
+                },
+                icon: Icon(
+                  task.isStarred ? Icons.star : Icons.star_border,
+                  color: task.isStarred ? Colors.deepPurple : Colors.grey,
+                ),
               ),
             ),
           ),

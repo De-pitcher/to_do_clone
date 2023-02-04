@@ -13,6 +13,16 @@ class Tasks extends ChangeNotifier {
     notifyListeners();
   }
 
+  void renameTask(DateTime id, String newTaskName) {
+    final currentIndex = _tasks.indexWhere((e) => e.id == id);
+    if (newTaskName.isNotEmpty) {
+      _tasks[currentIndex] = _tasks[currentIndex].copyWith(
+        task: newTaskName,
+      );
+    }
+    notifyListeners();
+  }
+
   void toggleIsDone(DateTime id) {
     final currentIndex = _tasks.indexWhere((e) => e.id == id);
     final tempIsDoneVal = _tasks[currentIndex].isDone;

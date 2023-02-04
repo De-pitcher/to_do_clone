@@ -2,19 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:to_do_clone/widgets/step_tile.dart';
-
+import '../widgets/step_tile.dart';
 import '../providers/task_steps.dart';
 import '../providers/tasks.dart';
 
 class TaskDetails extends StatefulWidget {
   static const String id = '/task_detail';
-  final Map<String, dynamic> args;
 
-  const TaskDetails({
-    super.key,
-    required this.args,
-  });
+  final Map<String, dynamic> args;
+  const TaskDetails({super.key, required this.args});
 
   @override
   State<TaskDetails> createState() => _TaskDetailsState();
@@ -108,6 +104,11 @@ class _TaskDetailsState extends State<TaskDetails> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
+                    style: TextStyle(
+                      decoration: cTask.isDone
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
+                    ),
                     decoration: InputDecoration(
                       hintText: 'Rename Task',
                       hintStyle: Theme.of(context)
@@ -118,6 +119,9 @@ class _TaskDetailsState extends State<TaskDetails> {
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    onSubmitted: (value) {
+                      context.read<Tasks>().renameTask(cTask.id, value);
+                    },
                   ),
                 ),
                 IconButton(
@@ -147,6 +151,7 @@ class _TaskDetailsState extends State<TaskDetails> {
   }
 
   List<Widget> body(BuildContext context) {
+    //! TODO: focus to the step textfield when the add button is tapped
     return [
       ListTile(
         leading: const Icon(
