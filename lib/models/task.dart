@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class Task {
   final DateTime id;
   final String task;
@@ -5,7 +6,6 @@ class Task {
   bool isDone;
   bool isStarred;
 
-  
   Task({
     required this.id,
     required this.step,
@@ -14,7 +14,21 @@ class Task {
     this.isStarred = false,
   });
 
-  
+  Task copyWith({
+    DateTime? id,
+    String? task,
+    List<String>? step,
+    bool? isDone,
+    bool? isStarred,
+  }) {
+    return Task(
+      id: id ?? this.id,
+      task: task ?? this.task,
+      step: step ?? this.step,
+      isDone: isDone ?? this.isDone,
+      isStarred: isStarred ?? this.isStarred,
+    );
+  }
 }
 
 

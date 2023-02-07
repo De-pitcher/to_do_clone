@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_clone/models/task.dart';
-import 'package:to_do_clone/providers/task.dart';
+import 'package:to_do_clone/providers/task_list.dart';
 import 'package:to_do_clone/widgets/task_tile.dart';
 
 class Tasks extends StatefulWidget {

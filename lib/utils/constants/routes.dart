@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_clone/landing%20and%20auth/login.dart';
+import 'package:to_do_clone/landing%20and%20auth/sign_up.dart';
+import 'package:to_do_clone/landing%20and%20auth/splash_screen.dart';
 import 'package:to_do_clone/widgets/task_details.dart';
 
 import '../../screens/activities/assigned_to_me.dart';
@@ -12,6 +15,12 @@ import '../../screens/profile.dart';
 
 MaterialPageRoute routeGen(RouteSettings settings) {
   switch (settings.name) {
+    case SplashScreen.id:
+      return MaterialPageRoute(builder: (context) => const SplashScreen());
+    case Login.id:
+      return MaterialPageRoute(builder: (context) => const Login());
+    case SignUp.id:
+      return MaterialPageRoute(builder: (context) => const SignUp());
     case MainPage.id:
       return MaterialPageRoute(builder: (_) => const MainPage());
     case ProfileAccount.id:
