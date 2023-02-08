@@ -18,35 +18,44 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksTasksScreenState extends State<TasksScreen> {
-  late final GlobalKey<AnimatedListState> _listKey;
-  late ListModel<Task> _list;
+  late final GlobalKey<AnimatedListState> _listKey =
+      GlobalKey<AnimatedListState>();
+  AnimatedListState? get _animatedList => _listKey.currentState;
+
+  // late ListModel<Task> _list;
 
   @override
   void initState() {
     super.initState();
-    _listKey = GlobalKey<AnimatedListState>();
+    // _listKey = GlobalKey<AnimatedListState>();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final tasksProvider = Provider.of<Tasks>(context);
-    _list = ListModel(
-      listKey: _listKey,
-      initialItems: tasksProvider.tasks,
-      removedItemBuilder: _buildRemovedItem,
-    );
+    // final tasksProvider = Provider.of<TaskModel>(context);
+    // _list = ListModel(
+    //   listKey: _listKey,
+    //   initialItems: tasksProvider.tasks,
+    //   removedItemBuilder: _buildRemovedItem,
+    // );
   }
 
   Widget _buildTaskTile(
     BuildContext context,
     int index,
     Animation<double> animation,
-  ) =>
-      TaskTile(
-        task: _list[index],
-        animation: animation,
-      );
+  ) {
+    final tskMdlProvider = Provider.of<Tasks>(context, listen: false);
+
+    return TaskTile(
+      task: tskMdlProvider.tasks[index],
+      cIndex: index,
+      animation: animation,
+      onRemoveTaskFn: _removeAt,
+      onAddTaskFn: _insert,
+    );
+  }
 
   Widget _buildRemovedItem(
     Task task,
@@ -55,18 +64,21 @@ class _TasksTasksScreenState extends State<TasksScreen> {
   ) {
     return TaskTile(
       task: task,
+      cIndex: context.read<Tasks>().indexOf(task),
       animation: animation,
+      onRemoveTaskFn: _removeAt,
+      onAddTaskFn: _insert,
     );
   }
 
   void _insert(Task item) {
-    final int index = _list.length;
-    _list.insert(index, item);
+    Provider.of<Tasks>(context, listen: false).insert(item, _animatedList!);
     setState(() {});
   }
 
   void _removeAt(int index) {
-    _list.removeAt(index);
+    Provider.of<Tasks>(context, listen: false)
+        .removeAt(index, _buildRemovedItem);
   }
 
   @override
@@ -119,7 +131,8 @@ class _TasksTasksScreenState extends State<TasksScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: AnimatedList(
                   key: _listKey,
-                  initialItemCount: _list.length,
+                  initialItemCount:
+                      Provider.of<Tasks>(context, listen: false).length,
                   itemBuilder: _buildTaskTile,
                 ),
               ),

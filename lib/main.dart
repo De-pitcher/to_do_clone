@@ -10,7 +10,6 @@ import './screens/landing.dart';
 import './providers/app_color.dart';
 import './providers/activities.dart';
 import './providers/groups.dart';
-import './utils/res/theme.dart';
 import './utils/constants/routes.dart';
 
 void main() {
@@ -41,7 +40,7 @@ class ToDoClone extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => TaskSteps(),
-        )
+        ),
       ],
       child: MaterialApp(
         title: 'ToDo Clone',

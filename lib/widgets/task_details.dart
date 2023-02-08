@@ -19,6 +19,7 @@ class TaskDetails extends StatefulWidget {
 class _TaskDetailsState extends State<TaskDetails> {
   late TextEditingController _controller;
   late TextEditingController _stepsController;
+  FocusNode _addStepFocus = FocusNode();
 
   Widget actionInfo(BuildContext context) {
     return SizedBox(
@@ -65,6 +66,7 @@ class _TaskDetailsState extends State<TaskDetails> {
   @override
   void dispose() {
     _controller.dispose();
+    _addStepFocus.dispose();
     super.dispose();
   }
 
@@ -151,15 +153,32 @@ class _TaskDetailsState extends State<TaskDetails> {
   }
 
   List<Widget> body(BuildContext context) {
-    //! TODO: focus to the step textfield when the add button is tapped
     return [
       ListTile(
-        leading: const Icon(
-          Icons.add,
-          color: Colors.deepPurple,
-        ),
+        //* _addStep.hasFocus displays a rounded rectangle if the addStep 
+        // textfield has focus otherwise it displays the add icon 
+        leading: _addStepFocus.hasFocus
+            ? Container(
+                height: 20,
+                width: 20,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              )
+            : const Icon(
+                Icons.add,
+                color: Colors.deepPurple,
+              ),
+        onTap: () {
+          FocusScope.of(context).requestFocus(_addStepFocus);
+        },
         title: TextField(
           controller: _stepsController,
+          focusNode: _addStepFocus,
           onSubmitted: (value) {
             final atn = context.read<TaskSteps>();
 

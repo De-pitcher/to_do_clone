@@ -9,9 +9,10 @@ class TaskSteps extends ChangeNotifier {
   List<Widget> get steps => _steps;
 
   void addStep(String newStep) {
-    
-    var stepWidget = StepTile(step: newStep);
-    _steps.add(stepWidget);
+    if (newStep.isNotEmpty) {
+      var stepWidget = StepTile(step: newStep);
+      _steps.add(stepWidget);
+    }
     notifyListeners();
   }
 
