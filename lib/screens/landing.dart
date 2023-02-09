@@ -15,7 +15,7 @@ import '../widgets/draggable_list_widget.dart';
 import '../providers/groups.dart';
 
 class MainPage extends StatelessWidget {
-  static const String id = '/';
+  static const String id = '/main_page';
   const MainPage({super.key});
 
   @override

@@ -5,8 +5,9 @@ import 'package:to_do_clone/providers/task_steps.dart';
 import 'package:to_do_clone/providers/task_tile.dart';
 import 'utils/res/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:to_do_clone/landing%20and%20auth/splash_screen.dart';
+import 'package:to_do_clone/providers/task_list.dart';
 
-import './screens/landing.dart';
 import './providers/app_color.dart';
 import './providers/activities.dart';
 import './providers/groups.dart';
@@ -41,13 +42,16 @@ class ToDoClone extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => TaskSteps(),
         ),
+        ChangeNotifierProvider<TaskList>(
+          create: (_) => TaskList(),
+        ),
       ],
       child: MaterialApp(
         title: 'ToDo Clone',
         theme: ThemeData.dark(),
         darkTheme: AppTheme.darkTheme,
         debugShowCheckedModeBanner: false,
-        initialRoute: MainPage.id,
+        initialRoute: SplashScreen.id,
         onGenerateRoute: routeGen,
       ),
     );

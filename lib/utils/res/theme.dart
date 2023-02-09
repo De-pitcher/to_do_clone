@@ -6,7 +6,7 @@ class AppTheme {
     iconTheme: const IconThemeData(color: Colors.black),
     textTheme: const TextTheme(
         bodySmall: TextStyle(color: Colors.black),
-        titleLarge: TextStyle(color: Colors.black)),
+        titleLarge: TextStyle(color: Colors.black),),
   );
 
   static ThemeData darkTheme = ThemeData(
