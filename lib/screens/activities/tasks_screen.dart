@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/task.dart';
-import '../../models/list_model.dart';
 import '../../providers/tasks.dart';
 import '../../widgets/task_tile.dart';
 import '../../widgets/bottom_sheet/add_task_bottom_sheet.dart';
@@ -18,8 +17,7 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksTasksScreenState extends State<TasksScreen> {
-  late final GlobalKey<AnimatedListState> _listKey =
-      GlobalKey<AnimatedListState>();
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   AnimatedListState? get _animatedList => _listKey.currentState;
 
   // late ListModel<Task> _list;
@@ -72,7 +70,7 @@ class _TasksTasksScreenState extends State<TasksScreen> {
   }
 
   void _insert(Task item) {
-    Provider.of<Tasks>(context, listen: false).insert(item, _animatedList!);
+    Provider.of<Tasks>(context, listen: false).insert(item, _animatedList);
     setState(() {});
   }
 
@@ -131,8 +129,7 @@ class _TasksTasksScreenState extends State<TasksScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: AnimatedList(
                   key: _listKey,
-                  initialItemCount:
-                      Provider.of<Tasks>(context, listen: false).length,
+                  initialItemCount: tasksProvider.length,
                   itemBuilder: _buildTaskTile,
                 ),
               ),

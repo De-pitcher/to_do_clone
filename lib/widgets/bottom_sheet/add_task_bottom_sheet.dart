@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../buttons/special_button.dart';
 import '../../models/task.dart';
-import '../../providers/tasks.dart';
 
 class AddTaskBottomSheet extends StatefulWidget {
   final Function(Task)? addTaskFn;
@@ -49,14 +47,15 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                   size: 32, color: Colors.white12),
               suffixIcon: GestureDetector(
                 onTap: () {
-                  Task newTask = Task(
-                    id: DateTime.now(),
-                    task: _controller.text,
-                    step: [],
-                  );
-                  context.read<Tasks>().addToList(newTask);
-                  widget.addTaskFn!(newTask);
-                  _controller.clear();
+                  if (_controller.text.isNotEmpty) {
+                    Task newTask = Task(
+                      id: DateTime.now(),
+                      task: _controller.text,
+                      step: [],
+                    );
+                    widget.addTaskFn!(newTask);
+                    _controller.clear();
+                  }
                 },
                 child: Icon(
                   Icons.file_upload_outlined,
