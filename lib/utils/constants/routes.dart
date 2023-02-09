@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_clone/landing%20and%20auth/login.dart';
+import 'package:to_do_clone/landing%20and%20auth/sign_up.dart';
+import 'package:to_do_clone/landing%20and%20auth/splash_screen.dart';
+import 'package:to_do_clone/widgets/task_details.dart';
 
 import '../../screens/activities/assigned_to_me.dart';
 import '../../screens/activities/important.dart';
 import '../../screens/activities/my_day.dart';
 import '../../screens/activities/planned.dart';
-import '../../screens/activities/tasks.dart';
+import '../../screens/activities/tasks_screen.dart';
 import '../../screens/landing.dart';
 import '../../screens/list_screen.dart';
 import '../../screens/profile.dart';
 
 MaterialPageRoute routeGen(RouteSettings settings) {
   switch (settings.name) {
+    case SplashScreen.id:
+      return MaterialPageRoute(builder: (context) => const SplashScreen());
+    case Login.id:
+      return MaterialPageRoute(builder: (context) => const Login());
+    case SignUp.id:
+      return MaterialPageRoute(builder: (context) => const SignUp());
     case MainPage.id:
       return MaterialPageRoute(builder: (_) => const MainPage());
     case ProfileAccount.id:
@@ -25,9 +35,14 @@ MaterialPageRoute routeGen(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const MyDay());
     case Planned.id:
       return MaterialPageRoute(builder: (_) => const Planned());
-    case Tasks.id:
+    case TasksScreen.id:
       return MaterialPageRoute(
-          builder: (_) => Tasks(color: settings.arguments as Color?));
+          builder: (_) =>
+              TasksScreen(args: settings.arguments as Map<String, dynamic>));
+    case TaskDetails.id:
+      return MaterialPageRoute(
+        builder: (_) =>  TaskDetails(args: settings.arguments as Map<String, dynamic>),
+      );
     default:
       return MaterialPageRoute(
         builder: (context) {

@@ -11,6 +11,8 @@ class Planned extends StatefulWidget {
 class _PlannedState extends State<Planned> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: Text('Center'),
+    );
   }
 }

@@ -6,15 +6,20 @@ class AppTheme {
     iconTheme: const IconThemeData(color: Colors.black),
     textTheme: const TextTheme(
         bodySmall: TextStyle(color: Colors.black),
-        titleLarge: TextStyle(color: Colors.black)),
+        titleLarge: TextStyle(color: Colors.black),),
   );
 
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     scaffoldBackgroundColor: Colors.black,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.black,
+      elevation: 0,
+    ),
     iconTheme: const IconThemeData(color: Colors.white),
     textTheme: const TextTheme(
       bodySmall: TextStyle(color: Colors.white),
+      headlineSmall: TextStyle(fontSize: 14),
     ),
   );
 

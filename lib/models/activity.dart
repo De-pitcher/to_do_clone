@@ -10,6 +10,7 @@ class Activity {
   final File? fileImage;
   final List<String> tasks;
   bool isSelected;
+  
   Activity({
     required this.key,
     required this.title,
