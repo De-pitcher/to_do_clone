@@ -20,68 +20,10 @@ class _TasksTasksScreenState extends State<TasksScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   AnimatedListState? get _animatedList => _listKey.currentState;
 
-  // late ListModel<Task> _list;
-
-  @override
-  void initState() {
-    super.initState();
-    // _listKey = GlobalKey<AnimatedListState>();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // final tasksProvider = Provider.of<TaskModel>(context);
-    // _list = ListModel(
-    //   listKey: _listKey,
-    //   initialItems: tasksProvider.tasks,
-    //   removedItemBuilder: _buildRemovedItem,
-    // );
-  }
-
-  Widget _buildTaskTile(
-    BuildContext context,
-    int index,
-    Animation<double> animation,
-  ) {
-    final tskMdlProvider = Provider.of<Tasks>(context, listen: false);
-
-    return TaskTile(
-      task: tskMdlProvider.tasks[index],
-      cIndex: index,
-      animation: animation,
-      onRemoveTaskFn: _removeAt,
-      onAddTaskFn: _insert,
-    );
-  }
-
-  Widget _buildRemovedItem(
-    Task task,
-    BuildContext context,
-    Animation<double> animation,
-  ) {
-    return TaskTile(
-      task: task,
-      cIndex: context.read<Tasks>().indexOf(task),
-      animation: animation,
-      onRemoveTaskFn: _removeAt,
-      onAddTaskFn: _insert,
-    );
-  }
-
-  void _insert(Task item) {
-    Provider.of<Tasks>(context, listen: false).insert(item, _animatedList);
-    setState(() {});
-  }
-
-  void _removeAt(int index) {
-    Provider.of<Tasks>(context, listen: false)
-        .removeAt(index, _buildRemovedItem);
-  }
-
   @override
   Widget build(BuildContext context) {
     final tasksProvider = Provider.of<Tasks>(context);
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -105,34 +47,8 @@ class _TasksTasksScreenState extends State<TasksScreen> {
       ),
       body: SafeArea(
         child: tasksProvider.tasks.isEmpty
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/empty_image.png',
-                    ),
-                    SizedBox(
-                      width: 210,
-                      child: Text(
-                        'Tasks show up here if they aren\'t part of any list you\'ve created.',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: Colors.deepPurple,
-                            ),
-                      ),
-                    )
-                  ],
-                ),
-              )
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: AnimatedList(
-                  key: _listKey,
-                  initialItemCount: tasksProvider.length,
-                  itemBuilder: _buildTaskTile,
-                ),
-              ),
+            ? buildEmptyWidget(context)
+            : buildAnimatedList(tasksProvider.length),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => addTask(context),
@@ -143,13 +59,80 @@ class _TasksTasksScreenState extends State<TasksScreen> {
     );
   }
 
+  Widget _buildTaskTile(
+    BuildContext context,
+    int index,
+    Animation<double> animation,
+  ) {
+    final tskMdlProvider = Provider.of<Tasks>(context, listen: false);
+
+    return TaskTile(
+      task: tskMdlProvider.tasks[index],
+      animation: animation,
+      buildRemovedItem: _buildRemovedItem,
+    );
+  }
+
+  Widget _buildRemovedItem(
+    Task task,
+    BuildContext context,
+    Animation<double> animation,
+  ) {
+    return TaskTile(
+      task: task,
+      animation: animation,
+      buildRemovedItem: _buildRemovedItem,
+    );
+  }
+
+  void _insert(Task item, [int? index]) {
+    Provider.of<Tasks>(context, listen: false)
+        .insertAt(item, _animatedList, index);
+    setState(() {});
+  }
+
+  Padding buildAnimatedList(int itemCount) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: AnimatedList(
+        key: _listKey,
+        initialItemCount: itemCount,
+        itemBuilder: _buildTaskTile,
+      ),
+    );
+  }
+
+  Center buildEmptyWidget(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/images/empty_image.png',
+          ),
+          SizedBox(
+            width: 210,
+            child: Text(
+              'Tasks show up here if they aren\'t part of any'
+              ' list you\'ve created.',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Colors.deepPurple,
+                  ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Future<dynamic> addTask(BuildContext context) {
     return showModalBottomSheet(
       context: context,
       isDismissible: false,
       builder: (context) {
         return AddTaskBottomSheet(
-          addTaskFn: _insert,
+          addTaskFn: (task) => _insert(task),
         );
       },
     );

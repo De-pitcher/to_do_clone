@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_clone/landing%20and%20auth/login.dart';
-import 'package:to_do_clone/landing%20and%20auth/sign_up.dart';
-import 'package:to_do_clone/landing%20and%20auth/splash_screen.dart';
+import 'package:to_do_clone/screens/landing%20and%20auth/login.dart';
+import 'package:to_do_clone/screens/landing%20and%20auth/sign_up.dart';
+import 'package:to_do_clone/screens/landing%20and%20auth/splash_screen.dart';
 import 'package:to_do_clone/widgets/task_details.dart';
 
 import '../../screens/activities/assigned_to_me.dart';

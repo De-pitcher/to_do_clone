@@ -9,24 +9,19 @@ import '../widgets/task_details.dart';
 
 class TaskTile extends StatelessWidget {
   final Task task;
-  final int cIndex;
   final Animation<double> animation;
-  final Function(int)? onRemoveTaskFn;
-  final Function(Task)? onAddTaskFn;
-  // final Widget Function(Task, BuildContext, Animation<double>) removedItem;
+  final AnimatedListState? animatedList;
+  final RemovedItemBuilder<Task> buildRemovedItem;
   const TaskTile({
     Key? key,
     required this.task,
-    required this.cIndex,
     required this.animation,
-    required this.onRemoveTaskFn,
-    required this.onAddTaskFn,
+    required this.buildRemovedItem,
+    this.animatedList,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    int currentTaskIndex = 0;
-
     return Column(
       children: [
         SizeTransition(
@@ -54,46 +49,42 @@ class TaskTile extends StatelessWidget {
                 ),
               ),
               onDismissed: (direction) {
-                // if (direction.name == DismissDirection.horizontal) {
+                const duration = Duration(seconds: 3);
+                int? currentTaskIndex =
+                    context.read<Tasks>().removeTask(task, buildRemovedItem);
 
-                // print(context.read<TaskModel>().indexOf(task));
-                onRemoveTaskFn!(cIndex);
-                // Provider.of<TaskModel>(context, listen: false).removeAt(
-                //     context.read<TaskModel>().indexOf(task), removedItem);
-                // }
-                // final currentTaskIndex =
-                // context.read<TaskModel>().removeAt(task, removedItem);
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   SnackBar(
-                //     shape: RoundedRectangleBorder(
-                //       borderRadius: BorderRadius.circular(5),
-                //     ),
-                //     duration: const Duration(seconds: 3),
-                //     elevation: 0,
-                //     backgroundColor: Colors.white24,
-                //     content: SizedBox(
-                //       height: 30,
-                //       child: Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //         children: [
-                //           const Text(
-                //             'Task deleted',
-                //             style: TextStyle(color: Colors.white),
-                //           ),
-                //           TextButton(
-                //             onPressed: () {
-                //               context
-                //                   .read<TaskModel>()
-                //                   .insert(currentTaskIndex, task);
-                //               onAddTaskFn!(task);
-                //             },
-                //             child: const Text('UNDO'),
-                //           )
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    duration: duration,
+                    elevation: 0,
+                    backgroundColor: Colors.white24,
+                    content: SizedBox(
+                      height: 30,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Task deleted',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              context
+                                  .read<Tasks>()
+                                  .insert(currentTaskIndex, task);
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                            },
+                            child: const Text('UNDO'),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                );
               },
               child: ListTile(
                 onTap: () {

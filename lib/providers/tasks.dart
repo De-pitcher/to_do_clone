@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../models/task.dart';
@@ -11,21 +13,48 @@ typedef RemovedItemBuilder<T> = Widget Function(
 class Tasks with ChangeNotifier {
   final List<Task> _tasks = [];
 
-  void insert(Task item, AnimatedListState? animatedList) {
-    int index = length;
-    _tasks.insert(index, item);
+  // void insert(Task task, AnimatedListState? animatedList) {
+  //   int index = length;
+  //   _tasks.insert(index, task);
+  //   if (animatedList != null) {
+  //     animatedList.insertItem(
+  //       index,
+  //       duration: const Duration(milliseconds: 300),
+  //     );
+  //   }
+  //   notifyListeners();
+  // }
+
+  void insertAt(Task task, AnimatedListState? animatedList, [int? index]) {
+    int cIndex = length;
+    if (index != null) {
+      // print(cIndex);
+      // _tasks.ins
+      // _tasks[index] = task;
+    }
+    _tasks.insert(cIndex, task);
+    // }
     if (animatedList != null) {
       animatedList.insertItem(
-        index,
+        cIndex,
         duration: const Duration(milliseconds: 300),
       );
     }
     notifyListeners();
   }
 
-  Task? removeAt(int index, RemovedItemBuilder<Task> removedItemBuilder) {
-    final Task removedItem = _tasks.removeAt(index);
-    return removedItem;
+  void insert(int index, Task task) {
+    _tasks.insert(index - 1, task);
+    notifyListeners();
+  }
+
+  int removeTask(
+    Task task,
+    RemovedItemBuilder<Task> removedItemBuilder,
+  ) {
+    final index = indexOf(task);
+    _tasks.removeAt(index);
+    return index;
   }
 
   void renameTask(DateTime id, String newTaskName) {
@@ -60,5 +89,5 @@ class Tasks with ChangeNotifier {
 
   Task operator [](int index) => _tasks[index];
 
-  int indexOf(Task item) => _tasks.indexOf(item);
+  int indexOf(Task task) => _tasks.indexOf(task);
 }
