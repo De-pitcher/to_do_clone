@@ -37,14 +37,24 @@ class TaskTile extends StatelessWidget {
         child: Dismissible(
           key: UniqueKey(),
           dragStartBehavior: DragStartBehavior.start,
-          background: Container(
+          secondaryBackground: Container(
             alignment: Alignment.centerRight,
             color: Theme.of(context).errorColor,
             padding: const EdgeInsets.only(right: 20),
             child: const Icon(
               Icons.delete,
               color: Colors.white,
-              size: 40,
+              size: 25,
+            ),
+          ),
+          background: Container(
+            alignment: Alignment.centerLeft,
+            color: Theme.of(context).colorScheme.secondary,
+            padding: const EdgeInsets.only(left: 20),
+            child: const Icon(
+              Icons.sunny,
+              color: Colors.white,
+              size: 25,
             ),
           ),
           onDismissed: (direction) {

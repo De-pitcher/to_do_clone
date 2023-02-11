@@ -33,6 +33,9 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
       );
       widget.addTaskFn!(newTask);
       _controller.clear();
+      setState(() {
+        _isFieldEmpty = true;
+      });
     }
   }
 

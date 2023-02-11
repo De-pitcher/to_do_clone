@@ -40,6 +40,7 @@ class _TasksTasksScreenState extends State<TasksScreen> {
   void _remove(int index) {
     context.read<Tasks>().removeTask(index);
     _listModel.removeAt(index);
+    setState(() {});
   }
 
   @override
