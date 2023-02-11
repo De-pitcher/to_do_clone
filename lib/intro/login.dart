@@ -1,5 +1,8 @@
 import "package:flutter/material.dart";
+import 'package:to_do_clone/data/firebase_auth.dart';
+import 'package:to_do_clone/intro/sign_up.dart';
 import 'package:to_do_clone/screens/landing.dart';
+import 'package:to_do_clone/widgets/error_widget.dart';
 
 class Login extends StatefulWidget {
   static const String id = "/login_page";
@@ -10,6 +13,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  Authentication _auth = Authentication();
   late String buttonText;
   late final GlobalKey<FormState> formKey;
   late final GlobalKey<ScaffoldState> scaffoldKey;
@@ -81,29 +85,31 @@ class _LoginState extends State<Login> {
                 ),
               ),
               const SizedBox(height: 15),
-              TextButton.icon(
-                onPressed: () {
-                  bool validDetails = formKey.currentState!.validate();
-                  if (validDetails) {
-                    setState(() => buttonText = 'Welcome Back');
+              FutureBuilder(
+                builder: (context, snapshot) {
                   
-                    Navigator.of(context).pushNamed(MainPage.id);
-                  } else {
-                    scaffoldKey.currentState!.showBottomSheet((context) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 30,
-                        color: Colors.red[400],
-                        child: const Center(
-                          child: Text('Incorrect email or password'),
-                        ),
-                      );
-                    });
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    // scaffoldKey.currentState!.showBottomSheet(
+                    //   (context) => AppError(error: snapshot.error.toString()),
+                    // );
+                    print(snapshot.error);
                   }
+                  // if (snapshot.connectionState == ConnectionState.done) {
+                  //   // setState(() => buttonText = 'Welcome Back');
+                  //   // Navigator.of(context).pushNamed(MainPage.id);
+                  // }
+                  return TextButton.icon(
+                    onPressed: () async {
+                      formKey.currentState!.validate();
+                      await _auth.loginUser(email.text, password.text);
+                    },
+                    icon: const Icon(Icons.arrow_right_alt_rounded),
+                    label: Text(buttonText),
+                  );
                 },
-                icon: const Icon(Icons.arrow_right_alt_rounded),
-                label: Text(buttonText),
-              )
+              ),
             ],
           ),
         ),
@@ -111,10 +117,9 @@ class _LoginState extends State<Login> {
       bottomSheet: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          
           const Text("Don't have an account? "),
           TextButton(
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).pushNamed(SignUp.id),
             child: const Text('Sign Up'),
           ),
         ],

@@ -41,6 +41,7 @@ dependencies:
   image_picker: ^0.8.6
   drag_and_drop_lists: ^0.3.3
   reorderables: ^0.5.1
+  firebase_auth: ^4.2.6
 
 dev_dependencies:
   flutter_test:
