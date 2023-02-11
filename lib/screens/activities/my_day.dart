@@ -12,7 +12,7 @@ class _MyDayState extends State<MyDay> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           // image: DecorationImage(image: AssetImage())
           ),
       child: Column(

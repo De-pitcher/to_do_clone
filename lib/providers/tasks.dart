@@ -1,60 +1,23 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../models/task.dart';
 
-typedef RemovedItemBuilder<T> = Widget Function(
-  T item,
-  BuildContext context,
-  Animation<double> animation,
-);
-
 class Tasks with ChangeNotifier {
   final List<Task> _tasks = [];
 
-  // void insert(Task task, AnimatedListState? animatedList) {
-  //   int index = length;
-  //   _tasks.insert(index, task);
-  //   if (animatedList != null) {
-  //     animatedList.insertItem(
-  //       index,
-  //       duration: const Duration(milliseconds: 300),
-  //     );
-  //   }
-  //   notifyListeners();
-  // }
+  List<Task> get tasks => _tasks;
 
-  void insertAt(Task task, AnimatedListState? animatedList, [int? index]) {
-    int cIndex = length;
-    if (index != null) {
-      // print(cIndex);
-      // _tasks.ins
-      // _tasks[index] = task;
-    }
+  void insert(Task task, [int? index]) {
+    int cIndex = index != null && index != -1 ? index : _tasks.length;
     _tasks.insert(cIndex, task);
-    // }
-    if (animatedList != null) {
-      animatedList.insertItem(
-        cIndex,
-        duration: const Duration(milliseconds: 300),
-      );
-    }
     notifyListeners();
   }
 
-  void insert(int index, Task task) {
-    _tasks.insert(index - 1, task);
-    notifyListeners();
-  }
+  Task removeTask(int index) => _tasks.removeAt(index);
 
-  int removeTask(
-    Task task,
-    RemovedItemBuilder<Task> removedItemBuilder,
-  ) {
-    final index = indexOf(task);
-    _tasks.removeAt(index);
-    return index;
+  void insertAt(int index, Task task) {
+    _tasks.insert(index, task);
+    notifyListeners();
   }
 
   void renameTask(DateTime id, String newTaskName) {
@@ -82,12 +45,4 @@ class Tasks with ChangeNotifier {
         _tasks[currentIndex].copyWith(isStarred: !tempIsStarred);
     notifyListeners();
   }
-
-  int get length => _tasks.length;
-
-  List<Task> get tasks => _tasks;
-
-  Task operator [](int index) => _tasks[index];
-
-  int indexOf(Task task) => _tasks.indexOf(task);
 }

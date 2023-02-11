@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/animated_list_model.dart';
 import '../../models/task.dart';
 import '../../providers/tasks.dart';
 import '../../widgets/task_tile.dart';
@@ -18,17 +19,44 @@ class TasksScreen extends StatefulWidget {
 
 class _TasksTasksScreenState extends State<TasksScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  AnimatedListState? get _animatedList => _listKey.currentState;
+  late AnimatedListModel<Task> _listModel;
+
+  @override
+  void didChangeDependencies() {
+    _listModel = AnimatedListModel(
+      listKey: _listKey,
+      initialItems: Provider.of<Tasks>(context, listen: false).tasks,
+      removedItemBuilder: _removedItemBuilder,
+    );
+    super.didChangeDependencies();
+  }
+
+  void _insert(Task item, [int? cIndex]) {
+    final index = cIndex ?? _listModel.length;
+    context.read<Tasks>().insert(item, index);
+    _listModel.insert(index, item);
+  }
+
+  void _remove(int index) {
+    context.read<Tasks>().removeTask(index);
+    _listModel.removeAt(index);
+  }
 
   @override
   Widget build(BuildContext context) {
     final tasksProvider = Provider.of<Tasks>(context);
-
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          },
+        ),
         iconTheme: IconThemeData(color: widget.args['color']),
         actionsIconTheme: IconThemeData(color: widget.args['color']),
         title: Text(
@@ -48,7 +76,7 @@ class _TasksTasksScreenState extends State<TasksScreen> {
       body: SafeArea(
         child: tasksProvider.tasks.isEmpty
             ? buildEmptyWidget(context)
-            : buildAnimatedList(tasksProvider.length),
+            : buildAnimatedList(tasksProvider.tasks.length),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => addTask(context),
@@ -64,31 +92,20 @@ class _TasksTasksScreenState extends State<TasksScreen> {
     int index,
     Animation<double> animation,
   ) {
-    final tskMdlProvider = Provider.of<Tasks>(context, listen: false);
-
     return TaskTile(
-      task: tskMdlProvider.tasks[index],
+      task: _listModel[index],
       animation: animation,
-      buildRemovedItem: _buildRemovedItem,
+      onAddTaskFn: (task) => _insert(task, index),
+      onRemoveFn: () => _remove(index),
     );
   }
 
-  Widget _buildRemovedItem(
+  Widget _removedItemBuilder(
     Task task,
     BuildContext context,
     Animation<double> animation,
   ) {
-    return TaskTile(
-      task: task,
-      animation: animation,
-      buildRemovedItem: _buildRemovedItem,
-    );
-  }
-
-  void _insert(Task item, [int? index]) {
-    Provider.of<Tasks>(context, listen: false)
-        .insertAt(item, _animatedList, index);
-    setState(() {});
+    return Container();
   }
 
   Padding buildAnimatedList(int itemCount) {
@@ -96,7 +113,7 @@ class _TasksTasksScreenState extends State<TasksScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: AnimatedList(
         key: _listKey,
-        initialItemCount: itemCount,
+        initialItemCount: _listModel.length,
         itemBuilder: _buildTaskTile,
       ),
     );
@@ -132,7 +149,7 @@ class _TasksTasksScreenState extends State<TasksScreen> {
       isDismissible: false,
       builder: (context) {
         return AddTaskBottomSheet(
-          addTaskFn: (task) => _insert(task),
+          addTaskFn: _insert,
         );
       },
     );

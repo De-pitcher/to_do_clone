@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import "package:flutter/material.dart";
-import 'package:to_do_clone/screens/landing%20and%20auth/login.dart';
-import 'package:to_do_clone/screens/landing.dart';
+
+import './login.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String id = '/';
