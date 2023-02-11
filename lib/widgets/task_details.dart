@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:to_do_clone/widgets/step_tile.dart';
-
+import '../widgets/step_tile.dart';
 import '../providers/task_steps.dart';
- 
+import '../providers/tasks.dart';
+
 class TaskDetails extends StatefulWidget {
   static const String id = '/task_detail';
-  final Map<String, dynamic> args;
 
+  final Map<String, dynamic> args;
   const TaskDetails({super.key, required this.args});
 
   @override
@@ -19,21 +19,7 @@ class TaskDetails extends StatefulWidget {
 class _TaskDetailsState extends State<TaskDetails> {
   late TextEditingController _controller;
   late TextEditingController _stepsController;
-
-  Widget taskDetailsOptions(BuildContext context,
-      {Function()? onTap, required IconData icon, required String option}) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.white38),
-      title: Text(
-        option,
-        style: Theme.of(context)
-            .textTheme
-            .titleSmall!
-            .copyWith(color: Colors.white38),
-      ),
-      onTap: onTap,
-    );
-  }
+  FocusNode _addStepFocus = FocusNode();
 
   Widget actionInfo(BuildContext context) {
     return SizedBox(
@@ -71,21 +57,30 @@ class _TaskDetailsState extends State<TaskDetails> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.args["taskValue"]);
+    _controller = TextEditingController(
+      text: widget.args["taskValue"],
+    );
     _stepsController = TextEditingController();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _addStepFocus.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final stepsList = Provider.of<TaskSteps>(context);
+    final cTask = Provider.of<Tasks>(context)
+        .tasks
+        .firstWhere((tks) => tks.id == widget.args['id']);
     return Scaffold(
+      backgroundColor: Colors.black45,
       appBar: AppBar(
+        backgroundColor: Colors.black45,
+        elevation: 0,
         title: Text('${widget.args['parent']}'),
       ),
       body: SafeArea(
@@ -93,13 +88,29 @@ class _TaskDetailsState extends State<TaskDetails> {
           children: [
             Row(
               children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.circle_outlined),
+                Transform.scale(
+                  scale: 1.2,
+                  child: Checkbox(
+                    value: cTask.isDone,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    splashRadius: 35,
+                    onChanged: (_) {
+                      setState(() {
+                        context.read<Tasks>().toggleIsDone(widget.args['id']);
+                      });
+                    },
+                  ),
                 ),
                 Expanded(
                   child: TextField(
                     controller: _controller,
+                    style: TextStyle(
+                      decoration: cTask.isDone
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
+                    ),
                     decoration: InputDecoration(
                       hintText: 'Rename Task',
                       hintStyle: Theme.of(context)
@@ -107,13 +118,22 @@ class _TaskDetailsState extends State<TaskDetails> {
                           .headline6!
                           .copyWith(color: Colors.white12),
                       border: const UnderlineInputBorder(
-                          borderSide: BorderSide.none),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
+                    onSubmitted: (value) {
+                      context.read<Tasks>().renameTask(cTask.id, value);
+                    },
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.star_border),
+                  onPressed: () {
+                    context.read<Tasks>().toggleIsStarred(widget.args['id']);
+                  },
+                  icon: Icon(
+                    cTask.isStarred ? Icons.star : Icons.star_border,
+                    color: cTask.isStarred ? Colors.deepPurple : Colors.grey,
+                  ),
                 ),
               ],
             ),
@@ -135,12 +155,33 @@ class _TaskDetailsState extends State<TaskDetails> {
   List<Widget> body(BuildContext context) {
     return [
       ListTile(
-        leading: const Icon(Icons.add),
+        //* _addStep.hasFocus displays a rounded rectangle if the addStep 
+        // textfield has focus otherwise it displays the add icon 
+        leading: _addStepFocus.hasFocus
+            ? Container(
+                height: 20,
+                width: 20,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              )
+            : const Icon(
+                Icons.add,
+                color: Colors.deepPurple,
+              ),
+        onTap: () {
+          FocusScope.of(context).requestFocus(_addStepFocus);
+        },
         title: TextField(
           controller: _stepsController,
+          focusNode: _addStepFocus,
           onSubmitted: (value) {
             final atn = context.read<TaskSteps>();
-            
+
             atn.addStep(value);
 
             _stepsController.clear();
@@ -150,27 +191,41 @@ class _TaskDetailsState extends State<TaskDetails> {
             hintStyle: Theme.of(context)
                 .textTheme
                 .bodyText2!
-                .copyWith(color: Colors.purple),
+                .copyWith(color: Colors.deepPurple),
             border: const UnderlineInputBorder(borderSide: BorderSide.none),
           ),
         ),
       ),
-      taskDetailsOptions(context,
-          icon: CupertinoIcons.brightness,
-          option: 'Add to my Day',
-          onTap: () {}),
-      taskDetailsOptions(context,
-          icon: Icons.notifications_outlined,
-          option: 'Remind me',
-          onTap: () {}),
-      const Divider(thickness: 1.5, color: Colors.white30, indent: 70),
-      taskDetailsOptions(context,
-          icon: CupertinoIcons.calendar, option: 'Add due time', onTap: () {}),
-      const Divider(thickness: 1.5, color: Colors.white30, indent: 70),
-      taskDetailsOptions(context,
-          icon: CupertinoIcons.repeat, option: 'Repeat', onTap: () {}),
-      taskDetailsOptions(context,
-          icon: Icons.file_open, option: 'Add file', onTap: () {}),
+      const TaskDetailsOptionWidget(
+        option: 'Add to my Day',
+        icon: CupertinoIcons.brightness,
+      ),
+      const TaskDetailsOptionWidget(
+        option: 'Remind me',
+        icon: Icons.notifications_outlined,
+      ),
+      const Divider(
+        thickness: 1.5,
+        color: Colors.white30,
+        indent: 70,
+      ),
+      const TaskDetailsOptionWidget(
+        option: 'Add due time',
+        icon: CupertinoIcons.calendar,
+      ),
+      const Divider(
+        thickness: 1.5,
+        color: Colors.white30,
+        indent: 70,
+      ),
+      const TaskDetailsOptionWidget(
+        option: 'Repeat',
+        icon: CupertinoIcons.repeat,
+      ),
+      const TaskDetailsOptionWidget(
+        option: 'Add file',
+        icon: Icons.file_open,
+      ),
       const SizedBox(height: 5),
       TextField(
         maxLines: 9,
@@ -182,5 +237,32 @@ class _TaskDetailsState extends State<TaskDetails> {
         ),
       )
     ];
+  }
+}
+
+class TaskDetailsOptionWidget extends StatelessWidget {
+  final String option;
+  final IconData icon;
+  final Function()? onTap;
+  const TaskDetailsOptionWidget({
+    super.key,
+    required this.option,
+    required this.icon,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.white38),
+      title: Text(
+        option,
+        style: Theme.of(context)
+            .textTheme
+            .titleSmall!
+            .copyWith(color: Colors.white38),
+      ),
+      onTap: onTap,
+    );
   }
 }

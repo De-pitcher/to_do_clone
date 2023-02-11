@@ -12,9 +12,14 @@ class AppTheme {
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     scaffoldBackgroundColor: Colors.black,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.black,
+      elevation: 0,
+    ),
     iconTheme: const IconThemeData(color: Colors.white),
     textTheme: const TextTheme(
       bodySmall: TextStyle(color: Colors.white),
+      headlineSmall: TextStyle(fontSize: 14),
     ),
   );
 

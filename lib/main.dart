@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+
+import 'package:to_do_clone/providers/tasks.dart';
+import 'package:to_do_clone/providers/task_steps.dart';
+import 'package:to_do_clone/providers/task_tile.dart';
+import 'utils/res/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -8,7 +13,6 @@ import 'package:to_do_clone/providers/task_list.dart';
 import './providers/app_color.dart';
 import './providers/activities.dart';
 import './providers/groups.dart';
-import './utils/res/theme.dart';
 import './utils/constants/routes.dart';
 
 void main() async {
@@ -32,6 +36,15 @@ class ToDoClone extends StatelessWidget {
         ),
         ChangeNotifierProvider<Groups>(
           create: (_) => Groups(),
+        ),
+        ChangeNotifierProvider<Tasks>(
+          create: (_) => Tasks(),
+        ),
+        ChangeNotifierProvider<TaskTileState>(
+          create: (_) => TaskTileState(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => TaskSteps(),
         ),
         ChangeNotifierProvider<TaskList>(
           create: (_) => TaskList(),

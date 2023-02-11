@@ -8,7 +8,7 @@ import '../screens/activities/assigned_to_me.dart';
 import '../screens/activities/important.dart';
 import '../screens/activities/my_day.dart';
 import '../screens/activities/planned.dart';
-import '../screens/activities/tasks.dart';
+import 'activities/tasks_screen.dart';
 import '../widgets/dialogs/group_dialog.dart';
 import '../widgets/actions_widget.dart';
 import '../widgets/draggable_list_widget.dart';
@@ -72,7 +72,7 @@ class MainPage extends StatelessWidget {
                     icon: CupertinoIcons.home,
                     iconColor: Colors.deepPurple[300],
                     action: 'Tasks',
-                    routeName: Tasks.id,
+                    routeName: TasksScreen.id,
                   ),
                   const Divider(
                     color: Colors.grey,
