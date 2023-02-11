@@ -20,6 +20,7 @@ class TasksScreen extends StatefulWidget {
 class _TasksTasksScreenState extends State<TasksScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   late AnimatedListModel<Task> _listModel;
+  var _liftTitle = false;
 
   @override
   void didChangeDependencies() {
@@ -48,9 +49,11 @@ class _TasksTasksScreenState extends State<TasksScreen> {
     final tasksProvider = Provider.of<Tasks>(context);
     return Scaffold(
       backgroundColor: Colors.black,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
+        toolbarHeight: 40,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -60,13 +63,19 @@ class _TasksTasksScreenState extends State<TasksScreen> {
         ),
         iconTheme: IconThemeData(color: widget.args['color']),
         actionsIconTheme: IconThemeData(color: widget.args['color']),
-        title: Text(
-          'Tasks',
-          style: Theme.of(context)
-              .textTheme
-              .titleLarge!
-              .copyWith(color: widget.args['color']),
-        ),
+        title: _liftTitle
+            ? Hero(
+                tag: const Key('Task'),
+                transitionOnUserGestures: true,
+                child: Text(
+                  'Tasks',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(color: widget.args['color']),
+                ),
+              )
+            : null,
         actions: [
           IconButton(
             onPressed: () {},
@@ -75,9 +84,34 @@ class _TasksTasksScreenState extends State<TasksScreen> {
         ],
       ),
       body: SafeArea(
-        child: tasksProvider.tasks.isEmpty
-            ? buildEmptyWidget(context)
-            : buildAnimatedList(tasksProvider.tasks.length),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            if (!_liftTitle)
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Column(
+                  children: [
+                    Hero(
+                      tag: const Key('Task'),
+                      child: Text(
+                        'Tasks',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline4!
+                            .copyWith(color: widget.args['color']),
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+                  ],
+                ),
+              ),
+            tasksProvider.tasks.isEmpty
+                ? buildEmptyWidget(context)
+                : buildAnimatedList(tasksProvider.tasks.length)
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => addTask(context),
@@ -125,6 +159,8 @@ class _TasksTasksScreenState extends State<TasksScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          if (_liftTitle)
+            SizedBox(height: MediaQuery.of(context).size.height * 0.25),
           Image.asset(
             'assets/images/empty_image.png',
           ),
@@ -145,6 +181,9 @@ class _TasksTasksScreenState extends State<TasksScreen> {
   }
 
   Future<dynamic> addTask(BuildContext context) {
+    setState(() {
+      _liftTitle = true;
+    });
     return showModalBottomSheet(
       context: context,
       isDismissible: false,
