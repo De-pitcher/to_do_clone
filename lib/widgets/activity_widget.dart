@@ -7,11 +7,17 @@ import './animated_title.dart';
 import './bottom_sheet/add_task_bottom_sheet.dart';
 
 class ActivityWidget extends StatefulWidget {
+  final String title;
+  final String? subtitle;
+  final bool displaySubtitle;
   final List<Task> listModel;
   final Color color;
   final Widget emptyWidget;
   final Function(Task, int?)? insert;
   final Function(int)? remove;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final Widget? floatingActionButton;
+  final Widget? bottomSheet;
   const ActivityWidget({
     super.key,
     required this.listModel,
@@ -19,6 +25,12 @@ class ActivityWidget extends StatefulWidget {
     required this.emptyWidget,
     this.insert,
     this.remove,
+    required this.title,
+    required this.displaySubtitle,
+    this.subtitle,
+    this.floatingActionButtonLocation,
+    this.floatingActionButton,
+    this.bottomSheet,
   });
 
   @override
@@ -78,30 +90,36 @@ class _ActivityWidgetState extends State<ActivityWidget> {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: AnimatedTitle(
-                driveAnimation: _liftTitle,
-                title: 'Tracks',
-                displaySubtitle: false,
-                titleColor: widget.color,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: AnimatedTitle(
+                  driveAnimation: _liftTitle,
+                  title: widget.title,
+                  displaySubtitle: widget.displaySubtitle,
+                  titleColor: widget.color,
+                  subtitle: widget.subtitle,
+                ),
               ),
-            ),
-            widget.listModel.isEmpty
-                ? widget.emptyWidget
-                : buildAnimatedList(widget.listModel.length)
-          ],
+              widget.listModel.isEmpty
+                  ? widget.emptyWidget
+                  : buildAnimatedList(widget.listModel.length)
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => addTask(context),
-        backgroundColor: widget.color,
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add, size: 32),
+      floatingActionButtonLocation: widget.floatingActionButtonLocation,
+      floatingActionButton: GestureDetector(
+        // heroTag: UniqueKey(),
+        onTap: () => addTask(context),
+        // backgroundColor: widget.color,
+        // foregroundColor: Colors.white,
+        child: widget.floatingActionButton,
       ),
     );
   }

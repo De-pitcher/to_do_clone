@@ -14,11 +14,21 @@ class TasksScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final tasksProvider = Provider.of<Tasks>(context);
     return ActivityWidget(
+      title: 'Tracks',
+      displaySubtitle: false,
       listModel: tasksProvider.tasks,
       color: args['color'],
       insert: (item, index) => context.read<Tasks>().insert(item, index),
       remove: (index) => context.read<Tasks>().removeTask(index),
       emptyWidget: _buildEmptyWidget(context),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          backgroundColor: args['color'],
+          foregroundColor: Colors.white,
+          child: const Icon(Icons.add, size: 32)),
+      // bottomSheet: AddTaskBottomSheet(
+      //     addTaskFn: _insert,
+      //   ),
     );
   }
 
