@@ -103,7 +103,10 @@ class _TasksTasksScreenState extends State<TasksScreen> {
                             .copyWith(color: widget.args['color']),
                       ),
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+                    tasksProvider.tasks.isEmpty
+                        ? SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.2)
+                        : const Text(''),
                   ],
                 ),
               ),
@@ -146,10 +149,13 @@ class _TasksTasksScreenState extends State<TasksScreen> {
   Padding buildAnimatedList(int itemCount) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: AnimatedList(
-        key: _listKey,
-        initialItemCount: _listModel.length,
-        itemBuilder: _buildTaskTile,
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.85,
+        child: AnimatedList(
+          key: _listKey,
+          initialItemCount: _listModel.length,
+          itemBuilder: _buildTaskTile,
+        ),
       ),
     );
   }
