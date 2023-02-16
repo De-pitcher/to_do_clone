@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 
 class AnimatedTitle extends StatefulWidget {
+  final String title;
+  final String? subtitle;
+  final Color? titleColor;
   final bool driveAnimation;
+  final bool displaySubtitle;
   const AnimatedTitle({
     Key? key,
     required this.driveAnimation,
+    required this.title,
+    this.subtitle,
+    required this.displaySubtitle,
+    this.titleColor,
   }) : super(key: key);
 
   @override
@@ -25,8 +33,12 @@ class _AnimatedTitleState extends State<AnimatedTitle>
     setState(() {
       position = Tween<Offset>(
         begin: const Offset(0.0, 0.0),
-        end: const Offset(0.1, -0.05),
-      ).animate(CurvedAnimation(curve: Curves.ease, parent: _controller));
+        end: widget.displaySubtitle
+            ? const Offset(0.35, -1.0)
+            : const Offset(0.8, -1.5),
+      ).animate(
+        CurvedAnimation(curve: Curves.ease, parent: _controller),
+      );
     });
   }
 
@@ -49,34 +61,46 @@ class _AnimatedTitleState extends State<AnimatedTitle>
     });
     return SlideTransition(
       position: position,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          AnimatedDefaultTextStyle(
-            style: _controller.status == AnimationStatus.dismissed
-                ? Theme.of(context).textTheme.headline4!.copyWith(
-                      color: Colors.white,
-                    )
-                : Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: Colors.white,
-                    ),
-            duration: const Duration(milliseconds: 300),
-            child: const Text('My Day'),
-          ),
-          AnimatedDefaultTextStyle(
-            style: _controller.status == AnimationStatus.dismissed
-                ? Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: Colors.white,
-                    )
-                : Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: Colors.white,
-                    ),
-            duration: const Duration(milliseconds: 300),
-            child: const Text('Saturday, February 11'),
-          ),
-        ],
-      ),
+      child: widget.displaySubtitle
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                AnimatedDefaultTextStyle(
+                  style: _controller.status == AnimationStatus.dismissed
+                      ? Theme.of(context).textTheme.headline4!.copyWith(
+                            color: Colors.white,
+                          )
+                      : Theme.of(context).textTheme.titleLarge!.copyWith(
+                            color: Colors.white,
+                          ),
+                  duration: const Duration(milliseconds: 300),
+                  child: Text(widget.title),
+                ),
+                AnimatedDefaultTextStyle(
+                  style: _controller.status == AnimationStatus.dismissed
+                      ? Theme.of(context).textTheme.titleLarge!.copyWith(
+                            color: Colors.white,
+                          )
+                      : Theme.of(context).textTheme.titleSmall!.copyWith(
+                            color: Colors.white,
+                          ),
+                  duration: const Duration(milliseconds: 300),
+                  child: Text(widget.subtitle!),
+                )
+              ],
+            )
+          : AnimatedDefaultTextStyle(
+              style: _controller.status == AnimationStatus.dismissed
+                  ? Theme.of(context).textTheme.headline4!.copyWith(
+                        color: widget.titleColor ?? Colors.white,
+                      )
+                  : Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: widget.titleColor ?? Colors.white,
+                      ),
+              duration: const Duration(milliseconds: 300),
+              child: Text(widget.title),
+            ),
     );
   }
 }

@@ -46,8 +46,17 @@ class _MyDayState extends State<MyDay> {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(left: 20),
-            child: AnimatedTitle(
-              driveAnimation: _liftTitle,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                AnimatedTitle(
+                  driveAnimation: _liftTitle,
+                  title: 'My Day',
+                  displaySubtitle: true,
+                  subtitle: 'Saturday, February 11',
+                ),
+              ],
             ),
           ),
         ),

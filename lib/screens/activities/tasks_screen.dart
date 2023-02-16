@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../models/animated_list_model.dart';
 import '../../models/task.dart';
 import '../../providers/tasks.dart';
+import '../../widgets/animated_title.dart';
 import '../../widgets/task_tile.dart';
 import '../../widgets/bottom_sheet/add_task_bottom_sheet.dart';
 
@@ -48,10 +49,10 @@ class _TasksTasksScreenState extends State<TasksScreen> {
   Widget build(BuildContext context) {
     final tasksProvider = Provider.of<Tasks>(context);
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: 40,
         leading: IconButton(
@@ -63,19 +64,6 @@ class _TasksTasksScreenState extends State<TasksScreen> {
         ),
         iconTheme: IconThemeData(color: widget.args['color']),
         actionsIconTheme: IconThemeData(color: widget.args['color']),
-        title: _liftTitle
-            ? Hero(
-                tag: const Key('Task'),
-                transitionOnUserGestures: true,
-                child: Text(
-                  'Tasks',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge!
-                      .copyWith(color: widget.args['color']),
-                ),
-              )
-            : null,
         actions: [
           IconButton(
             onPressed: () {},
@@ -84,36 +72,23 @@ class _TasksTasksScreenState extends State<TasksScreen> {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (!_liftTitle)
-              Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: Column(
-                  children: [
-                    Hero(
-                      tag: const Key('Task'),
-                      child: Text(
-                        'Tasks',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline4!
-                            .copyWith(color: widget.args['color']),
-                      ),
-                    ),
-                    tasksProvider.tasks.isEmpty
-                        ? SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.2)
-                        : const Text(''),
-                  ],
-                ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              AnimatedTitle(
+                driveAnimation: _liftTitle,
+                title: 'Tracks',
+                displaySubtitle: false,
+                titleColor: widget.args['color'],
               ),
-            tasksProvider.tasks.isEmpty
-                ? buildEmptyWidget(context)
-                : buildAnimatedList(tasksProvider.tasks.length)
-          ],
+              tasksProvider.tasks.isEmpty
+                  ? buildEmptyWidget(context)
+                  : buildAnimatedList(tasksProvider.tasks.length)
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -165,8 +140,8 @@ class _TasksTasksScreenState extends State<TasksScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (_liftTitle)
-            SizedBox(height: MediaQuery.of(context).size.height * 0.25),
+          // if (_liftTitle)
+          //   SizedBox(height: MediaQuery.of(context).size.height * 0.25),
           Image.asset(
             'assets/images/empty_image.png',
           ),
