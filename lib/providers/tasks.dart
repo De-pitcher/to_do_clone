@@ -2,30 +2,22 @@ import 'package:flutter/material.dart';
 
 import '../models/task.dart';
 
-typedef RemovedItemBuilder<T> = Widget Function(
-  T item,
-  BuildContext context,
-  Animation<double> animation,
-);
-
 class Tasks with ChangeNotifier {
   final List<Task> _tasks = [];
 
-  void insert(Task item, AnimatedListState? animatedList) {
-    int index = length;
-    _tasks.insert(index, item);
-    if (animatedList != null) {
-      animatedList.insertItem(
-        index,
-        duration: const Duration(milliseconds: 300),
-      );
-    }
+  List<Task> get tasks => _tasks;
+
+  void insert(Task task, [int? index]) {
+    int cIndex = index != null && index != -1 ? index : _tasks.length;
+    _tasks.insert(cIndex, task);
     notifyListeners();
   }
 
-  Task? removeAt(int index, RemovedItemBuilder<Task> removedItemBuilder) {
-    final Task removedItem = _tasks.removeAt(index);
-    return removedItem;
+  Task removeTask(int index) => _tasks.removeAt(index);
+
+  void insertAt(int index, Task task) {
+    _tasks.insert(index, task);
+    notifyListeners();
   }
 
   void renameTask(DateTime id, String newTaskName) {
@@ -53,12 +45,4 @@ class Tasks with ChangeNotifier {
         _tasks[currentIndex].copyWith(isStarred: !tempIsStarred);
     notifyListeners();
   }
-
-  int get length => _tasks.length;
-
-  List<Task> get tasks => _tasks;
-
-  Task operator [](int index) => _tasks[index];
-
-  int indexOf(Task item) => _tasks.indexOf(item);
 }

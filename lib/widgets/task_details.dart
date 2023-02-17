@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/step_tile.dart';
 import '../providers/task_steps.dart';
 import '../providers/tasks.dart';
 
@@ -19,11 +18,11 @@ class TaskDetails extends StatefulWidget {
 class _TaskDetailsState extends State<TaskDetails> {
   late TextEditingController _controller;
   late TextEditingController _stepsController;
-  FocusNode _addStepFocus = FocusNode();
+  final FocusNode _addStepFocus = FocusNode();
 
   Widget actionInfo(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * .1,
+      height: MediaQuery.of(context).size.height * 0.1,
       child: Column(
         children: [
           const Divider(color: Colors.white30, thickness: 1),
@@ -155,8 +154,8 @@ class _TaskDetailsState extends State<TaskDetails> {
   List<Widget> body(BuildContext context) {
     return [
       ListTile(
-        //* _addStep.hasFocus displays a rounded rectangle if the addStep 
-        // textfield has focus otherwise it displays the add icon 
+        //* _addStep.hasFocus displays a rounded rectangle if the addStep
+        // textfield has focus otherwise it displays the add icon
         leading: _addStepFocus.hasFocus
             ? Container(
                 height: 20,

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:to_do_clone/providers/task_tile.dart';
 
 import '../models/task.dart';
 

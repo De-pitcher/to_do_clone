@@ -24,6 +24,21 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
     super.dispose();
   }
 
+  void onSubmit() {
+    if (_controller.text.isNotEmpty) {
+      Task newTask = Task(
+        id: DateTime.now(),
+        task: _controller.text,
+        step: [],
+      );
+      widget.addTaskFn!(newTask);
+      _controller.clear();
+      setState(() {
+        _isFieldEmpty = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -46,17 +61,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
               prefixIcon: const Icon(Icons.circle_outlined,
                   size: 32, color: Colors.white12),
               suffixIcon: GestureDetector(
-                onTap: () {
-                  if (_controller.text.isNotEmpty) {
-                    Task newTask = Task(
-                      id: DateTime.now(),
-                      task: _controller.text,
-                      step: [],
-                    );
-                    widget.addTaskFn!(newTask);
-                    _controller.clear();
-                  }
-                },
+                onTap: onSubmit,
                 child: Icon(
                   Icons.file_upload_outlined,
                   color: _isFieldEmpty ? Colors.white38 : Colors.white60,
@@ -75,6 +80,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                 });
               }
             },
+            onEditingComplete: onSubmit,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
