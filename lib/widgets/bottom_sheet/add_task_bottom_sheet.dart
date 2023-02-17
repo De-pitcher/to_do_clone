@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../buttons/special_button.dart';
 import '../../models/task.dart';
 
 class AddTaskBottomSheet extends StatefulWidget {
   final Function(Task)? addTaskFn;
+  final List<Widget> specialButtons;
   const AddTaskBottomSheet({
     required this.addTaskFn,
     super.key,
+    required this.specialButtons,
   });
 
   @override
@@ -82,22 +83,13 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
             },
             onEditingComplete: onSubmit,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              SpecialButton(
-                label: 'Set due date',
-                icon: Icons.calendar_month_rounded,
-              ),
-              SpecialButton(
-                label: 'Remind me',
-                icon: Icons.notifications_on_outlined,
-              ),
-              SpecialButton(
-                label: 'Repeat',
-                icon: Icons.repeat,
-              ),
-            ],
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 60,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: widget.specialButtons,
+            ),
           )
         ],
       ),

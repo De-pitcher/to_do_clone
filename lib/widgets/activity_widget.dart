@@ -9,20 +9,23 @@ import './bottom_sheet/add_task_bottom_sheet.dart';
 class ActivityWidget extends StatefulWidget {
   final String title;
   final String? subtitle;
+  final String? bgImage;
   final bool displaySubtitle;
   final List<Task> listModel;
   final Color color;
-  final Widget emptyWidget;
+  final Widget? emptyWidget;
   final Function(Task, int?)? insert;
   final Function(int)? remove;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
   final Widget? floatingActionButton;
   final Widget? bottomSheet;
+  final bool isExtended;
+  final List<Widget> specialButtons;
   const ActivityWidget({
     super.key,
     required this.listModel,
     required this.color,
-    required this.emptyWidget,
+    this.emptyWidget,
     this.insert,
     this.remove,
     required this.title,
@@ -31,6 +34,8 @@ class ActivityWidget extends StatefulWidget {
     this.floatingActionButtonLocation,
     this.floatingActionButton,
     this.bottomSheet,
+    required this.isExtended,
+    this.bgImage, required this.specialButtons,
   });
 
   @override
@@ -69,6 +74,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -89,38 +95,76 @@ class _ActivityWidgetState extends State<ActivityWidget> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: AnimatedTitle(
-                  driveAnimation: _liftTitle,
-                  title: widget.title,
-                  displaySubtitle: widget.displaySubtitle,
-                  titleColor: widget.color,
-                  subtitle: widget.subtitle,
+      body: Container(
+        decoration: widget.bgImage != null
+            ? BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(widget.bgImage!),
+                  fit: BoxFit.cover,
                 ),
-              ),
-              widget.listModel.isEmpty
-                  ? widget.emptyWidget
-                  : buildAnimatedList(widget.listModel.length)
-            ],
+              )
+            : null,
+        child: SafeArea(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: AnimatedTitle(
+                    driveAnimation: _liftTitle,
+                    title: widget.title,
+                    displaySubtitle: widget.displaySubtitle,
+                    titleColor: widget.color,
+                    subtitle: widget.subtitle,
+                  ),
+                ),
+                widget.listModel.isEmpty
+                    ? widget.emptyWidget ?? const Text('')
+                    : buildAnimatedList(widget.listModel.length)
+              ],
+            ),
           ),
         ),
       ),
       floatingActionButtonLocation: widget.floatingActionButtonLocation,
-      floatingActionButton: GestureDetector(
-        // heroTag: UniqueKey(),
-        onTap: () => addTask(context),
-        // backgroundColor: widget.color,
-        // foregroundColor: Colors.white,
-        child: widget.floatingActionButton,
-      ),
+      floatingActionButton: widget.isExtended
+          ? Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FloatingActionButton.extended(
+                    heroTag: UniqueKey(),
+                    elevation: 5,
+                    onPressed: () {},
+                    label: Row(
+                      children: const [
+                        Icon(Icons.lightbulb_outline_sharp),
+                        SizedBox(width: 10),
+                        Text('Suggestion'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 50),
+                  FloatingActionButton(
+                    heroTag: UniqueKey(),
+                    elevation: 5,
+                    onPressed: () => addTask(context),
+                    child: const Icon(Icons.add),
+                  )
+                ],
+              ),
+            )
+          : FloatingActionButton(
+              heroTag: UniqueKey(),
+              onPressed: () => addTask(context),
+              backgroundColor: widget.color,
+              foregroundColor: Colors.white,
+              child: widget.floatingActionButton,
+            ),
     );
   }
 
@@ -169,6 +213,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       builder: (context) {
         return AddTaskBottomSheet(
           addTaskFn: _insert,
+          specialButtons: widget.specialButtons,
         );
       },
     );

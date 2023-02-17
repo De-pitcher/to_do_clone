@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../providers/tasks.dart';
 import '../../widgets/activity_widget.dart';
+import '../../widgets/buttons/special_button.dart';
 
 class TasksScreen extends StatelessWidget {
   final Map<String, dynamic> args;
@@ -21,14 +22,22 @@ class TasksScreen extends StatelessWidget {
       insert: (item, index) => context.read<Tasks>().insert(item, index),
       remove: (index) => context.read<Tasks>().removeTask(index),
       emptyWidget: _buildEmptyWidget(context),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          backgroundColor: args['color'],
-          foregroundColor: Colors.white,
-          child: const Icon(Icons.add, size: 32)),
-      // bottomSheet: AddTaskBottomSheet(
-      //     addTaskFn: _insert,
-      //   ),
+      isExtended: false,
+      floatingActionButton: const Icon(Icons.add, size: 32),
+      specialButtons: const [
+        SpecialButton(
+          label: 'Set due date',
+          icon: Icons.calendar_month_rounded,
+        ),
+        SpecialButton(
+          label: 'Remind me',
+          icon: Icons.notifications_on_outlined,
+        ),
+        SpecialButton(
+          label: 'Repeat',
+          icon: Icons.repeat,
+        ),
+      ],
     );
   }
 

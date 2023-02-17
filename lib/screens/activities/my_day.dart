@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../providers/tasks.dart';
 import '../../widgets/activity_widget.dart';
 import '../../widgets/animated_title.dart';
+import '../../widgets/buttons/special_button.dart';
 
 class MyDay extends StatefulWidget {
   static const String id = '/my_day';
@@ -24,6 +25,7 @@ class _MyDayState extends State<MyDay> {
       subtitle: 'Saturday, February 11',
       listModel: tasksProvider.tasks,
       color: Colors.white,
+      bgImage: 'assets/images/my_day.png',
       insert: (item, index) => context.read<Tasks>().insert(item, index),
       remove: (index) => context.read<Tasks>().removeTask(index),
       emptyWidget: Container(
@@ -35,6 +37,7 @@ class _MyDayState extends State<MyDay> {
           ),
         ),
       ),
+      isExtended: true,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(right: 10),
         child: Row(
@@ -62,13 +65,28 @@ class _MyDayState extends State<MyDay> {
                 });
               },
               child: const Icon(Icons.add),
-            )
+            ),
           ],
         ),
       ),
-      // bottomSheet: AddTaskBottomSheet(
-      //     addTaskFn: _insert,
-      //   ),
+      specialButtons: const [
+        SpecialButton(
+          label: 'Tasks',
+          icon: Icons.home_outlined,
+        ),
+        SpecialButton(
+          label: 'Set due date',
+          icon: Icons.calendar_month_rounded,
+        ),
+        SpecialButton(
+          label: 'Remind me',
+          icon: Icons.notifications_on_outlined,
+        ),
+        SpecialButton(
+          label: 'Repeat',
+          icon: Icons.repeat,
+        ),
+      ],
     );
 
     // Scaffold(
