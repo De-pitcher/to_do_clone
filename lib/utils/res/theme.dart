@@ -4,9 +4,14 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     iconTheme: const IconThemeData(color: Colors.black),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.black,
+      elevation: 0,
+    ),
     textTheme: const TextTheme(
-        bodySmall: TextStyle(color: Colors.black),
-        titleLarge: TextStyle(color: Colors.black),),
+      bodySmall: TextStyle(color: Colors.black),
+      titleLarge: TextStyle(color: Colors.black),
+    ),
   );
 
   static ThemeData darkTheme = ThemeData(

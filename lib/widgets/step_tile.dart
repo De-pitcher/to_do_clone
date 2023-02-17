@@ -8,7 +8,7 @@ class StepTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: GestureDetector(
-        child: Icon(Icons.circle_outlined),
+        child: const Icon(Icons.circle_outlined),
       ),
       title: Text(
         step,
@@ -19,7 +19,7 @@ class StepTile extends StatelessWidget {
       ),
       trailing: IconButton(
         onPressed: () {},
-        icon: Icon(Icons.more_vert),
+        icon: const Icon(Icons.more_vert),
       ),
     );
   }
