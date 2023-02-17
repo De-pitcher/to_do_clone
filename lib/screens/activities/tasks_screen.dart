@@ -23,7 +23,7 @@ class TasksScreen extends StatelessWidget {
       remove: (index) => context.read<Tasks>().removeTask(index),
       emptyWidget: _buildEmptyWidget(context),
       isExtended: false,
-      floatingActionButton: const Icon(Icons.add, size: 32),
+      fabIcon: const Icon(Icons.add, size: 32),
       specialButtons: const [
         SpecialButton(
           label: 'Set due date',

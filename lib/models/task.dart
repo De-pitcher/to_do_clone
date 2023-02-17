@@ -5,6 +5,7 @@ class Task {
   final List<String> step;
   bool isDone;
   bool isStarred;
+  bool myDay;
 
   Task({
     required this.id,
@@ -12,6 +13,7 @@ class Task {
     this.task = '',
     this.isDone = false,
     this.isStarred = false,
+    this.myDay = false,
   });
 
   Task copyWith({
@@ -20,6 +22,7 @@ class Task {
     List<String>? step,
     bool? isDone,
     bool? isStarred,
+    bool? myDay
   }) {
     return Task(
       id: id ?? this.id,
@@ -27,6 +30,7 @@ class Task {
       step: step ?? this.step,
       isDone: isDone ?? this.isDone,
       isStarred: isStarred ?? this.isStarred,
+      myDay: myDay ?? this.myDay,
     );
   }
 }

@@ -58,38 +58,42 @@ class TaskTile extends StatelessWidget {
             ),
           ),
           onDismissed: (direction) {
-            const duration = Duration(seconds: 3);
-            scaffoldMessenger.hideCurrentSnackBar();
-            onRemoveFn!();
-            scaffoldMessenger.showSnackBar(
-              SnackBar(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                duration: duration,
-                elevation: 0,
-                backgroundColor: Colors.white24,
-                content: SizedBox(
-                  height: 30,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Task deleted',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          onAddTaskFn!(task);
-                          scaffoldMessenger.hideCurrentSnackBar();
-                        },
-                        child: const Text('UNDO'),
-                      )
-                    ],
+            if (direction == DismissDirection.endToStart) {
+              const duration = Duration(seconds: 3);
+              scaffoldMessenger.hideCurrentSnackBar();
+              onRemoveFn!();
+              scaffoldMessenger.showSnackBar(
+                SnackBar(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  duration: duration,
+                  elevation: 0,
+                  backgroundColor: Colors.white24,
+                  content: SizedBox(
+                    height: 30,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Task deleted',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            onAddTaskFn!(task);
+                            scaffoldMessenger.hideCurrentSnackBar();
+                          },
+                          child: const Text('UNDO'),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
+              );
+            } else {
+              context.read<Tasks>().toggleMyDay(task.id);
+            }
           },
           child: ListTile(
             onTap: () {

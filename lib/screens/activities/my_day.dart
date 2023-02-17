@@ -23,52 +23,12 @@ class _MyDayState extends State<MyDay> {
       title: 'My Day',
       displaySubtitle: true,
       subtitle: 'Saturday, February 11',
-      listModel: tasksProvider.tasks,
+      listModel: tasksProvider.myDayTasks,
       color: Colors.white,
       bgImage: 'assets/images/my_day.png',
       insert: (item, index) => context.read<Tasks>().insert(item, index),
       remove: (index) => context.read<Tasks>().removeTask(index),
-      emptyWidget: Container(
-        // constraints: const BoxConstraints.expand(),
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/my_day.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
       isExtended: true,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(right: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton.extended(
-              heroTag: UniqueKey(),
-              elevation: 5,
-              onPressed: () {},
-              label: Row(
-                children: const [
-                  Icon(Icons.lightbulb_outline_sharp),
-                  SizedBox(width: 10),
-                  Text('Suggestion'),
-                ],
-              ),
-            ),
-            const SizedBox(width: 50),
-            FloatingActionButton(
-              heroTag: UniqueKey(),
-              elevation: 5,
-              onPressed: () {
-                setState(() {
-                  _liftTitle = true;
-                });
-              },
-              child: const Icon(Icons.add),
-            ),
-          ],
-        ),
-      ),
       specialButtons: const [
         SpecialButton(
           label: 'Tasks',

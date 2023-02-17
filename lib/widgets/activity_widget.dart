@@ -17,7 +17,7 @@ class ActivityWidget extends StatefulWidget {
   final Function(Task, int?)? insert;
   final Function(int)? remove;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
-  final Widget? floatingActionButton;
+  final Widget? fabIcon;
   final Widget? bottomSheet;
   final bool isExtended;
   final List<Widget> specialButtons;
@@ -32,10 +32,11 @@ class ActivityWidget extends StatefulWidget {
     required this.displaySubtitle,
     this.subtitle,
     this.floatingActionButtonLocation,
-    this.floatingActionButton,
+    this.fabIcon,
     this.bottomSheet,
     required this.isExtended,
-    this.bgImage, required this.specialButtons,
+    this.bgImage,
+    required this.specialButtons,
   });
 
   @override
@@ -96,6 +97,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
         ],
       ),
       body: Container(
+        width: double.infinity,
         decoration: widget.bgImage != null
             ? BoxDecoration(
                 image: DecorationImage(
@@ -163,7 +165,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
               onPressed: () => addTask(context),
               backgroundColor: widget.color,
               foregroundColor: Colors.white,
-              child: widget.floatingActionButton,
+              child: widget.fabIcon,
             ),
     );
   }
