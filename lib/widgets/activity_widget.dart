@@ -195,7 +195,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.85,
+        height: MediaQuery.of(context).size.height * 0.8,
         child: AnimatedList(
           key: _listKey,
           initialItemCount: _listModel.length,

@@ -19,34 +19,37 @@ class _MyDayState extends State<MyDay> {
   @override
   Widget build(BuildContext context) {
     final tasksProvider = Provider.of<Tasks>(context);
-    return ActivityWidget(
-      title: 'My Day',
-      displaySubtitle: true,
-      subtitle: 'Saturday, February 11',
-      listModel: tasksProvider.myDayTasks,
-      color: Colors.white,
-      bgImage: 'assets/images/my_day.png',
-      insert: (item, index) => context.read<Tasks>().insert(item, index),
-      remove: (index) => context.read<Tasks>().removeTask(index),
-      isExtended: true,
-      specialButtons: const [
-        SpecialButton(
-          label: 'Tasks',
-          icon: Icons.home_outlined,
-        ),
-        SpecialButton(
-          label: 'Set due date',
-          icon: Icons.calendar_month_rounded,
-        ),
-        SpecialButton(
-          label: 'Remind me',
-          icon: Icons.notifications_on_outlined,
-        ),
-        SpecialButton(
-          label: 'Repeat',
-          icon: Icons.repeat,
-        ),
-      ],
+    return SizedBox(
+      // height: MediaQuery.of(context).size.height - 10,
+      child: ActivityWidget(
+        title: 'My Day',
+        displaySubtitle: true,
+        subtitle: 'Saturday, February 11',
+        listModel: tasksProvider.myDayTasks,
+        color: Colors.white,
+        bgImage: 'assets/images/my_day.png',
+        insert: (item, index) => context.read<Tasks>().insert(item, index),
+        remove: (index) => context.read<Tasks>().removeTask(index),
+        isExtended: true,
+        specialButtons: const [
+          SpecialButton(
+            label: 'Tasks',
+            icon: Icons.home_outlined,
+          ),
+          SpecialButton(
+            label: 'Set due date',
+            icon: Icons.calendar_month_rounded,
+          ),
+          SpecialButton(
+            label: 'Remind me',
+            icon: Icons.notifications_on_outlined,
+          ),
+          SpecialButton(
+            label: 'Repeat',
+            icon: Icons.repeat,
+          ),
+        ],
+      ),
     );
 
     // Scaffold(
