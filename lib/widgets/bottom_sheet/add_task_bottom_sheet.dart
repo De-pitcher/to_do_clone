@@ -48,7 +48,6 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
           break;
         default:
       }
-      print(newTask.myDay);
       widget.addTaskFn!(newTask);
       _controller.clear();
       setState(() {

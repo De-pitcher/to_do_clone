@@ -5,7 +5,7 @@ import 'package:to_do_clone/screens/landing%20and%20auth/splash_screen.dart';
 import 'package:to_do_clone/widgets/task_details.dart';
 
 import '../../screens/activities/assigned_to_me.dart';
-import '../../screens/activities/important.dart';
+import '../../screens/activities/important_screen.dart';
 import '../../screens/activities/my_day.dart';
 import '../../screens/activities/planned.dart';
 import '../../screens/activities/tasks_screen.dart';
@@ -29,19 +29,26 @@ MaterialPageRoute routeGen(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const ListScreen());
     case AssignedPage.id:
       return MaterialPageRoute(builder: (_) => const AssignedPage());
-    case Important.id:
-      return MaterialPageRoute(builder: (_) => const Important());
+    case ImportantScreen.id:
+      return MaterialPageRoute(
+        builder: (_) => ImportantScreen(
+          args: settings.arguments as Map<String, dynamic>,
+        ),
+      );
     case MyDay.id:
       return MaterialPageRoute(builder: (_) => const MyDay());
     case Planned.id:
       return MaterialPageRoute(builder: (_) => const Planned());
     case TasksScreen.id:
       return MaterialPageRoute(
-          builder: (_) =>
-              TasksScreen(args: settings.arguments as Map<String, dynamic>));
+        builder: (_) => TasksScreen(
+          args: settings.arguments as Map<String, dynamic>,
+        ),
+      );
     case TaskDetails.id:
       return MaterialPageRoute(
-        builder: (_) =>  TaskDetails(args: settings.arguments as Map<String, dynamic>),
+        builder: (_) =>
+            TaskDetails(args: settings.arguments as Map<String, dynamic>),
       );
     default:
       return MaterialPageRoute(

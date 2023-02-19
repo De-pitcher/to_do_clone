@@ -35,7 +35,7 @@ class _AnimatedTitleState extends State<AnimatedTitle>
         begin: const Offset(0.0, 0.0),
         end: widget.displaySubtitle
             ? const Offset(0.35, -1.0)
-            : const Offset(0.8, -1.5),
+            : const Offset(0.6, -1.5),
       ).animate(
         CurvedAnimation(curve: Curves.ease, parent: _controller),
       );

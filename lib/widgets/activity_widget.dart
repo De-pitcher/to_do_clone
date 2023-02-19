@@ -158,7 +158,10 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                     heroTag: UniqueKey(),
                     elevation: 5,
                     onPressed: () => addTask(context),
-                    child: const Icon(Icons.add),
+                    child: const Icon(
+                      Icons.add,
+                      color: Colors.black,
+                    ),
                   )
                 ],
               ),
@@ -167,7 +170,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
               heroTag: UniqueKey(),
               onPressed: () => addTask(context),
               backgroundColor: widget.color,
-              foregroundColor: Colors.white,
+              foregroundColor: Colors.black,
               child: widget.fabIcon,
             ),
     );
@@ -183,6 +186,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       animation: animation,
       onAddTaskFn: (task) => _insert(task, index),
       onRemoveFn: () => _remove(index),
+      activityType: widget.activityType,
     );
   }
 

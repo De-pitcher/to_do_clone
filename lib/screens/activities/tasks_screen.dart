@@ -6,18 +6,17 @@ import '../../widgets/activity_widget.dart';
 import '../../widgets/buttons/special_button.dart';
 
 class TasksScreen extends StatelessWidget {
-  final Map<String, dynamic> args;
   static const String id = '/tasks';
 
+  final Map<String, dynamic> args;
   const TasksScreen({super.key, required this.args});
 
   @override
   Widget build(BuildContext context) {
-    final tasksProvider = Provider.of<Tasks>(context);
     return ActivityWidget(
-      title: 'Tracks',
+      title: args['action'],
       displaySubtitle: false,
-      listModel: tasksProvider.tasks,
+      listModel: Provider.of<Tasks>(context).tasks,
       color: args['color'],
       insert: (item, index) => context.read<Tasks>().insert(item, index),
       remove: (index) => context.read<Tasks>().removeTask(index),

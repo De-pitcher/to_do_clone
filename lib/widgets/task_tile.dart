@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../enums/activity_type.dart';
 import '../models/task.dart';
 import '../providers/tasks.dart';
 import '../widgets/task_details.dart';
@@ -12,17 +13,21 @@ class TaskTile extends StatelessWidget {
   final Animation<double> animation;
   final Function(Task)? onAddTaskFn;
   final Function()? onRemoveFn;
+  final ActivityType activityType;
   const TaskTile({
     Key? key,
     required this.task,
     required this.animation,
     this.onRemoveFn,
     this.onAddTaskFn,
+    this.activityType = ActivityType.non,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final tksProvider = context.read<Tasks>();
+    const duration = Duration(seconds: 3);
     return SizeTransition(
       axisAlignment: -1,
       sizeFactor: CurvedAnimation(
@@ -68,40 +73,20 @@ class TaskTile extends StatelessWidget {
             ),
             onDismissed: (direction) {
               if (direction == DismissDirection.endToStart) {
-                const duration = Duration(seconds: 3);
                 scaffoldMessenger.hideCurrentSnackBar();
                 onRemoveFn!();
                 scaffoldMessenger.showSnackBar(
-                  SnackBar(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    duration: duration,
-                    elevation: 0,
-                    backgroundColor: Colors.white24,
-                    content: SizedBox(
-                      height: 30,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Task deleted',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              onAddTaskFn!(task);
-                              scaffoldMessenger.hideCurrentSnackBar();
-                            },
-                            child: const Text('UNDO'),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                  snackbar(
+                      duration: duration,
+                      msg: 'Task deleted',
+                      scaffoldMessenger: scaffoldMessenger,
+                      onPressed: () {
+                        onAddTaskFn!(task);
+                        scaffoldMessenger.hideCurrentSnackBar();
+                      }),
                 );
               } else if (direction == DismissDirection.startToEnd) {
-                context.read<Tasks>().toggleMyDay(task.id);
+                tksProvider.toggleMyDay(task.id);
               }
             },
             child: SizedBox(
@@ -132,7 +117,7 @@ class TaskTile extends StatelessWidget {
                     checkColor: Colors.black,
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     onChanged: (_) {
-                      context.read<Tasks>().toggleIsDone(task.id);
+                      tksProvider.toggleIsDone(task.id);
                     },
                   ),
                 ),
@@ -169,7 +154,21 @@ class TaskTile extends StatelessWidget {
                 ),
                 trailing: IconButton(
                   onPressed: () {
-                    context.read<Tasks>().toggleIsStarred(task.id);
+                    tksProvider.toggleIsStarred(task.id);
+                    if (task.isStarred == true &&
+                        activityType == ActivityType.important) {
+                      scaffoldMessenger.showSnackBar(
+                        snackbar(
+                          duration: duration,
+                          msg: 'Task removed from Importance',
+                          scaffoldMessenger: scaffoldMessenger,
+                          onPressed: () {
+                            tksProvider.StarTask(task.id);
+                            scaffoldMessenger.hideCurrentSnackBar();
+                          },
+                        ),
+                      );
+                    }
                   },
                   icon: Icon(
                     task.isStarred ? Icons.star : Icons.star_border,
@@ -179,6 +178,38 @@ class TaskTile extends StatelessWidget {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  SnackBar snackbar({
+    required Duration duration,
+    required String msg,
+    required ScaffoldMessengerState scaffoldMessenger,
+    Function()? onPressed,
+  }) {
+    return SnackBar(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+      ),
+      duration: duration,
+      elevation: 0,
+      backgroundColor: Colors.white24,
+      content: SizedBox(
+        height: 30,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              msg,
+              style: const TextStyle(color: Colors.white),
+            ),
+            TextButton(
+              onPressed: onPressed,
+              child: const Text('UNDO'),
+            )
+          ],
         ),
       ),
     );
