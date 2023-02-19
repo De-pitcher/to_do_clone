@@ -13,16 +13,21 @@ class SpecialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton.icon(
-      onPressed: onTap,
-      icon: Icon(icon, color: Colors.white),
-      label: Text(
-        label,
-        style: Theme.of(context)
-            .textTheme
-            .titleSmall!
-            .copyWith(color: Colors.white),
-      ),
+    return Row(
+      children: [
+        TextButton.icon(
+          onPressed: onTap,
+          icon: Icon(icon, color: Colors.white),
+          label: Text(
+            label,
+            style: Theme.of(context)
+                .textTheme
+                .titleSmall!
+                .copyWith(color: Colors.white),
+          ),
+        ),
+        const SizedBox(width: 25)
+      ],
     );
   }
 }

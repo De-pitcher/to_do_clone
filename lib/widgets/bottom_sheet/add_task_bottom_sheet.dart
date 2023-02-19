@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../buttons/special_button.dart';
 import '../../models/task.dart';
+import '../../enums/activity_type.dart';
 
 class AddTaskBottomSheet extends StatefulWidget {
   final Function(Task)? addTaskFn;
+  final List<Widget> specialButtons;
+  final ActivityType? activityType;
+
   const AddTaskBottomSheet({
     required this.addTaskFn,
+    required this.specialButtons,
+    this.activityType = ActivityType.non,
     super.key,
   });
 
@@ -31,6 +36,19 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         task: _controller.text,
         step: [],
       );
+      switch (widget.activityType) {
+        case ActivityType.assignedToMe:
+          break;
+        case ActivityType.important:
+          newTask = newTask.copyWith(isStarred: true);
+          break;
+        case ActivityType.myDay:
+          newTask = newTask.copyWith(myDay: true);
+          break;
+        case ActivityType.planned:
+          break;
+        default:
+      }
       widget.addTaskFn!(newTask);
       _controller.clear();
       setState(() {
@@ -82,22 +100,13 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
             },
             onEditingComplete: onSubmit,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              SpecialButton(
-                label: 'Set due date',
-                icon: Icons.calendar_month_rounded,
-              ),
-              SpecialButton(
-                label: 'Remind me',
-                icon: Icons.notifications_on_outlined,
-              ),
-              SpecialButton(
-                label: 'Repeat',
-                icon: Icons.repeat,
-              ),
-            ],
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 60,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: widget.specialButtons,
+            ),
           )
         ],
       ),

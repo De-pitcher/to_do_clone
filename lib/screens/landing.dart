@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import './profile.dart';
 import './list_screen.dart';
 import '../screens/activities/assigned_to_me.dart';
-import '../screens/activities/important.dart';
+import 'activities/important_screen.dart';
 import '../screens/activities/my_day.dart';
 import '../screens/activities/planned.dart';
 import 'activities/tasks_screen.dart';
@@ -54,7 +54,7 @@ class MainPage extends StatelessWidget {
                     icon: CupertinoIcons.star,
                     iconColor: Colors.pink[200],
                     action: 'Important',
-                    routeName: Important.id,
+                    routeName: ImportantScreen.id,
                   ),
                   ActionWidget(
                     icon: Icons.schedule,

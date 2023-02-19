@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_clone/widgets/task_tile.dart';
 
+import '../enums/activity_type.dart';
 import '../models/animated_list_model.dart';
 import '../models/task.dart';
 import './animated_title.dart';
@@ -9,28 +10,36 @@ import './bottom_sheet/add_task_bottom_sheet.dart';
 class ActivityWidget extends StatefulWidget {
   final String title;
   final String? subtitle;
+  final String? bgImage;
   final bool displaySubtitle;
   final List<Task> listModel;
   final Color color;
-  final Widget emptyWidget;
+  final Widget? emptyWidget;
   final Function(Task, int?)? insert;
   final Function(int)? remove;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
-  final Widget? floatingActionButton;
+  final Widget? fabIcon;
   final Widget? bottomSheet;
+  final bool isExtended;
+  final List<Widget> specialButtons;
+  final ActivityType activityType;
   const ActivityWidget({
     super.key,
     required this.listModel,
     required this.color,
-    required this.emptyWidget,
+    this.emptyWidget,
     this.insert,
     this.remove,
     required this.title,
     required this.displaySubtitle,
     this.subtitle,
     this.floatingActionButtonLocation,
-    this.floatingActionButton,
+    this.fabIcon,
     this.bottomSheet,
+    required this.isExtended,
+    this.bgImage,
+    required this.specialButtons,
+    this.activityType = ActivityType.non,
   });
 
   @override
@@ -67,8 +76,9 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white24,
       resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -89,38 +99,80 @@ class _ActivityWidgetState extends State<ActivityWidget> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: AnimatedTitle(
-                  driveAnimation: _liftTitle,
-                  title: widget.title,
-                  displaySubtitle: widget.displaySubtitle,
-                  titleColor: widget.color,
-                  subtitle: widget.subtitle,
+      body: Container(
+        width: double.infinity,
+        decoration: widget.bgImage != null
+            ? BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(widget.bgImage!),
+                  fit: BoxFit.cover,
                 ),
-              ),
-              widget.listModel.isEmpty
-                  ? widget.emptyWidget
-                  : buildAnimatedList(widget.listModel.length)
-            ],
+              )
+            : null,
+        child: SafeArea(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: AnimatedTitle(
+                    driveAnimation: _liftTitle,
+                    title: widget.title,
+                    displaySubtitle: widget.displaySubtitle,
+                    titleColor: widget.color,
+                    subtitle: widget.subtitle,
+                  ),
+                ),
+                widget.listModel.isEmpty
+                    ? widget.emptyWidget ?? const Text('')
+                    : buildAnimatedList(widget.listModel.length)
+              ],
+            ),
           ),
         ),
       ),
       floatingActionButtonLocation: widget.floatingActionButtonLocation,
-      floatingActionButton: GestureDetector(
-        // heroTag: UniqueKey(),
-        onTap: () => addTask(context),
-        // backgroundColor: widget.color,
-        // foregroundColor: Colors.white,
-        child: widget.floatingActionButton,
-      ),
+      floatingActionButton: widget.isExtended
+          ? Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FloatingActionButton.extended(
+                    heroTag: UniqueKey(),
+                    elevation: 5,
+                    onPressed: () {},
+                    label: Row(
+                      children: const [
+                        Icon(Icons.lightbulb_outline_sharp),
+                        SizedBox(width: 10),
+                        Text('Suggestion'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 50),
+                  FloatingActionButton(
+                    heroTag: UniqueKey(),
+                    elevation: 5,
+                    onPressed: () => addTask(context),
+                    child: const Icon(
+                      Icons.add,
+                      color: Colors.black,
+                    ),
+                  )
+                ],
+              ),
+            )
+          : FloatingActionButton(
+              heroTag: UniqueKey(),
+              onPressed: () => addTask(context),
+              backgroundColor: widget.color,
+              foregroundColor: Colors.black,
+              child: widget.fabIcon,
+            ),
     );
   }
 
@@ -134,6 +186,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       animation: animation,
       onAddTaskFn: (task) => _insert(task, index),
       onRemoveFn: () => _remove(index),
+      activityType: widget.activityType,
     );
   }
 
@@ -149,7 +202,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.85,
+        height: MediaQuery.of(context).size.height * 0.8,
         child: AnimatedList(
           key: _listKey,
           initialItemCount: _listModel.length,
@@ -169,6 +222,8 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       builder: (context) {
         return AddTaskBottomSheet(
           addTaskFn: _insert,
+          specialButtons: widget.specialButtons,
+          activityType: widget.activityType,
         );
       },
     );

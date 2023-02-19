@@ -7,6 +7,10 @@ class Tasks with ChangeNotifier {
 
   List<Task> get tasks => _tasks;
 
+  List<Task> get myDayTasks => _tasks.where((tks) => tks.myDay).toList();
+
+  List<Task> get important => _tasks.where((tks) => tks.isStarred).toList();
+
   void insert(Task task, [int? index]) {
     int cIndex = index != null && index != -1 ? index : _tasks.length;
     _tasks.insert(cIndex, task);
@@ -41,8 +45,24 @@ class Tasks with ChangeNotifier {
   void toggleIsStarred(DateTime id) {
     final currentIndex = _tasks.indexWhere((e) => e.id == id);
     final tempIsStarred = _tasks[currentIndex].isStarred;
+    // print(tempIsStarred);
     _tasks[currentIndex] =
         _tasks[currentIndex].copyWith(isStarred: !tempIsStarred);
+    notifyListeners();
+  }
+
+  void StarTask(DateTime id) {
+    final currentIndex = _tasks.indexWhere((e) => e.id == id);
+    // final tempIsStarred = _tasks[currentIndex].isStarred;
+    // // print(tempIsStarred);
+    _tasks[currentIndex] = _tasks[currentIndex].copyWith(isStarred: true);
+    notifyListeners();
+  }
+
+  void toggleMyDay(DateTime id) {
+    final currentIndex = _tasks.indexWhere((e) => e.id == id);
+    final tempMyDay = _tasks[currentIndex].myDay;
+    _tasks[currentIndex] = _tasks[currentIndex].copyWith(myDay: !tempMyDay);
     notifyListeners();
   }
 }
