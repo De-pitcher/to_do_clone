@@ -40,6 +40,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         case ActivityType.assignedToMe:
           break;
         case ActivityType.important:
+          newTask = newTask.copyWith(isStarred: true);
           break;
         case ActivityType.myDay:
           newTask = newTask.copyWith(myDay: true);
