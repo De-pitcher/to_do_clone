@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_clone/widgets/task_tile.dart';
 
+import '../enums/activity_type.dart';
 import '../models/animated_list_model.dart';
 import '../models/task.dart';
 import './animated_title.dart';
@@ -21,6 +22,7 @@ class ActivityWidget extends StatefulWidget {
   final Widget? bottomSheet;
   final bool isExtended;
   final List<Widget> specialButtons;
+  final ActivityType activityType;
   const ActivityWidget({
     super.key,
     required this.listModel,
@@ -37,6 +39,7 @@ class ActivityWidget extends StatefulWidget {
     required this.isExtended,
     this.bgImage,
     required this.specialButtons,
+    this.activityType = ActivityType.non,
   });
 
   @override
@@ -73,7 +76,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white24,
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -216,6 +219,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
         return AddTaskBottomSheet(
           addTaskFn: _insert,
           specialButtons: widget.specialButtons,
+          activityType: widget.activityType,
         );
       },
     );

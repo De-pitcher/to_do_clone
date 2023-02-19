@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../../models/task.dart';
+import '../../enums/activity_type.dart';
 
 class AddTaskBottomSheet extends StatefulWidget {
   final Function(Task)? addTaskFn;
   final List<Widget> specialButtons;
+  final ActivityType? activityType;
+
   const AddTaskBottomSheet({
     required this.addTaskFn,
-    super.key,
     required this.specialButtons,
+    this.activityType = ActivityType.non,
+    super.key,
   });
 
   @override
@@ -32,6 +36,19 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         task: _controller.text,
         step: [],
       );
+      switch (widget.activityType) {
+        case ActivityType.assignedToMe:
+          break;
+        case ActivityType.important:
+          break;
+        case ActivityType.myDay:
+          newTask = newTask.copyWith(myDay: true);
+          break;
+        case ActivityType.planned:
+          break;
+        default:
+      }
+      print(newTask.myDay);
       widget.addTaskFn!(newTask);
       _controller.clear();
       setState(() {

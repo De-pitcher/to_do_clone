@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../widgets/activity_widget.dart';
+import '../../providers/tasks.dart';
 
 class Important extends StatefulWidget {
   static const String id = '/important';
@@ -11,6 +15,6 @@ class Important extends StatefulWidget {
 class _ImportantState extends State<Important> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return ActivityWidget(listModel: ,);
   }
 }
