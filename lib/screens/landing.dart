@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './profile.dart';
-import './list_screen.dart';
+import 'profile.dart';
+import 'list_screen.dart';
 import '../screens/activities/assigned_to_me.dart';
 import './activities/important_screen.dart';
 import '../screens/activities/my_day.dart';

@@ -1,4 +1,4 @@
-import './activity.dart';
+import 'activity.dart';
 
 class Group {
   String name;
