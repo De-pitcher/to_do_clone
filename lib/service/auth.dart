@@ -1,20 +1,33 @@
 import "package:firebase_auth/firebase_auth.dart";
 
 class Authentication {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future createAccount(
+  FirebaseAuth get auth => _auth;
+
+  Future<String> createAccount(
       {required String email, required String password}) async {
+    String? error;
     try {
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
     } catch (e) {
-      print(e.toString());
+      error = e.toString();
     }
+
+    return error!;
   }
 
-  Future loginUser(String email, String password) async {
-    await _auth.signInWithEmailAndPassword(email: email, password: password);
+  Future<String> loginUser(String email, String password) async {
+    String? err;
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+
+    } on FirebaseAuthException catch (error) {
+      err = error.message;
+      print(error.message);
+    }
+    return err!;
   }
 
   bool isSignedIn() {

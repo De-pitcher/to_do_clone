@@ -1,18 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:to_do_clone/intro/login.dart';
+
 import 'firebase_options.dart';
-import 'package:to_do_clone/intro/splash_screen.dart';
-import 'package:to_do_clone/providers/task_list.dart';
-
-import './providers/app_color.dart';
-import './providers/activities.dart';
-import './providers/groups.dart';
-import './providers/tasks.dart';
-import './providers/task_steps.dart';
-import './utils/constants/routes.dart';
-import './utils/res/theme.dart';
-
+import 'intro/splash_screen.dart';
+import 'providers/activities.dart';
+import 'providers/app_color.dart';
+import 'providers/groups.dart';
+import 'providers/task_steps.dart';
+import 'providers/tasks.dart';
+import 'screens/landing.dart';
+import 'service/auth.dart';
+import 'utils/constants/routes.dart';
+import 'utils/res/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +27,7 @@ class ToDoClone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = Authentication();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AppColor>(
@@ -48,7 +51,7 @@ class ToDoClone extends StatelessWidget {
         theme: ThemeData.dark(),
         darkTheme: AppTheme.darkTheme,
         debugShowCheckedModeBanner: false,
-        initialRoute: SplashScreen.id,
+        initialRoute: user.isSignedIn() ? MainPage.id : Login.id,
         onGenerateRoute: routeGen,
       ),
     );

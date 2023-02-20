@@ -1,9 +1,8 @@
+
 import "package:flutter/material.dart";
-import "package:firebase_auth/firebase_auth.dart";
-import 'package:to_do_clone/intro/login.dart';
-import 'package:to_do_clone/screens/landing.dart';
-import 'package:to_do_clone/service/auth.dart';
-import 'package:to_do_clone/widgets/error_widget.dart';
+import 'login.dart';
+import '../service/auth.dart';
+import '../widgets/error_widget.dart';
 
 class SignUp extends StatefulWidget {
   static const String id = "/sign_up";
@@ -14,6 +13,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  bool _isLoading = false;
   final Authentication _authentication = Authentication();
 
   late final GlobalKey<FormState> formKey;
@@ -21,6 +21,23 @@ class _SignUpState extends State<SignUp> {
   late final TextEditingController name;
   late final TextEditingController email;
   late final TextEditingController password;
+
+  Future<void> createUser() async {
+    formKey.currentState!.validate();
+    setState(() => _isLoading = true);
+    try {
+      await _authentication
+          .createAccount(email: email.text, password: password.text)
+          .whenComplete(() => Navigator.of(context).pushNamed(Login.id));
+    } catch (error) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: AppError(error: error.toString()),
+        ),
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -106,51 +123,12 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
               const SizedBox(height: 15),
-              // FutureBuilder(
-              //   builder: (context, snapshot) {
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return const CircularProgressIndicator();
-              //     } else if (snapshot.hasError == true) {
-              //       scaffoldKey.currentState!.showBottomSheet(
-              //         (context) => AppError(
-              //           error: snapshot.error.toString(),
-              //         ),
-              //       );
-              //     }
-              //     return TextButton(
-              //       onPressed: () async {
-              //         bool validDetails = formKey.currentState!.validate();
-              //         if (validDetails) {
-              //           _authentication
-              //               .createAccount(
-              //                   email: email.text, password: password.text)
-              //               .then((value) {
-              //             if (_authentication.isSignedIn()) {
-              //               Navigator.of(context).pushNamed(MainPage.id);
-              //             }
-                         
-              //           });
-              //         }
-              //       },
-              //       child: const Text('Sign up'),
-              //     );
-              //   },
-              // ),
               TextButton(
-                    onPressed: () async {
-                      bool validDetails = formKey.currentState!.validate();
-                      if (validDetails) {
-                        _authentication
-                            .createAccount(
-                                email: email.text, password: password.text)
-                            .then((value) {
-                         
-                         
-                        });
-                      }
-                    },
-                    child: const Text('Sign up'),
-                  )
+                onPressed: _isLoading ? null : () async => await createUser(),
+                child: _isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text('Sign up'),
+              )
             ],
           ),
         ),

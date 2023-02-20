@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_clone/intro/login.dart';
-import 'package:to_do_clone/intro/sign_up.dart';
-import 'package:to_do_clone/intro/splash_screen.dart';
-import 'package:to_do_clone/widgets/task_details.dart';
+import '../../intro/login.dart';
+import '../../intro/sign_up.dart';
+import '../../intro/splash_screen.dart';
+import '../../widgets/task_details.dart';
 
 import '../../screens/activities/assigned_to_me.dart';
 import '../../screens/activities/important.dart';

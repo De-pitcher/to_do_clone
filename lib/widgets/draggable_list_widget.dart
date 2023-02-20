@@ -1,14 +1,14 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do_clone/widgets/dialogs/group_dialog.dart';
+import 'dialogs/group_dialog.dart';
 
 import '../enums/group_pop_menu_value.dart';
 import '../models/activity.dart';
 import '../models/group.dart';
-import './list_tile_widget.dart';
-import './group_header_widget.dart';
-import './dialogs/add_or_remove_dialog.dart';
+import 'list_tile_widget.dart';
+import 'group_header_widget.dart';
+import 'dialogs/add_or_remove_dialog.dart';
 import '../providers/activities.dart';
 import '../providers/groups.dart';
 

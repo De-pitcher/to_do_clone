@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
-import 'package:to_do_clone/service/auth.dart';
-import 'package:to_do_clone/intro/sign_up.dart';
-import 'package:to_do_clone/screens/landing.dart';
-import 'package:to_do_clone/widgets/error_widget.dart';
+import '../service/auth.dart';
+import 'sign_up.dart';
+import '../screens/landing.dart';
+import '../widgets/error_widget.dart';
 
 class Login extends StatefulWidget {
   static const String id = "/login_page";
@@ -13,18 +13,34 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  bool _isLoading = false;
   final Authentication _authentication = Authentication();
-
-  late String buttonText;
   late final GlobalKey<FormState> formKey;
   late final GlobalKey<ScaffoldState> scaffoldKey;
   late final TextEditingController email;
   late final TextEditingController password;
 
+  Future<void> loginUser() async {
+    formKey.currentState!.validate();
+    setState(() => _isLoading = true);
+    try {
+      await _authentication
+          .loginUser(email.text, password.text)
+          .whenComplete(() => Navigator.of(context).pushNamed(MainPage.id));
+    } catch (error) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: AppError(error: error.toString()),
+        ),
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    buttonText = 'Login';
+
     formKey = GlobalKey<FormState>();
     scaffoldKey = GlobalKey<ScaffoldState>();
     email = TextEditingController();
@@ -86,38 +102,12 @@ class _LoginState extends State<Login> {
                 ),
               ),
               const SizedBox(height: 15),
-              // FutureBuilder(
-              //   builder: (context, snapshot) {
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return const Center(child: CircularProgressIndicator());
-              //     } else if (snapshot.hasError) {
-              //       // scaffoldKey.currentState!.showBottomSheet(
-              //       //   (context) => AppError(error: snapshot.error.toString()),
-              //       // );
-              //       print(snapshot.error);
-              //     }
-              //     // if (snapshot.connectionState == ConnectionState.done) {
-              //     //   // setState(() => buttonText = 'Welcome Back');
-              //     //   // Navigator.of(context).pushNamed(MainPage.id);
-              //     // }
-              //     return TextButton.icon(
-              //       onPressed: () async {
-              //         formKey.currentState!.validate();
-              //         await _auth.loginUser(email.text, password.text);
-              //       },
-              //       icon: const Icon(Icons.arrow_right_alt_rounded),
-              //       label: Text(buttonText),
-              //     );
-              //   },
-              // ),
               TextButton.icon(
-                onPressed: () async {
-                  formKey.currentState!.validate();
-                  await _authentication.loginUser(email.text, password.text);
-                  Navigator.of(context).pushNamed(MainPage.id);
-                },
-                icon: const Icon(Icons.arrow_right_alt_rounded),
-                label: Text(buttonText),
+                onPressed: _isLoading ? null : () async => await loginUser(),
+                icon: _isLoading
+                    ? const CircularProgressIndicator()
+                    : const Icon(Icons.arrow_right_alt_rounded),
+                label: _isLoading ? const Text('') : const Text('Login'),
               ),
             ],
           ),
