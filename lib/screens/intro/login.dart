@@ -1,5 +1,8 @@
 import "package:flutter/material.dart";
-import 'package:to_do_clone/screens/landing.dart';
+import '../../service/auth.dart';
+import 'sign_up.dart';
+import '../landing.dart';
+import '../../widgets/error_widget.dart';
 
 class Login extends StatefulWidget {
   static const String id = "/login_page";
@@ -10,16 +13,34 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  late String buttonText;
+  bool _isLoading = false;
+  final Authentication _authentication = Authentication();
   late final GlobalKey<FormState> formKey;
   late final GlobalKey<ScaffoldState> scaffoldKey;
   late final TextEditingController email;
   late final TextEditingController password;
 
+  Future<void> loginUser() async {
+    formKey.currentState!.validate();
+    setState(() => _isLoading = true);
+    try {
+      await _authentication
+          .loginUser(email.text, password.text)
+          .whenComplete(() => Navigator.of(context).pushNamed(MainPage.id));
+    } catch (error) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: AppError(error: error.toString()),
+        ),
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    buttonText = 'Login';
+
     formKey = GlobalKey<FormState>();
     scaffoldKey = GlobalKey<ScaffoldState>();
     email = TextEditingController();
@@ -82,28 +103,12 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 15),
               TextButton.icon(
-                onPressed: () {
-                  bool validDetails = formKey.currentState!.validate();
-                  if (validDetails) {
-                    setState(() => buttonText = 'Welcome Back');
-                  
-                    Navigator.of(context).pushNamed(MainPage.id);
-                  } else {
-                    scaffoldKey.currentState!.showBottomSheet((context) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 30,
-                        color: Colors.red[400],
-                        child: const Center(
-                          child: Text('Incorrect email or password'),
-                        ),
-                      );
-                    });
-                  }
-                },
-                icon: const Icon(Icons.arrow_right_alt_rounded),
-                label: Text(buttonText),
-              )
+                onPressed: _isLoading ? null : () async => await loginUser(),
+                icon: _isLoading
+                    ? const CircularProgressIndicator()
+                    : const Icon(Icons.arrow_right_alt_rounded),
+                label: _isLoading ? const Text('') : const Text('Login'),
+              ),
             ],
           ),
         ),
@@ -111,10 +116,9 @@ class _LoginState extends State<Login> {
       bottomSheet: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          
           const Text("Don't have an account? "),
           TextButton(
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).pushNamed(SignUp.id),
             child: const Text('Sign Up'),
           ),
         ],

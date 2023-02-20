@@ -1,7 +1,7 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:to_do_clone/widgets/step_tile.dart';
+import '../widgets/step_tile.dart';
 
 class TaskSteps extends ChangeNotifier {
   final List<Widget> _steps = [];

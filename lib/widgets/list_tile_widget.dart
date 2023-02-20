@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/activity.dart';
-import './list_widget.dart';
+import 'list_widget.dart';
 
 class ListTileWidget extends StatelessWidget {
   final Activity activity;
