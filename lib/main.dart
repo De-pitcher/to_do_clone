@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './providers/app_color.dart';
+import './providers/list_theme.dart';
 import './providers/activities.dart';
 import './providers/groups.dart';
 import './providers/tasks.dart';
@@ -21,8 +21,8 @@ class ToDoClone extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AppColor>(
-          create: (_) => AppColor(),
+        ChangeNotifierProvider<ListTheme>(
+          create: (_) => ListTheme(),
         ),
         ChangeNotifierProvider<Activities>(
           create: (_) => Activities(),

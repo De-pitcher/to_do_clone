@@ -6,11 +6,21 @@ import '../enums/group_pop_menu_value.dart';
 import '../utils/constants/pop_menu_items.dart';
 
 class GroupHeaderWidget extends StatefulWidget {
+  /// name of the group
   final String name;
+  /// checks if the widget is expanded in order for animation to
+  /// take place
   final bool expanded;
+  /// check if the  list is empty in other to display the appropriate
+  /// icon in the [PopMenuItem]
   final bool isEmpty;
+  /// Handles the expanding/ animation of the [GroupHeaderWidget]
   final Function()? onHide;
+  /// Displays the [PopMenuItem]s
   final Function(GroupPopMenuValue) onPopMenuItemSelected;
+
+  /// Displays animated list tile widget of the grouped list of task
+  /// tile
   const GroupHeaderWidget({
     required this.name,
     required this.expanded,
@@ -27,9 +37,13 @@ class GroupHeaderWidget extends StatefulWidget {
 class _GroupHeaderWidgetState extends State<GroupHeaderWidget>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
+  //* handles the animation of the [expand_more] icon
   late final Animation<double> _angleAnimation;
+  //* handles the animation of the name(title of the group widget)
   late final Animation<double> _widthAnimation;
+  //* handles the animation of the [task_outlined] icon
   late final Animation<double> _listIconOpacityAnimation;
+  //* handles the animation of the [PopMenenuItem]s
   late final Animation<double> _popMenuIconOpacityAnimation;
 
   @override
@@ -81,6 +95,7 @@ class _GroupHeaderWidgetState extends State<GroupHeaderWidget>
     super.initState();
   }
 
+  /// Animates the [GroupHeaderWidget] forward and backwards
   void _showList() {
     setState(() {
       if (!widget.expanded && _controller.isDismissed) {

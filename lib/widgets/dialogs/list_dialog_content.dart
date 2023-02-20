@@ -6,11 +6,12 @@ import '../new_list_theme_card.dart';
 import '../circular_color_card.dart';
 import '../circular_image_card.dart';
 import '../picker.dart';
-import '../../providers/app_color.dart';
+import '../../providers/list_theme.dart';
 import '../../enums/new_list_theme_value.dart';
 import '../../providers/activities.dart';
 
 class ListDialogContent extends StatefulWidget {
+  /// [ListDialogContent] a dialog for creating [ListWidget]s
   const ListDialogContent({super.key});
 
   @override
@@ -18,15 +19,24 @@ class ListDialogContent extends StatefulWidget {
 }
 
 class _ListDialogContentState extends State<ListDialogContent> {
+  /// sets the color [NewListThemeValue] to true 
+  /// and is updated when anomther[NewListThemeValue] is selected
   var _color = true;
   var _photo = false;
   var _custom = false;
+
+  //* Controlls the color of suffix icon in the textfield
   var _isButtonEnabled = false;
+
   String _listTitle = '';
 
-  void onSubmitted(AppColor colorsProvider) {
+  /// [onSubmitted] updates the [_listTitle] and adds a new 
+  /// [Activities] object to the [Activities] state 
+  void onSubmitted(ListTheme colorsProvider) {
+    //* Updates the title
     colorsProvider.updateListTitle(_listTitle);
     final listProvider = Provider.of<Activities>(context, listen: false);
+    //* Adds a new activity 
     listProvider.addListActivity(
       title: _listTitle,
       tasks: [],
@@ -39,7 +49,7 @@ class _ListDialogContentState extends State<ListDialogContent> {
 
   @override
   Widget build(BuildContext context) {
-    final colorsProvider = Provider.of<AppColor>(context);
+    final colorsProvider = Provider.of<ListTheme>(context);
     return SizedBox(
       width: 600,
       height: 230,
@@ -73,7 +83,10 @@ class _ListDialogContentState extends State<ListDialogContent> {
     );
   }
 
-  Row _actionButtonBuild(BuildContext context, AppColor colorsProvider) {
+  /// [_actionButtonBuild] builds two buttons in a row that handles the 
+  /// what happens if a user decides to create a ListWidget or cancle the 
+  /// creation
+  Row _actionButtonBuild(BuildContext context, ListTheme colorsProvider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -102,7 +115,7 @@ class _ListDialogContentState extends State<ListDialogContent> {
   }
 
   SizedBox _circularCardItemsBuild(
-      AppColor colorsProvider, BuildContext context) {
+      ListTheme colorsProvider, BuildContext context) {
     return SizedBox(
       height: 35,
       width: double.infinity,
@@ -144,7 +157,7 @@ class _ListDialogContentState extends State<ListDialogContent> {
                 listOfColor: colorsProvider.colors[i].listOfColors,
                 isSelected: colorsProvider.colors[i].isSelected,
                 onTap: () {
-                  Provider.of<AppColor>(context, listen: false)
+                  Provider.of<ListTheme>(context, listen: false)
                       .selectCurrentColor(colorsProvider.colors[i]);
                 },
               );
@@ -154,7 +167,8 @@ class _ListDialogContentState extends State<ListDialogContent> {
     );
   }
 
-  Row _newListThemeCardBuild(AppColor colorsProvider) {
+  /// [_newListThemeCardBuild] builds a horizonal list of [NewListThemeCard]
+  Row _newListThemeCardBuild(ListTheme colorsProvider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -206,7 +220,8 @@ class _ListDialogContentState extends State<ListDialogContent> {
     );
   }
 
-  Expanded _textFieldBuild(BuildContext context, AppColor colorsProvider) {
+  /// [_textFieldBuild] builds a textfield for creating new [ListWidget]
+  Expanded _textFieldBuild(BuildContext context, ListTheme colorsProvider) {
     return Expanded(
       child: TextField(
         autofocus: true,

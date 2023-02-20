@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-
 class GroupDialog extends StatefulWidget {
   final Function(String)? onCreatePressed;
   final String? actionButtonTitle;
   final String? initialFieldValue;
+
+  /// [GroupDialog] is a dialog for creating list of Group list widgets
   const GroupDialog({
     super.key,
     this.onCreatePressed,

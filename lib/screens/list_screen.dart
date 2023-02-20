@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../widgets/dialogs/list_dialog_content.dart';
 import '../widgets/list_widget.dart';
-import '../providers/app_color.dart';
+import '../providers/list_theme.dart';
 
 class ListScreen extends StatefulWidget {
   static const id = '/list-screen';
@@ -22,7 +22,7 @@ class _ListScreenState extends State<ListScreen> {
     super.initState();
 
     Timer.run(() {
-      Provider.of<AppColor>(context, listen: false).resetListTitle();
+      Provider.of<ListTheme>(context, listen: false).resetListTitle();
 
       showDialog(
           context: context,
@@ -42,7 +42,7 @@ class _ListScreenState extends State<ListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = Provider.of<AppColor>(context);
+    final colorProvider = Provider.of<ListTheme>(context);
     return ListWidget(
       title: colorProvider.listTitle,
       fileImage: colorProvider.selectedFileImage,

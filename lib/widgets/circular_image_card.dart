@@ -7,6 +7,9 @@ class CircularImageCard extends StatelessWidget {
   final File? fileImage;
   final Function()? onTap;
   final bool isPickedImage;
+
+  /// A widget that displays either a circular [File] image or an
+  /// image from the asset folder file 
   const CircularImageCard({
     super.key,
     this.image,
