@@ -2,34 +2,60 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../models/app_color_model.dart';
+import '../models/list_theme_model.dart';
 import '../utils/constants/color_models.dart';
 import '../enums/new_list_theme_value.dart';
 
-class AppColor extends ChangeNotifier {
-  List<AppColorModel> _colors = [...colorModels];
+/// [ListTheme] is a class that handles the state of theming as regards
+/// to [ListWidget]
+class ListTheme extends ChangeNotifier {
+  //* Holds the list of colors
+  List<ListThemeModel> _colors = [...colorModels];
 
+  /// This variable [listOfSelectedColors] holds the list of selected colors
   List<Color> listOfSelectedColors = [];
+
+  //* Holds the list of images
   final List<String> _images = [...themeImages];
+
+  //* Holds the list of file images
   final List<File> _fileImages = [];
 
-  List<AppColorModel> get colors => [..._colors];
+  /// This [colors] returns the list of colors
+  List<ListThemeModel> get colors => [..._colors];
+
+  /// This [images] returns the list of images
   List<String> get images => [..._images];
+
+  /// This [fileImages] returns the list of file images
   List<File> get fileImages => [..._fileImages];
 
+  /// This [newListThemeValue] holds the reference to the current
+  /// [NewListThemeValue]
   NewListThemeValue newListThemeValue = NewListThemeValue.color;
+
+  /// This [selectedColor] holds the reference to the currently selected color
   Color selectedColor = Colors.blue;
+
+  /// This [selectedImage] holds the reference to the currently selected image
   String? selectedImage;
+
+  /// This [selectedFileImage] holds the reference to the currently selected
+  /// file image
   File? selectedFileImage;
+
+  /// This [listTitle] holds the reference to the current list
   String listTitle = 'Untitle list';
 
+  /// [changeNewListThemeValue] changes and updates the [newListThemeValue]
   void changeNewListThemeValue(NewListThemeValue newThemeValue) {
     newListThemeValue = newThemeValue;
     notifyListeners();
   }
 
-  void selectCurrentColor(AppColorModel currentColorModel) {
-    List<AppColorModel> tempColor = List.from(_colors);
+  /// [selectCurrentColor] changes and updates the [selectedColor]
+  void selectCurrentColor(ListThemeModel currentColorModel) {
+    List<ListThemeModel> tempColor = List.from(_colors);
 
     for (var i = 0; i < tempColor.length; i++) {
       if (tempColor[i].id == currentColorModel.id) {
@@ -55,6 +81,8 @@ class AppColor extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// [selectImage] selects an image and assign the null to the
+  /// [selectedFileImage]
   void selectImage(int cIndex) {
     for (var i = 0; i < _images.length; i++) {
       if (cIndex == i) {
@@ -66,6 +94,7 @@ class AppColor extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// [addFileImage] adds a [FileImage] to the [fileImages]
   void addFileImage(File selectdFileImage) {
     _fileImages.add(selectdFileImage);
     selectedFileImage = selectdFileImage;
@@ -73,6 +102,8 @@ class AppColor extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// [selectFileImage] selects an file image and assign the null to the
+  /// [selectedImage]
   void selectFileImage(int cIndex) {
     for (var i = 0; i < _fileImages.length; i++) {
       if (cIndex == i) {
@@ -83,6 +114,8 @@ class AppColor extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// [updateListTitle] updates the list title if the params is not empty
+  /// otherwise it assigns "Untitle list" to it
   void updateListTitle(String updatedListTitle) {
     if (updatedListTitle.isNotEmpty || listTitle.startsWith('Untitle')) {
       listTitle = updatedListTitle;
@@ -90,6 +123,8 @@ class AppColor extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// [resetListTitle] resets the [listTitle] to "Untitle list". This method 
+  /// is called after a [ListWidget] is created
   void resetListTitle() {
     listTitle = 'Untitle list';
     notifyListeners();

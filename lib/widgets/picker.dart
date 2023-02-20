@@ -6,6 +6,9 @@ import 'package:image_picker/image_picker.dart';
 class Picker extends StatefulWidget {
   final Color color;
   final Function(File pickedImage) imagePickFn;
+
+  /// [Picker] is a widget that accesses the phone camera and parses 
+  /// the retrieved file as [FileImage]
   const Picker(this.color, this.imagePickFn, {super.key});
 
   @override
@@ -23,11 +26,9 @@ class _PickerState extends State<Picker> {
     );
 
     if (pickedImageFile == null) return;
-    // print('....???????????///????/?/?/?/?/?');
     setState(() {
       _pickedImage = File(pickedImageFile.path);
     });
-    // print(_pickedImage);
     widget.imagePickFn(_pickedImage!);
   }
 
