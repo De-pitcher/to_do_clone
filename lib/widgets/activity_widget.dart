@@ -82,23 +82,16 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     listModel.insert(index, item);
   }
 
-  // void _insertToUi(Task item, AnimatedListModel listModel, [int? cIndex]) {
-  //   final index = cIndex ?? listModel.length;
-  //   widget.insert!(item, index);
-  //   _listModel.insert(index, item);
-  // }
-
-  void _remove(int index, AnimatedListModel<Task> listModel,
-      AnimatedListModel<Task> nextListModel) {
+  void _remove(int index, AnimatedListModel<Task> listModel) {
     widget.remove!(index);
-    _removeFromUi(index, listModel, nextListModel);
+    listModel.removeAt(index);
+    setState(() {});
   }
 
   void _removeFromUi(int cIndex, AnimatedListModel<Task> listModel,
       AnimatedListModel<Task> nextListModel) {
     final item = listModel.removeAt(cIndex);
-
-    final index = cIndex > nextListModel.length ? nextListModel.length : cIndex;
+    final index = cIndex >= nextListModel.length ? nextListModel.length : cIndex;
     nextListModel.insert(index, item);
     setState(() {});
   }
@@ -227,11 +220,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       task: widget.unDoneListModel[index],
       animation: animation,
       onAddTaskFn: (task) => _insert(task, _listModel, index),
-      onRemoveFn: () => _remove(
-        index,
-        _listModel,
-        _completedListModel,
-      ),
+      onRemoveFn: () => _remove(index, _listModel),
       onRemoveFromUiFn: () =>
           _removeFromUi(index, _listModel, _completedListModel),
       activityType: widget.activityType,
@@ -247,7 +236,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       task: widget.completedListModel![index],
       animation: animation,
       onAddTaskFn: (task) => _insert(task, _completedListModel, index),
-      onRemoveFn: () => _remove(index, _completedListModel, _listModel),
+      onRemoveFn: () => _remove(index, _completedListModel),
       onRemoveFromUiFn: () =>
           _removeFromUi(index, _completedListModel, _listModel),
       activityType: widget.activityType,
