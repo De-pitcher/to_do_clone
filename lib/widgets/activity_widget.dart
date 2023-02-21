@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'completed_task_header.dart';
 import 'task_tile.dart';
 
 import '../enums/activity_type.dart';
@@ -12,7 +13,8 @@ class ActivityWidget extends StatefulWidget {
   final String? subtitle;
   final String? bgImage;
   final bool displaySubtitle;
-  final List<Task> listModel;
+  final List<Task> unDoneListModel;
+  final List<Task>? completedListModel;
   final Color color;
   final Widget? emptyWidget;
   final Function(Task, int?)? insert;
@@ -23,9 +25,12 @@ class ActivityWidget extends StatefulWidget {
   final bool isExtended;
   final List<Widget> specialButtons;
   final ActivityType activityType;
+
+  /// [ActivityWidget] is a widget that is used to create different
+  /// activities that tasks can be grouped in
   const ActivityWidget({
     super.key,
-    required this.listModel,
+    required this.unDoneListModel,
     required this.color,
     this.emptyWidget,
     this.insert,
@@ -40,6 +45,7 @@ class ActivityWidget extends StatefulWidget {
     this.bgImage,
     required this.specialButtons,
     this.activityType = ActivityType.non,
+    this.completedListModel = const <Task>[],
   });
 
   @override
@@ -48,28 +54,52 @@ class ActivityWidget extends StatefulWidget {
 
 class _ActivityWidgetState extends State<ActivityWidget> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  final GlobalKey<AnimatedListState> _completedListKey =
+      GlobalKey<AnimatedListState>();
   late AnimatedListModel<Task> _listModel;
+  late AnimatedListModel<Task> _completedListModel;
   var _liftTitle = false;
+  var _isExpanded = true;
 
   @override
   void didChangeDependencies() {
     _listModel = AnimatedListModel(
       listKey: _listKey,
-      initialItems: widget.listModel,
+      initialItems: widget.unDoneListModel,
+      removedItemBuilder: _removedItemBuilder,
+    );
+    _completedListModel = AnimatedListModel(
+      listKey: _completedListKey,
+      initialItems: widget.completedListModel,
       removedItemBuilder: _removedItemBuilder,
     );
     super.didChangeDependencies();
   }
 
-  void _insert(Task item, [int? cIndex]) {
-    final index = cIndex ?? _listModel.length;
+  void _insert(Task item, AnimatedListModel listModel, [int? cIndex]) {
+    final index = cIndex ?? listModel.length;
     widget.insert!(item, index);
-    _listModel.insert(index, item);
+    listModel.insert(index, item);
   }
 
-  void _remove(int index) {
+  // void _insertToUi(Task item, AnimatedListModel listModel, [int? cIndex]) {
+  //   final index = cIndex ?? listModel.length;
+  //   widget.insert!(item, index);
+  //   _listModel.insert(index, item);
+  // }
+
+  void _remove(int index, AnimatedListModel<Task> listModel,
+      AnimatedListModel<Task> nextListModel) {
     widget.remove!(index);
-    _listModel.removeAt(index);
+    _removeFromUi(index, listModel, nextListModel);
+  }
+
+  void _removeFromUi(int cIndex, AnimatedListModel<Task> listModel,
+      AnimatedListModel<Task> nextListModel) {
+    final item = listModel.removeAt(cIndex);
+
+    final index = cIndex > nextListModel.length ? nextListModel.length : cIndex;
+    nextListModel.insert(index, item);
     setState(() {});
   }
 
@@ -126,9 +156,21 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                     subtitle: widget.subtitle,
                   ),
                 ),
-                widget.listModel.isEmpty
-                    ? widget.emptyWidget ?? const Text('')
-                    : buildAnimatedList(widget.listModel.length)
+                if (widget.unDoneListModel.isEmpty &&
+                    widget.completedListModel!.isEmpty)
+                  widget.emptyWidget ?? const Text('')
+                else if (widget.unDoneListModel.isEmpty &&
+                    widget.completedListModel!.isNotEmpty)
+                  buildCompletedAnimatedList()
+                else
+                  Expanded(
+                    child: Column(
+                      children: [
+                        buildAnimatedList(),
+                        buildCompletedAnimatedList()
+                      ],
+                    ),
+                  )
               ],
             ),
           ),
@@ -182,10 +224,32 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     Animation<double> animation,
   ) {
     return TaskTile(
-      task: widget.listModel[index],
+      task: widget.unDoneListModel[index],
       animation: animation,
-      onAddTaskFn: (task) => _insert(task, index),
-      onRemoveFn: () => _remove(index),
+      onAddTaskFn: (task) => _insert(task, _listModel, index),
+      onRemoveFn: () => _remove(
+        index,
+        _listModel,
+        _completedListModel,
+      ),
+      onRemoveFromUiFn: () =>
+          _removeFromUi(index, _listModel, _completedListModel),
+      activityType: widget.activityType,
+    );
+  }
+
+  Widget _buildCompletedTaskTile(
+    BuildContext context,
+    int index,
+    Animation<double> animation,
+  ) {
+    return TaskTile(
+      task: widget.completedListModel![index],
+      animation: animation,
+      onAddTaskFn: (task) => _insert(task, _completedListModel, index),
+      onRemoveFn: () => _remove(index, _completedListModel, _listModel),
+      onRemoveFromUiFn: () =>
+          _removeFromUi(index, _completedListModel, _listModel),
       activityType: widget.activityType,
     );
   }
@@ -198,11 +262,11 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     return Container();
   }
 
-  Padding buildAnimatedList(int itemCount) {
+  Padding buildAnimatedList() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.8,
+        height: _listModel.length * 70,
         child: AnimatedList(
           key: _listKey,
           initialItemCount: _listModel.length,
@@ -210,6 +274,40 @@ class _ActivityWidgetState extends State<ActivityWidget> {
         ),
       ),
     );
+  }
+
+  Widget buildCompletedAnimatedList() {
+    return _completedListModel.isEmpty
+        ? Container()
+        : Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Column(
+              children: [
+                CompletedTaskHeader(
+                  numCompleted: _completedListModel.length,
+                  color: widget.color,
+                  onHide: (value) {
+                    setState(() {
+                      _isExpanded = value;
+                    });
+                  },
+                ),
+                if (_isExpanded)
+                  AnimatedOpacity(
+                    opacity: _isExpanded ? 1 : 0,
+                    duration: const Duration(milliseconds: 300),
+                    child: SizedBox(
+                      height: _completedListModel.length * 70,
+                      child: AnimatedList(
+                        key: _completedListKey,
+                        initialItemCount: _completedListModel.length,
+                        itemBuilder: _buildCompletedTaskTile,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          );
   }
 
   Future<dynamic> addTask(BuildContext context) {
@@ -221,7 +319,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       isDismissible: false,
       builder: (context) {
         return AddTaskBottomSheet(
-          addTaskFn: _insert,
+          addTaskFn: (item) => _insert(item, _listModel),
           specialButtons: widget.specialButtons,
           activityType: widget.activityType,
         );

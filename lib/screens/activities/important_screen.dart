@@ -20,7 +20,7 @@ class _ImportantScreenState extends State<ImportantScreen> {
   @override
   Widget build(BuildContext context) {
     return ActivityWidget(
-      listModel: Provider.of<Tasks>(context).important,
+      unDoneListModel: Provider.of<Tasks>(context).important,
       color: widget.args['color'],
       title: widget.args['action'],
       displaySubtitle: false,

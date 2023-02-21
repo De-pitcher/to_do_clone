@@ -24,7 +24,7 @@ class _MyDayState extends State<MyDay> {
         title: 'My Day',
         displaySubtitle: true,
         subtitle: 'Saturday, February 11',
-        listModel: tasksProvider.myDayTasks,
+        unDoneListModel: tasksProvider.myDayTasks,
         color: Colors.white,
         bgImage: 'assets/images/my_day.png',
         insert: (item, index) => context.read<Tasks>().insert(item, index),

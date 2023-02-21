@@ -50,4 +50,6 @@ class AnimatedListModel<E> {
   E operator [](int index) => _items[index];
 
   int indexOf(E item) => _items.indexOf(item);
+
+  bool get isEmpty => _items.isEmpty;
 }

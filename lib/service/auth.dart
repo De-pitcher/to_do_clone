@@ -10,7 +10,7 @@ class Authentication {
     String? error;
     try {
       await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+          email: email, password: password,);
     } catch (e) {
       error = e.toString();
     }

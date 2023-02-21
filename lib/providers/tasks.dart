@@ -11,6 +11,11 @@ class Tasks with ChangeNotifier {
 
   List<Task> get important => _tasks.where((tks) => tks.isStarred).toList();
 
+  List<Task> get isDoneTasks => _tasks.where((tsk) => tsk.isDone).toList();
+
+  List<Task> get unDoneTasks =>
+      _tasks.where((tsk) => tsk.isDone == false).toList();
+
   void insert(Task task, [int? index]) {
     int cIndex = index != null && index != -1 ? index : _tasks.length;
     _tasks.insert(cIndex, task);

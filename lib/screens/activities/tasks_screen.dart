@@ -13,10 +13,19 @@ class TasksScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tksProvider = Provider.of<Tasks>(context);
+    // print(tksProvider.isDoneTasks.)
+    // tksProvider.isDoneTasks.forEach((e) => print(e.task));
+    print('Undone');
+    tksProvider.isDoneTasks.forEach((e) => print(e.task));
+    print(tksProvider.unDoneTasks.length);
+    print(tksProvider.isDoneTasks.length);
+
     return ActivityWidget(
       title: args['action'],
       displaySubtitle: false,
-      listModel: Provider.of<Tasks>(context).tasks,
+      unDoneListModel: Provider.of<Tasks>(context).unDoneTasks,
+      completedListModel: Provider.of<Tasks>(context).isDoneTasks,
       color: args['color'],
       insert: (item, index) => context.read<Tasks>().insert(item, index),
       remove: (index) => context.read<Tasks>().removeTask(index),
