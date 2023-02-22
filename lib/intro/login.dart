@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
+import 'package:to_do_clone/intro/forgot_password.dart';
 import '../service/auth.dart';
 import 'sign_up.dart';
 import '../screens/landing.dart';
@@ -14,33 +16,36 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _isLoading = false;
-  final Authentication _authentication = Authentication();
   late final GlobalKey<FormState> formKey;
   late final GlobalKey<ScaffoldState> scaffoldKey;
   late final TextEditingController email;
   late final TextEditingController password;
 
-  Future<void> loginUser() async {
+  loginUser() async {
     formKey.currentState!.validate();
     setState(() => _isLoading = true);
-    try {
-      await _authentication
-          .loginUser(email.text, password.text)
-          .whenComplete(() => Navigator.of(context).pushNamed(MainPage.id));
-    } catch (error) {
+    var response = await Authentication.loginUser(email.text, password.text);
+
+    if (response != null && mounted) {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: AppError(error: error.toString()),
+          backgroundColor: Colors.red,
+          content: Text(response),
         ),
       );
     }
+    setState(() => _isLoading = false);
+    if (response == null && mounted) {
+      Navigator.of(context).pushNamed(MainPage.id);
+    }
+    email.clear();
+    password.clear();
   }
 
   @override
   void initState() {
     super.initState();
-
     formKey = GlobalKey<FormState>();
     scaffoldKey = GlobalKey<ScaffoldState>();
     email = TextEditingController();
@@ -101,7 +106,16 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 5),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed(ForgotPassword.id),
+                  child: const Text('Forgot Password?'),
+                ),
+              ),
+              const SizedBox(height: 10),
               TextButton.icon(
                 onPressed: _isLoading ? null : () async => await loginUser(),
                 icon: _isLoading

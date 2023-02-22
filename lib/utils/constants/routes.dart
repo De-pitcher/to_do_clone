@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_clone/intro/forgot_password.dart';
 import '../../intro/login.dart';
 import '../../intro/sign_up.dart';
 import '../../intro/splash_screen.dart';
@@ -21,6 +22,8 @@ MaterialPageRoute routeGen(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const Login());
     case SignUp.id:
       return MaterialPageRoute(builder: (context) => const SignUp());
+    case ForgotPassword.id:
+      return MaterialPageRoute(builder: (context) => const ForgotPassword());
     case MainPage.id:
       return MaterialPageRoute(builder: (_) => const MainPage());
     case ProfileAccount.id:
@@ -41,7 +44,8 @@ MaterialPageRoute routeGen(RouteSettings settings) {
               TasksScreen(args: settings.arguments as Map<String, dynamic>));
     case TaskDetails.id:
       return MaterialPageRoute(
-        builder: (_) =>  TaskDetails(args: settings.arguments as Map<String, dynamic>),
+        builder: (_) =>
+            TaskDetails(args: settings.arguments as Map<String, dynamic>),
       );
     default:
       return MaterialPageRoute(
