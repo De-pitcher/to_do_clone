@@ -1,5 +1,7 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' show DateFormat;
 import 'package:provider/provider.dart';
 
 import '../../enums/activity_type.dart';

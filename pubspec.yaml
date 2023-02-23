@@ -40,9 +40,9 @@ dependencies:
   provider: ^6.0.5
   image_picker: ^0.8.6
   drag_and_drop_lists: ^0.3.3
-  firebase_auth: ^4.2.6
   uuid: ^3.0.7
-  intl: ^0.18.0
+  firebase_core: ^2.7.0
+  firebase_auth: ^4.2.9
 
 dev_dependencies:
   flutter_test:
