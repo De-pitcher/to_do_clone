@@ -19,17 +19,12 @@ class Tasks with ChangeNotifier {
   void insert(Task task, [int? index]) {
     int cIndex = index ?? _tasks.length;
     _tasks.insert(cIndex, task);
-    print(_tasks.length);
     notifyListeners();
   }
 
   void removeTask(Task task) {
     final index = _tasks.indexWhere((tks) => tks.id.contains(task.id));
-    final item = _tasks.firstWhere((tks) => tks.id.contains(task.id));
     _tasks.removeAt(index);
-    print(item.task);
-    print(task.id);
-    // print(_tasks.length);
     notifyListeners();
   }
 
@@ -65,7 +60,7 @@ class Tasks with ChangeNotifier {
     notifyListeners();
   }
 
-  void StarTask(String id) {
+  void starTask(String id) {
     final currentIndex = _tasks.indexWhere((e) => e.id == id);
     // final tempIsStarred = _tasks[currentIndex].isStarred;
     // // print(tempIsStarred);

@@ -181,7 +181,7 @@ class TaskTile extends StatelessWidget {
                           msg: 'Task removed from Importance',
                           scaffoldMessenger: scaffoldMessenger,
                           onPressed: () {
-                            tksProvider.StarTask(task.id);
+                            tksProvider.starTask(task.id);
                             scaffoldMessenger.hideCurrentSnackBar();
                           },
                         ),
