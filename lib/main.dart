@@ -25,7 +25,6 @@ class ToDoClone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Authentication();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ListTheme>(
@@ -49,7 +48,7 @@ class ToDoClone extends StatelessWidget {
         theme: ThemeData.dark(),
         darkTheme: AppTheme.darkTheme,
         debugShowCheckedModeBanner: false,
-        initialRoute: user.isSignedIn() ? MainPage.id : Login.id,
+        initialRoute: Authentication.isSignedIn() ? MainPage.id : Login.id,
         onGenerateRoute: routeGen,
       ),
     );

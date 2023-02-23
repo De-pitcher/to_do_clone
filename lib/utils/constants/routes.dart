@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+
+import '../../screens/intro/forgot_password.dart';
 import '../../screens/intro/login.dart';
 import '../../screens/intro/sign_up.dart';
-import '../../screens/intro/splash_screen.dart';
 import '../../widgets/task_details.dart';
-
 import '../../screens/activities/assigned_to_me.dart';
 import '../../screens/activities/important_screen.dart';
 import '../../screens/activities/my_day_screen.dart';
@@ -15,12 +15,12 @@ import '../../screens/profile.dart';
 
 MaterialPageRoute routeGen(RouteSettings settings) {
   switch (settings.name) {
-    case SplashScreen.id:
-      return MaterialPageRoute(builder: (context) => const SplashScreen());
     case Login.id:
       return MaterialPageRoute(builder: (context) => const Login());
     case SignUp.id:
       return MaterialPageRoute(builder: (context) => const SignUp());
+    case ForgotPassword.id:
+      return MaterialPageRoute(builder: (context) => const ForgotPassword());
     case MainPage.id:
       return MaterialPageRoute(builder: (_) => const MainPage());
     case ProfileAccount.id:
