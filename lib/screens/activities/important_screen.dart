@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do_clone/enums/activity_type.dart';
 
+import '../../enums/activity_type.dart';
 import '../../widgets/activity_widget.dart';
 import '../../providers/tasks.dart';
 import '../../widgets/buttons/special_button.dart';
@@ -20,11 +20,18 @@ class _ImportantScreenState extends State<ImportantScreen> {
   @override
   Widget build(BuildContext context) {
     return ActivityWidget(
-      listModel: Provider.of<Tasks>(context).important,
       color: widget.args['color'],
       title: widget.args['action'],
       displaySubtitle: false,
       isExtended: false,
+      completedListModel: Provider.of<Tasks>(context)
+          .important
+          .where((tks) => tks.isDone)
+          .toList(),
+      unDoneListModel: Provider.of<Tasks>(context)
+          .important
+          .where((tks) => !tks.isDone)
+          .toList(),
       fabIcon: const Icon(Icons.add, size: 32),
       activityType: ActivityType.important,
       specialButtons: const [

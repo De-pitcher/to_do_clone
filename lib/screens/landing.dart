@@ -6,7 +6,7 @@ import 'profile.dart';
 import 'list_screen.dart';
 import '../screens/activities/assigned_to_me.dart';
 import './activities/important_screen.dart';
-import '../screens/activities/my_day.dart';
+import 'activities/my_day_screen.dart';
 import '../screens/activities/planned.dart';
 import './activities/tasks_screen.dart';
 import '../widgets/dialogs/group_dialog.dart';
@@ -49,7 +49,7 @@ class MainPage extends StatelessWidget {
                     icon: CupertinoIcons.brightness,
                     iconColor: Colors.purple[400],
                     action: 'My Day',
-                    routeName: MyDay.id,
+                    routeName: MyDayScreen.id,
                   ),
                   //* [Important] tile
                   ActionWidget(

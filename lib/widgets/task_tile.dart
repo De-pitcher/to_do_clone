@@ -12,7 +12,8 @@ class TaskTile extends StatelessWidget {
   final Task task;
   final Animation<double> animation;
   final Function(Task)? onAddTaskFn;
-  final Function()? onRemoveFn;
+  final Function(Task)? onRemoveFn;
+  final Function()? onRemoveFromUiFn;
   final ActivityType activityType;
   const TaskTile({
     Key? key,
@@ -21,6 +22,7 @@ class TaskTile extends StatelessWidget {
     this.onRemoveFn,
     this.onAddTaskFn,
     this.activityType = ActivityType.non,
+    this.onRemoveFromUiFn,
   }) : super(key: key);
 
   @override
@@ -51,7 +53,7 @@ class TaskTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(5),
                 color: Theme.of(context).errorColor,
               ),
-              padding: const EdgeInsets.only(right: 20),
+              padding: const EdgeInsets.only(right: 10),
               child: const Icon(
                 Icons.delete,
                 color: Colors.white,
@@ -64,7 +66,7 @@ class TaskTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(5),
                 color: Theme.of(context).colorScheme.secondary,
               ),
-              padding: const EdgeInsets.only(left: 20),
+              padding: const EdgeInsets.only(left: 10),
               child: const Icon(
                 Icons.sunny,
                 color: Colors.white,
@@ -74,7 +76,7 @@ class TaskTile extends StatelessWidget {
             onDismissed: (direction) {
               if (direction == DismissDirection.endToStart) {
                 scaffoldMessenger.hideCurrentSnackBar();
-                onRemoveFn!();
+                onRemoveFn!(task);
                 scaffoldMessenger.showSnackBar(
                   snackbar(
                       duration: duration,
@@ -117,6 +119,7 @@ class TaskTile extends StatelessWidget {
                     checkColor: Colors.black,
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     onChanged: (_) {
+                      onRemoveFromUiFn!();
                       tksProvider.toggleIsDone(task.id);
                     },
                   ),
@@ -134,22 +137,37 @@ class TaskTile extends StatelessWidget {
                                 : TextDecoration.none,
                           ),
                     ),
-                    task.myDay
+                    activityType != ActivityType.myDay && task.myDay
                         ? Row(
                             children: [
-                              const Icon(Icons.sunny,
-                                  size: 16, color: Colors.grey),
+                              const Icon(
+                                Icons.sunny,
+                                size: 16,
+                                color: Colors.grey,
+                              ),
                               const SizedBox(width: 10),
                               Text(
                                 'My Day',
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyText2!
-                                    .copyWith(color: Colors.grey),
+                                    .copyWith(
+                                      color: Colors.grey,
+                                    ),
                               )
                             ],
                           )
-                        : Container(),
+                        : activityType == ActivityType.myDay && task.myDay
+                            ? Text(
+                                'Tasks',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2!
+                                    .copyWith(
+                                      color: Colors.grey,
+                                    ),
+                              )
+                            : Container(),
                   ],
                 ),
                 trailing: IconButton(

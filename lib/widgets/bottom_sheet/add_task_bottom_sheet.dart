@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../models/task.dart';
 import '../../enums/activity_type.dart';
@@ -30,9 +31,10 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
   }
 
   void onSubmit() {
+    const uuid = Uuid();
     if (_controller.text.isNotEmpty) {
       Task newTask = Task(
-        id: DateTime.now(),
+        id: uuid.v4(),
         task: _controller.text,
         step: [],
       );
