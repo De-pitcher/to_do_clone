@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../enums/activity_type.dart';
@@ -6,25 +7,27 @@ import '../../providers/tasks.dart';
 import '../../widgets/activity_widget.dart';
 import '../../widgets/buttons/special_button.dart';
 
-class MyDay extends StatefulWidget {
+class MyDayScreen extends StatefulWidget {
   static const String id = '/my_day';
-  const MyDay({super.key});
+  const MyDayScreen({super.key});
 
   @override
-  State<MyDay> createState() => _MyDayState();
+  State<MyDayScreen> createState() => _MyDayScreenState();
 }
 
-class _MyDayState extends State<MyDay> {
+class _MyDayScreenState extends State<MyDayScreen> {
   @override
   Widget build(BuildContext context) {
     final tasksProvider = Provider.of<Tasks>(context);
     return SizedBox(
-      // height: MediaQuery.of(context).size.height - 10,
       child: ActivityWidget(
         title: 'My Day',
         displaySubtitle: true,
-        subtitle: 'Saturday, February 11',
-        unDoneListModel: tasksProvider.myDayTasks,
+        subtitle: DateFormat.MMMMEEEEd().format(DateTime.now()),
+        completedListModel:
+            tasksProvider.myDayTasks.where((tks) => tks.isDone).toList(),
+        unDoneListModel:
+            tasksProvider.myDayTasks.where((tks) => !tks.isDone).toList(),
         color: Colors.white,
         bgImage: 'assets/images/my_day.png',
         insert: (item, index) => context.read<Tasks>().insert(item, index),

@@ -20,6 +20,10 @@ class _ImportantScreenState extends State<ImportantScreen> {
   @override
   Widget build(BuildContext context) {
     return ActivityWidget(
+      color: widget.args['color'],
+      title: widget.args['action'],
+      displaySubtitle: false,
+      isExtended: false,
       completedListModel: Provider.of<Tasks>(context)
           .important
           .where((tks) => tks.isDone)
@@ -28,10 +32,6 @@ class _ImportantScreenState extends State<ImportantScreen> {
           .important
           .where((tks) => !tks.isDone)
           .toList(),
-      color: widget.args['color'],
-      title: widget.args['action'],
-      displaySubtitle: false,
-      isExtended: false,
       fabIcon: const Icon(Icons.add, size: 32),
       activityType: ActivityType.important,
       specialButtons: const [

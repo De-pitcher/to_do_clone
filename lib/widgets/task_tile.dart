@@ -137,7 +137,7 @@ class TaskTile extends StatelessWidget {
                                 : TextDecoration.none,
                           ),
                     ),
-                    task.myDay
+                    activityType != ActivityType.myDay && task.myDay
                         ? Row(
                             children: [
                               const Icon(
@@ -157,7 +157,17 @@ class TaskTile extends StatelessWidget {
                               )
                             ],
                           )
-                        : Container(),
+                        : activityType == ActivityType.myDay && task.myDay
+                            ? Text(
+                                'Tasks',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2!
+                                    .copyWith(
+                                      color: Colors.grey,
+                                    ),
+                              )
+                            : Container(),
                   ],
                 ),
                 trailing: IconButton(
