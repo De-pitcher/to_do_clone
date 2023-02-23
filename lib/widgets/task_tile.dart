@@ -12,7 +12,7 @@ class TaskTile extends StatelessWidget {
   final Task task;
   final Animation<double> animation;
   final Function(Task)? onAddTaskFn;
-  final Function()? onRemoveFn;
+  final Function(Task)? onRemoveFn;
   final Function()? onRemoveFromUiFn;
   final ActivityType activityType;
   const TaskTile({
@@ -76,7 +76,7 @@ class TaskTile extends StatelessWidget {
             onDismissed: (direction) {
               if (direction == DismissDirection.endToStart) {
                 scaffoldMessenger.hideCurrentSnackBar();
-                onRemoveFn!();
+                onRemoveFn!(task);
                 scaffoldMessenger.showSnackBar(
                   snackbar(
                       duration: duration,

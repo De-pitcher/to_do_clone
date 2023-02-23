@@ -18,7 +18,7 @@ class ActivityWidget extends StatefulWidget {
   final Color color;
   final Widget? emptyWidget;
   final Function(Task, int?)? insert;
-  final Function(int)? remove;
+  final Function(Task)? remove;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
   final Widget? fabIcon;
   final Widget? bottomSheet;
@@ -77,13 +77,12 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   }
 
   void _insert(Task item, AnimatedListModel listModel, [int? cIndex]) {
-    final index = cIndex ?? listModel.length;
-    widget.insert!(item, index);
-    listModel.insert(index, item);
+    widget.insert!(item, cIndex);
+    listModel.insert(cIndex ?? listModel.length, item);
   }
 
-  void _remove(int index, AnimatedListModel<Task> listModel) {
-    widget.remove!(index);
+  void _remove(Task item, int index, AnimatedListModel<Task> listModel) {
+    widget.remove!(item);
     listModel.removeAt(index);
     setState(() {});
   }
@@ -91,7 +90,8 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   void _removeFromUi(int cIndex, AnimatedListModel<Task> listModel,
       AnimatedListModel<Task> nextListModel) {
     final item = listModel.removeAt(cIndex);
-    final index = cIndex >= nextListModel.length ? nextListModel.length : cIndex;
+    final index =
+        cIndex >= nextListModel.length ? nextListModel.length : cIndex;
     nextListModel.insert(index, item);
     setState(() {});
   }
@@ -220,7 +220,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       task: widget.unDoneListModel[index],
       animation: animation,
       onAddTaskFn: (task) => _insert(task, _listModel, index),
-      onRemoveFn: () => _remove(index, _listModel),
+      onRemoveFn: (item) => _remove(item, index, _listModel),
       onRemoveFromUiFn: () =>
           _removeFromUi(index, _listModel, _completedListModel),
       activityType: widget.activityType,
@@ -235,8 +235,8 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     return TaskTile(
       task: widget.completedListModel![index],
       animation: animation,
-      onAddTaskFn: (task) => _insert(task, _completedListModel, index),
-      onRemoveFn: () => _remove(index, _completedListModel),
+      onAddTaskFn: (task) => _insert(task, _completedListModel, null),
+      onRemoveFn: (item) => _remove(item, index, _completedListModel),
       onRemoveFromUiFn: () =>
           _removeFromUi(index, _completedListModel, _listModel),
       activityType: widget.activityType,

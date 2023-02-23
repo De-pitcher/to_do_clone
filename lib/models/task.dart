@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
 class Task {
-  final DateTime id;
+  String  id;
   final String task;
   final List<String> step;
   bool isDone;
@@ -17,7 +18,7 @@ class Task {
   });
 
   Task copyWith({
-    DateTime? id,
+    String? id,
     String? task,
     List<String>? step,
     bool? isDone,
