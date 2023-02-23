@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
+
 import 'package:to_do_clone/intro/forgot_password.dart';
+
+import '../screens/landing.dart';
 import '../service/auth.dart';
 import 'sign_up.dart';
-import '../screens/landing.dart';
-import '../widgets/error_widget.dart';
 
 class Login extends StatefulWidget {
   static const String id = "/login_page";

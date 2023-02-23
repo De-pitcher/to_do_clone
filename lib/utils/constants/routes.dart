@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:to_do_clone/intro/forgot_password.dart';
 import '../../intro/login.dart';
 import '../../intro/sign_up.dart';
-import '../../intro/splash_screen.dart';
+
 import '../../widgets/task_details.dart';
 
 import '../../screens/activities/assigned_to_me.dart';
@@ -16,8 +16,6 @@ import '../../screens/profile.dart';
 
 MaterialPageRoute routeGen(RouteSettings settings) {
   switch (settings.name) {
-    case SplashScreen.id:
-      return MaterialPageRoute(builder: (context) => const SplashScreen());
     case Login.id:
       return MaterialPageRoute(builder: (context) => const Login());
     case SignUp.id:

@@ -12,34 +12,31 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   bool _isLoading = false;
-  final _authentication = Authentication();
   late final GlobalKey<FormState> formKey;
-  late final GlobalKey<ScaffoldState> scaffoldKey;
   late final TextEditingController password;
   late final TextEditingController cPassword;
 
-  // Future<void> loginUser() async {
-  //   formKey.currentState!.validate();
-  //   setState(() => _isLoading = true);
-  //   try {
-  //     await _authentication
-  //         .loginUser(email.text, password.text)
-  //         .whenComplete(() => Navigator.of(context).pushNamed(MainPage.id));
-  //   } catch (error) {
-  //     setState(() => _isLoading = false);
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: AppError(error: error.toString()),
-  //       ),
-  //     );
-  //   }
-  // }
+  resetPassword() async {
+    formKey.currentState!.validate();
+    setState(() => _isLoading = true);
+    var response = await Authentication.resetPassword(cPassword.text);
+    if (response != null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response),
+        ),
+      );
+    }
+    setState(() => _isLoading = false);
+    if (response == null && mounted) {
+      // Navigator.of(context).pop();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     formKey = GlobalKey<FormState>();
-    scaffoldKey = GlobalKey<ScaffoldState>();
     password = TextEditingController();
     cPassword = TextEditingController();
   }
@@ -55,7 +52,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 300),
         child: Form(
@@ -74,7 +70,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   return null;
                 },
                 decoration: InputDecoration(
-                  label: const Text('Password'),
+                  label: const Text('New Password'),
                   hintText: '12345678',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -95,7 +91,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   return null;
                 },
                 decoration: InputDecoration(
-                  label: const Text('Confirm Password'),
+                  label: const Text('Confirm new password'),
                   hintText: '12345678',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -104,7 +100,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               ),
               const SizedBox(height: 10),
               TextButton(
-                onPressed: _isLoading ? null : () {},
+                onPressed: _isLoading ? null : () async => await resetPassword(),
                 child: _isLoading
                     ? const CircularProgressIndicator()
                     : const Text('Reset Password'),
