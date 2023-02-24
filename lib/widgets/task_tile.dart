@@ -7,6 +7,10 @@ import '../enums/activity_type.dart';
 import '../models/task.dart';
 import '../providers/tasks.dart';
 import '../widgets/task_details.dart';
+import './task_text_widget.dart';
+import './dismissed_widget.dart';
+
+const duration = Duration(seconds: 3);
 
 class TaskTile extends StatelessWidget {
   final Task task;
@@ -29,7 +33,6 @@ class TaskTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final tksProvider = context.read<Tasks>();
-    const duration = Duration(seconds: 3);
     return SizeTransition(
       axisAlignment: -1,
       sizeFactor: CurvedAnimation(
@@ -47,31 +50,17 @@ class TaskTile extends StatelessWidget {
           child: Dismissible(
             key: UniqueKey(),
             dragStartBehavior: DragStartBehavior.start,
-            secondaryBackground: Container(
+            secondaryBackground: DismissedWidget(
               alignment: Alignment.centerRight,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Theme.of(context).errorColor,
-              ),
               padding: const EdgeInsets.only(right: 10),
-              child: const Icon(
-                Icons.delete,
-                color: Colors.white,
-                size: 25,
-              ),
+              color: Theme.of(context).errorColor,
+              icon: Icons.delete,
             ),
-            background: Container(
+            background: DismissedWidget(
               alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Theme.of(context).colorScheme.secondary,
-              ),
               padding: const EdgeInsets.only(left: 10),
-              child: const Icon(
-                Icons.sunny,
-                color: Colors.white,
-                size: 25,
-              ),
+              color: Theme.of(context).colorScheme.secondary,
+              icon: Icons.sunny,
             ),
             onDismissed: (direction) {
               if (direction == DismissDirection.endToStart) {
@@ -128,14 +117,11 @@ class TaskTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      task.task,
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                            color: Colors.white,
-                            decoration: task.isDone
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
-                          ),
+                    TaskTextWidget(
+                      text: task.task,
+                      context: context,
+                      color: Colors.white,
+                      isDone: task.isDone,
                     ),
                     activityType != ActivityType.myDay && task.myDay
                         ? Row(
@@ -146,26 +132,18 @@ class TaskTile extends StatelessWidget {
                                 color: Colors.grey,
                               ),
                               const SizedBox(width: 10),
-                              Text(
-                                'My Day',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText2!
-                                    .copyWith(
-                                      color: Colors.grey,
-                                    ),
-                              )
+                              TaskTextWidget(
+                                text: 'My Day',
+                                context: context,
+                                color: Colors.grey,
+                              ),
                             ],
                           )
                         : activityType == ActivityType.myDay && task.myDay
-                            ? Text(
-                                'Tasks',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText2!
-                                    .copyWith(
-                                      color: Colors.grey,
-                                    ),
+                            ? TaskTextWidget(
+                                text: 'Tasks',
+                                context: context,
+                                color: Colors.grey,
                               )
                             : Container(),
                   ],

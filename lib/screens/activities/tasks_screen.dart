@@ -8,13 +8,19 @@ import '../../widgets/buttons/special_button.dart';
 class TasksScreen extends StatelessWidget {
   static const String id = '/tasks';
 
+  /// This retrieves the name and color of the parent [ActionWidget]
   final Map<String, dynamic> args;
+  
+  /// [TasksScreen] is a screen that displays all the tasks created 
+  /// in the app using the [ActivityWidget]. [ActivityWidget] can be used to 
+  /// manipulate the tasks. New tasks can be created by clicking the
+  /// [FloatingActionButton].
   const TasksScreen({super.key, required this.args});
 
   @override
   Widget build(BuildContext context) {
     return ActivityWidget(
-      title: args['action'],
+      title: args['activity'],
       displaySubtitle: false,
       unDoneListModel: Provider.of<Tasks>(context).unDoneTasks,
       completedListModel: Provider.of<Tasks>(context).isDoneTasks,

@@ -11,7 +11,10 @@ import '../../widgets/buttons/special_button.dart';
 
 class MyDayScreen extends StatefulWidget {
   static const String id = '/my_day';
-  const MyDayScreen({super.key});
+
+  /// This retrieves the name and color of the parent [ActionWidget]
+  final Map<String, dynamic> args;
+  const MyDayScreen({super.key, required this.args});
 
   @override
   State<MyDayScreen> createState() => _MyDayScreenState();
@@ -23,14 +26,14 @@ class _MyDayScreenState extends State<MyDayScreen> {
     final tasksProvider = Provider.of<Tasks>(context);
     return SizedBox(
       child: ActivityWidget(
-        title: 'My Day',
+        title: widget.args['activity'],
+        color: Colors.white,
         displaySubtitle: true,
         subtitle: DateFormat.MMMMEEEEd().format(DateTime.now()),
         completedListModel:
             tasksProvider.myDayTasks.where((tks) => tks.isDone).toList(),
         unDoneListModel:
             tasksProvider.myDayTasks.where((tks) => !tks.isDone).toList(),
-        color: Colors.white,
         bgImage: 'assets/images/my_day.png',
         insert: (item, index) => context.read<Tasks>().insert(item, index),
         remove: (index) => context.read<Tasks>().removeTask(index),

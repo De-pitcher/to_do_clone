@@ -9,6 +9,7 @@ import '../../widgets/buttons/special_button.dart';
 class ImportantScreen extends StatefulWidget {
   static const String id = '/important';
 
+  /// This retrieves the name and color of the parent [ActionWidget]
   final Map<String, dynamic> args;
   const ImportantScreen({super.key, required this.args});
 
@@ -21,7 +22,7 @@ class _ImportantScreenState extends State<ImportantScreen> {
   Widget build(BuildContext context) {
     return ActivityWidget(
       color: widget.args['color'],
-      title: widget.args['action'],
+      title: widget.args['activity'],
       displaySubtitle: false,
       isExtended: false,
       completedListModel: Provider.of<Tasks>(context)

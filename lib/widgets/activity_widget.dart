@@ -1,33 +1,68 @@
 import 'package:flutter/material.dart';
-import 'completed_task_header.dart';
-import 'task_tile.dart';
 
+import './completed_task_header.dart';
+import './task_tile.dart';
 import '../enums/activity_type.dart';
 import '../models/animated_list_model.dart';
 import '../models/task.dart';
-import 'animated_title.dart';
-import 'bottom_sheet/add_task_bottom_sheet.dart';
+import './animated_title.dart';
+import './bottom_sheet/add_task_bottom_sheet.dart';
+import './buttons/special_button.dart';
 
 class ActivityWidget extends StatefulWidget {
+  /// This is the title of the [ActivityWidget].
   final String title;
+
+  /// This is the subtitle of the [ActivityWidget] which can
+  /// be null.
   final String? subtitle;
+
+  /// [bgImage] is the background image of the activity screen.
   final String? bgImage;
+
+  /// Checks if [subtitle] should be displayed.
   final bool displaySubtitle;
+
+  /// List of taks that is yet to be comleted.
   final List<Task> unDoneListModel;
+
+  /// List of tasks that is completed
   final List<Task>? completedListModel;
+
+  /// This is the color of the icons in the activity screen.
   final Color color;
+
+  /// This widget can  be set to be displayed when there is no task
+  /// on the activity screen but can be null.
   final Widget? emptyWidget;
+
+  /// This function recieves two parameter: [Task] and then [int]
+  /// which can be null. It is used to handle the insertion of a
+  /// task either the first time on reinserting it when deleted.
   final Function(Task, int?)? insert;
+
+  /// This function recieves only one parameter [Task]. It is
+  /// used to handle the deletion of tasks.
   final Function(Task)? remove;
+
+  /// This is of type [FloatingActionButtonLocation] and handles
+  /// the position of the [FloatingActionButton]s.
   final FloatingActionButtonLocation? floatingActionButtonLocation;
   final Widget? fabIcon;
-  final Widget? bottomSheet;
+
+  /// This param [isExtended] to check if two [FloatingActionButton]
+  /// should be displayed or not.
   final bool isExtended;
-  final List<Widget> specialButtons;
+
+  /// [specialButtons] is used to define the list of [SpecialButton].
+  final List<SpecialButton> specialButtons;
+
+  /// This enum [activityType] defines the type of activity screen
+  /// to be created.
   final ActivityType activityType;
 
   /// [ActivityWidget] is a widget that is used to create different
-  /// activities that tasks can be grouped in
+  /// activities that tasks can be grouped in.
   const ActivityWidget({
     super.key,
     required this.unDoneListModel,
@@ -40,7 +75,6 @@ class ActivityWidget extends StatefulWidget {
     this.subtitle,
     this.floatingActionButtonLocation,
     this.fabIcon,
-    this.bottomSheet,
     required this.isExtended,
     this.bgImage,
     required this.specialButtons,
@@ -53,16 +87,25 @@ class ActivityWidget extends StatefulWidget {
 }
 
 class _ActivityWidgetState extends State<ActivityWidget> {
+  //* This is a GlobalKey for handling the [AnimatedListState] of the
+  //* undone tasks.
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  //* This is a GlobalKey for handling the [AnimatedListState] of the
+  //* completed tasks.
   final GlobalKey<AnimatedListState> _completedListKey =
       GlobalKey<AnimatedListState>();
+  //* Animated list of undone tasks
   late AnimatedListModel<Task> _listModel;
+  //* Animated list of completed tasks.
   late AnimatedListModel<Task> _completedListModel;
+  //* Animated the title of the activity screen when set to true
   var _liftTitle = false;
+  //* Handles the animated of the [CompletedTaskHeader].
   var _isExpanded = true;
 
   @override
   void didChangeDependencies() {
+    //* Initialized the undone and the completed list of tasks.
     _listModel = AnimatedListModel(
       listKey: _listKey,
       initialItems: widget.unDoneListModel,
@@ -76,17 +119,26 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     super.didChangeDependencies();
   }
 
+  /// [_insert] function handles the insertion of [Task]s both to the
+  /// [AnimatedList] and to the [Task] provider. 
   void _insert(Task item, AnimatedListModel listModel, [int? cIndex]) {
+    //* Inserts to the [Tasks] provider
     widget.insert!(item, cIndex);
+    //* Inserts to the [AnimatedList].
     listModel.insert(cIndex ?? listModel.length, item);
   }
 
+  /// [_remove] function handles the insertion of [Task]s both to the
+  /// [AnimatedList] and to the [Task] provider.
   void _remove(Task item, int index, AnimatedListModel<Task> listModel) {
+    //* Removes task from the [Tasks] provider. 
     widget.remove!(item);
+    //* Removes task from the [AnimatedList].
     listModel.removeAt(index);
     setState(() {});
   }
-
+  /// [_removeFromUi] function removes task from the current [AnimatedList] 
+  /// ([listModel]) and adds it to the next [AnimatedList] ([nextListModel]).
   void _removeFromUi(int cIndex, AnimatedListModel<Task> listModel,
       AnimatedListModel<Task> nextListModel) {
     final item = listModel.removeAt(cIndex);
@@ -154,13 +206,13 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                   widget.emptyWidget ?? const Text('')
                 else if (widget.unDoneListModel.isEmpty &&
                     widget.completedListModel!.isNotEmpty)
-                  buildCompletedAnimatedList()
+                  _buildCompletedAnimatedList()
                 else
                   Expanded(
                     child: Column(
                       children: [
-                        buildAnimatedList(),
-                        buildCompletedAnimatedList()
+                        _buildAnimatedList(),
+                        _buildCompletedAnimatedList()
                       ],
                     ),
                   )
@@ -211,6 +263,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     );
   }
 
+  /// Builds the undone [TaskTile].
   Widget _buildTaskTile(
     BuildContext context,
     int index,
@@ -227,6 +280,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     );
   }
 
+  /// Builds the completed [TaskTile].
   Widget _buildCompletedTaskTile(
     BuildContext context,
     int index,
@@ -243,6 +297,8 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     );
   }
 
+  /// Builds the task that is animated. In this case it is not needed
+  /// so an empty [Container] is build instead.
   Widget _removedItemBuilder(
     Task task,
     BuildContext context,
@@ -251,7 +307,8 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     return Container();
   }
 
-  Padding buildAnimatedList() {
+  /// [_buildAnimatedList] builds [AnimatedList] of undone [Task]s.
+  Padding _buildAnimatedList() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: SizedBox(
@@ -265,7 +322,8 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     );
   }
 
-  Widget buildCompletedAnimatedList() {
+  /// [_buildCompletedAnimatedList] builds [AnimatedList] of undone [Task]s.
+  Widget _buildCompletedAnimatedList() {
     return _completedListModel.isEmpty
         ? Container()
         : Padding(

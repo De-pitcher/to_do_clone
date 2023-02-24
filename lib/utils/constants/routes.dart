@@ -36,7 +36,11 @@ MaterialPageRoute routeGen(RouteSettings settings) {
         ),
       );
     case MyDayScreen.id:
-      return MaterialPageRoute(builder: (_) => const MyDayScreen());
+      return MaterialPageRoute(
+        builder: (_) => MyDayScreen(
+          args: settings.arguments as Map<String, dynamic>,
+        ),
+      );
     case Planned.id:
       return MaterialPageRoute(builder: (_) => const Planned());
     case TasksScreen.id:
