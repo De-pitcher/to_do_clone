@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../enums/pop_menu_value.dart';
 import '../../enums/group_pop_menu_value.dart';
+import '../../enums/select_pop_menu_value.dart';
 import '../../widgets/menu_item.dart';
 
 List<PopupMenuEntry<PopMenuValue>> popMenuEntries(BuildContext context) => [
@@ -143,4 +144,29 @@ List<PopupMenuEntry<GroupPopMenuValue>> groupPopMenuEntries(
                 text: 'Ungroup list',
               ),
             ),
+    ];
+
+List<PopupMenuEntry<SelectPopMenuValue>> selectPopMenuEntries(
+        BuildContext context) =>
+    [
+      const PopupMenuItem(
+        value: SelectPopMenuValue.selectAll,
+        child: Text('Select all'),
+      ),
+      const PopupMenuItem(
+        value: SelectPopMenuValue.selectAll,
+        child: Text('Mark as important'),
+      ),
+      const PopupMenuItem(
+        value: SelectPopMenuValue.selectAll,
+        child: Text('Move'),
+      ),
+      const PopupMenuItem(
+        value: SelectPopMenuValue.selectAll,
+        child: Text('Copy'),
+      ),
+      const PopupMenuItem(
+        value: SelectPopMenuValue.selectAll,
+        child: Text('Delete task'),
+      ),
     ];

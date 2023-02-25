@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/tasks.dart';
+import '../utils/constants/pop_menu_items.dart';
 import './completed_task_header.dart';
 import './task_tile.dart';
 import '../enums/activity_type.dart';
@@ -102,6 +105,8 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   var _liftTitle = false;
   //* Handles the animated of the [CompletedTaskHeader].
   var _isExpanded = true;
+  //*
+  var _isSelected = false;
 
   @override
   void didChangeDependencies() {
@@ -120,7 +125,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   }
 
   /// [_insert] function handles the insertion of [Task]s both to the
-  /// [AnimatedList] and to the [Task] provider. 
+  /// [AnimatedList] and to the [Task] provider.
   void _insert(Task item, AnimatedListModel listModel, [int? cIndex]) {
     //* Inserts to the [Tasks] provider
     widget.insert!(item, cIndex);
@@ -131,13 +136,14 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   /// [_remove] function handles the insertion of [Task]s both to the
   /// [AnimatedList] and to the [Task] provider.
   void _remove(Task item, int index, AnimatedListModel<Task> listModel) {
-    //* Removes task from the [Tasks] provider. 
+    //* Removes task from the [Tasks] provider.
     widget.remove!(item);
     //* Removes task from the [AnimatedList].
     listModel.removeAt(index);
     setState(() {});
   }
-  /// [_removeFromUi] function removes task from the current [AnimatedList] 
+
+  /// [_removeFromUi] function removes task from the current [AnimatedList]
   /// ([listModel]) and adds it to the next [AnimatedList] ([nextListModel]).
   void _removeFromUi(int cIndex, AnimatedListModel<Task> listModel,
       AnimatedListModel<Task> nextListModel) {
@@ -148,13 +154,16 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     setState(() {});
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white24,
-      resizeToAvoidBottomInset: false,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
+  void onLongPressed() {
+    setState(() {
+      _isSelected = !_isSelected;
+    });
+    if (!_isSelected) {
+      context.read<Tasks>().setSelectToFalse();
+    }
+  }
+
+  AppBar _defaultAppBar(BuildContext context) => AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: 40,
@@ -173,7 +182,40 @@ class _ActivityWidgetState extends State<ActivityWidget> {
             icon: const Icon(Icons.more_vert),
           ),
         ],
-      ),
+      );
+
+  AppBar _selectAppBar(BuildContext context, int count) => AppBar(
+        elevation: 0,
+        backgroundColor: Colors.black,
+        leading: IconButton(
+          onPressed: onLongPressed,
+          icon: const Icon(Icons.cancel_outlined),
+        ),
+        title: Text('$count'),
+        actions: [
+          const Icon(Icons.sunny),
+          const SizedBox(width: 12),
+          const Icon(Icons.task),
+          PopupMenuButton(
+            itemBuilder: (ctx) => selectPopMenuEntries(ctx),
+          )
+        ],
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black54,
+      resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: true,
+      appBar: _isSelected
+          ? _selectAppBar(
+              context,
+              Provider.of<Tasks>(context, listen: false)
+                  .tasks
+                  .where((tks) => tks.isSelected!)
+                  .length)
+          : _defaultAppBar(context),
       body: Container(
         width: double.infinity,
         decoration: widget.bgImage != null
@@ -277,6 +319,8 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       onRemoveFromUiFn: () =>
           _removeFromUi(index, _listModel, _completedListModel),
       activityType: widget.activityType,
+      isSelected: _isSelected,
+      onLongPress: onLongPressed,
     );
   }
 
@@ -294,6 +338,8 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       onRemoveFromUiFn: () =>
           _removeFromUi(index, _completedListModel, _listModel),
       activityType: widget.activityType,
+      isSelected: _isSelected,
+      onLongPress: onLongPressed,
     );
   }
 

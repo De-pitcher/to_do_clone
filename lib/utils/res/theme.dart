@@ -4,6 +4,7 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     iconTheme: const IconThemeData(color: Colors.black),
+    scaffoldBackgroundColor: Colors.transparent,
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.black,
       elevation: 0,
@@ -16,9 +17,9 @@ class AppTheme {
 
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: Colors.black,
+    scaffoldBackgroundColor: Colors.transparent.withOpacity(0.5),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.transparent,
       elevation: 0,
     ),
     iconTheme: const IconThemeData(color: Colors.white),

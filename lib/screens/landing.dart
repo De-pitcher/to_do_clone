@@ -21,13 +21,16 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white10,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ListTile(
               onTap: () => Navigator.of(context).pushNamed(ProfileAccount.id),
-              leading: const CircleAvatar(),
+              leading: const CircleAvatar(
+                backgroundColor: Colors.grey,
+              ),
               title: const Text(
                 'Name',
                 style: TextStyle(color: Colors.white),

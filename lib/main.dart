@@ -45,7 +45,7 @@ class ToDoClone extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'ToDo Clone',
-        theme: ThemeData.dark(),
+        theme: AppTheme.darkTheme,
         darkTheme: AppTheme.darkTheme,
         debugShowCheckedModeBanner: false,
         initialRoute: Authentication.isSignedIn() ? MainPage.id : Login.id,

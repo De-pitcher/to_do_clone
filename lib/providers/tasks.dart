@@ -54,7 +54,6 @@ class Tasks with ChangeNotifier {
   void toggleIsStarred(String id) {
     final currentIndex = _tasks.indexWhere((e) => e.id == id);
     final tempIsStarred = _tasks[currentIndex].isStarred;
-    // print(tempIsStarred);
     _tasks[currentIndex] =
         _tasks[currentIndex].copyWith(isStarred: !tempIsStarred);
     notifyListeners();
@@ -62,8 +61,6 @@ class Tasks with ChangeNotifier {
 
   void starTask(String id) {
     final currentIndex = _tasks.indexWhere((e) => e.id == id);
-    // final tempIsStarred = _tasks[currentIndex].isStarred;
-    // // print(tempIsStarred);
     _tasks[currentIndex] = _tasks[currentIndex].copyWith(isStarred: true);
     notifyListeners();
   }
@@ -73,5 +70,19 @@ class Tasks with ChangeNotifier {
     final tempMyDay = _tasks[currentIndex].myDay;
     _tasks[currentIndex] = _tasks[currentIndex].copyWith(myDay: !tempMyDay);
     notifyListeners();
+  }
+
+  void toggleIsSelected(String id) {
+    final currentIndex = _tasks.indexWhere((e) => e.id == id);
+    final tempIsSelected = _tasks[currentIndex].isSelected;
+    _tasks[currentIndex] =
+        _tasks[currentIndex].copyWith(isSelected: !tempIsSelected!);
+    notifyListeners();
+  }
+
+  void setSelectToFalse() {
+    for (var i = 0; i < _tasks.length; i++) {
+      _tasks[i].isSelected = false;
+    }
   }
 }

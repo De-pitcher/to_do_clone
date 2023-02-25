@@ -2,6 +2,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '../enums/activity_type.dart';
 import '../models/task.dart';
@@ -12,13 +13,31 @@ import './dismissed_widget.dart';
 
 const duration = Duration(seconds: 3);
 
+/// [TaskTile] is a [ListTile] widget that is draggable. It displays the 
+/// properties of the task and can be manipulated to get the desired 
+/// customization offered by the [TaskTile] paramters. 
 class TaskTile extends StatelessWidget {
+  /// This [Task] contains info about a task. 
   final Task task;
+  /// This handles the animation of the [TaskTile]
   final Animation<double> animation;
+  /// This [onAddTaskFn] adds the task when it is removed by the [onRemoveFn]
   final Function(Task)? onAddTaskFn;
+  /// This [onRemoveFn] deletes the task.
   final Function(Task)? onRemoveFn;
+  /// This [onRemoveFromUiFn] deletes the task from the Screen.
   final Function()? onRemoveFromUiFn;
+  /// [onLongPress] is executed when the [TaskTile] is pressed for long.
+  final Function()? onLongPress;
+  /// This [activityType] defines the type of [ActivityType] the task belongs
+  /// to.
   final ActivityType activityType;
+  /// Checks if the [TaskTile] is in selected mode to display the appropriate
+  /// and corresponding widgets.
+  final bool? isSelected;
+
+  /// This constructor initialized the parameters defined in the [TaskTile] 
+  /// class.
   const TaskTile({
     Key? key,
     required this.task,
@@ -27,10 +46,13 @@ class TaskTile extends StatelessWidget {
     this.onAddTaskFn,
     this.activityType = ActivityType.non,
     this.onRemoveFromUiFn,
+    this.onLongPress,
+    this.isSelected = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    //* Handles the display of scaffold in this context
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final tksProvider = context.read<Tasks>();
     return SizeTransition(
@@ -46,7 +68,13 @@ class TaskTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(5),
           ),
           elevation: 0,
-          color: Colors.black54,
+          color: isSelected!
+              ? activityType == ActivityType.myDay
+                  ? Colors.black
+                  : Colors.white38
+              : activityType == ActivityType.myDay
+                  ? Colors.black54
+                  : Colors.white30,
           child: Dismissible(
             key: UniqueKey(),
             dragStartBehavior: DragStartBehavior.start,
@@ -83,35 +111,52 @@ class TaskTile extends StatelessWidget {
             child: SizedBox(
               height: 60,
               child: ListTile(
-                onTap: () {
-                  Navigator.of(context).pushNamed(
-                    TaskDetails.id,
-                    arguments: {
-                      'color': Colors.deepPurple,
-                      'parent': 'Tasks',
-                      'taskValue': task.task,
-                      'steps': task.step,
-                      'id': task.id,
-                    },
-                  );
-                },
+                onTap: isSelected!
+                    ? () => tksProvider.toggleIsSelected(task.id)
+                    : () {
+                        Navigator.of(context).pushNamed(
+                          TaskDetails.id,
+                          arguments: {
+                            'color': Colors.deepPurple,
+                            'parent': 'Tasks',
+                            'taskValue': task.task,
+                            'steps': task.step,
+                            'id': task.id,
+                          },
+                        );
+                      },
+                onLongPress: onLongPress,
+                selected: isSelected!,
                 horizontalTitleGap: 0,
                 leading: Transform.scale(
                   scale: 1.2,
-                  child: Checkbox(
-                    value: task.isDone,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    splashRadius: 35,
-                    activeColor: Colors.deepPurple,
-                    checkColor: Colors.black,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    onChanged: (_) {
-                      onRemoveFromUiFn!();
-                      tksProvider.toggleIsDone(task.id);
-                    },
-                  ),
+                  child: isSelected!
+                      ? Checkbox(
+                          value: task.isSelected,
+                          splashRadius: 35,
+                          activeColor: Colors.deepPurple,
+                          checkColor: Colors.black,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          onChanged: (_) {
+                            tksProvider.toggleIsSelected(task.id);
+                          },
+                        )
+                      : Checkbox(
+                          value: task.isDone,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          splashRadius: 35,
+                          activeColor: Colors.deepPurple,
+                          checkColor: Colors.black,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          onChanged: (_) {
+                            onRemoveFromUiFn!();
+                            tksProvider.toggleIsDone(task.id);
+                          },
+                        ),
                 ),
                 title: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -149,23 +194,25 @@ class TaskTile extends StatelessWidget {
                   ],
                 ),
                 trailing: IconButton(
-                  onPressed: () {
-                    tksProvider.toggleIsStarred(task.id);
-                    if (task.isStarred == true &&
-                        activityType == ActivityType.important) {
-                      scaffoldMessenger.showSnackBar(
-                        snackbar(
-                          duration: duration,
-                          msg: 'Task removed from Importance',
-                          scaffoldMessenger: scaffoldMessenger,
-                          onPressed: () {
-                            tksProvider.starTask(task.id);
-                            scaffoldMessenger.hideCurrentSnackBar();
-                          },
-                        ),
-                      );
-                    }
-                  },
+                  onPressed: isSelected!
+                      ? null
+                      : () {
+                          tksProvider.toggleIsStarred(task.id);
+                          if (task.isStarred == true &&
+                              activityType == ActivityType.important) {
+                            scaffoldMessenger.showSnackBar(
+                              snackbar(
+                                duration: duration,
+                                msg: 'Task removed from Importance',
+                                scaffoldMessenger: scaffoldMessenger,
+                                onPressed: () {
+                                  tksProvider.starTask(task.id);
+                                  scaffoldMessenger.hideCurrentSnackBar();
+                                },
+                              ),
+                            );
+                          }
+                        },
                   icon: Icon(
                     task.isStarred ? Icons.star : Icons.star_border,
                     color: task.isStarred ? Colors.deepPurple : Colors.grey,
