@@ -30,7 +30,7 @@ class _SignUpState extends State<SignUp> {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.red[400],
           content: Text(response),
         ),
       );

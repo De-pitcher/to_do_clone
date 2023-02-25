@@ -13,38 +13,48 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
   bool _isLoading = false;
   late final GlobalKey<FormState> formKey;
-  late final TextEditingController password;
-  late final TextEditingController cPassword;
+  late final TextEditingController email;
 
-  resetPassword() async {
+  sendResetLink() async {
     formKey.currentState!.validate();
     setState(() => _isLoading = true);
-    var response = await Authentication.resetPassword(cPassword.text);
+    var response = await Authentication.resetPassword(email.text);
+
     if (response != null && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          backgroundColor: Colors.red[300],
           content: Text(response),
         ),
       );
     }
     setState(() => _isLoading = false);
+
     if (response == null && mounted) {
-      // Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green[300],
+          content: const Text('Successfully sent reset link'),
+        ),
+      );
     }
+
+    if (response == null && mounted) {
+      Navigator.of(context).pop();
+    }
+    email.clear();
   }
 
   @override
   void initState() {
     super.initState();
+    email = TextEditingController();
     formKey = GlobalKey<FormState>();
-    password = TextEditingController();
-    cPassword = TextEditingController();
   }
 
   @override
   void dispose() {
-    password.dispose();
-    cPassword.dispose();
+    email.dispose();
     formKey.currentState!.dispose();
     super.dispose();
   }
@@ -60,39 +70,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           child: Column(
             children: [
               TextFormField(
-                controller: password,
+                controller: email,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return "Password cannnot be empty";
-                  } else if (value.length < 8) {
-                    return "Password cannot be less than 8 characters";
+                    return "Enter a email";
                   }
                   return null;
                 },
                 decoration: InputDecoration(
-                  label: const Text('New Password'),
-                  hintText: '12345678',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: cPassword,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Password cannot be empty";
-                  } else if (value.length < 8) {
-                    return "Password cannot be less than 8 characters";
-                  } else if (value != password.value.text) {
-                    return "Password entered must be the same.";
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  label: const Text('Confirm new password'),
-                  hintText: '12345678',
+                  label: const Text('Enter email'),
+                  hintText: 'johndoe@gmail.com',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -100,10 +87,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               ),
               const SizedBox(height: 10),
               TextButton(
-                onPressed: _isLoading ? null : () async => await resetPassword(),
+                onPressed:
+                    _isLoading ? null : () async => await sendResetLink(),
                 child: _isLoading
                     ? const CircularProgressIndicator()
-                    : const Text('Reset Password'),
+                    : const Text('Send Reset Link'),
               ),
             ],
           ),
