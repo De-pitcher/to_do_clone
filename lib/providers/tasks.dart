@@ -94,11 +94,10 @@ class Tasks with ChangeNotifier {
   }
 
   bool isAllTaskSelected() {
-    bool isSelected = false;
     for (var item in _tasks) {
-      isSelected = item.isSelected!;
+      if (!item.isSelected!) return false;
     }
-    return isSelected;
+    return true;
   }
 
   void setSelectedTaskTo(bool value) {
