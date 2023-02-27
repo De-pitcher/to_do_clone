@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../enums/select_pop_menu_value.dart';
 import '../providers/tasks.dart';
 import '../utils/constants/pop_menu_items.dart';
 import './completed_task_header.dart';
@@ -11,6 +12,9 @@ import '../models/task.dart';
 import './animated_title.dart';
 import './bottom_sheet/add_task_bottom_sheet.dart';
 import './buttons/special_button.dart';
+import 'app_bars/default_app_bar.dart';
+import 'app_bars/select_app_bar.dart';
+import 'pop_up_menus/select_pop_up_menu.dart';
 
 class ActivityWidget extends StatefulWidget {
   /// This is the title of the [ActivityWidget].
@@ -154,53 +158,42 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     setState(() {});
   }
 
-  void onLongPressed() {
+  /// [_removeSelectedItemsFromUi] function removes task from the current [AnimatedList]
+  /// ([listModel]) and adds it to the next [AnimatedList] ([nextListModel]).
+  void _removeSelectedItemsFromUi(
+    AnimatedListModel<Task> listModel,
+    AnimatedListModel<Task> nextListModel,
+    List<Task> tasks,
+  ) {
     setState(() {
-      _isSelected = !_isSelected;
+      removeAnimatedItems(listModel, [...tasks.where((tks) => !tks.isDone)]);
+      removeAnimatedItems(nextListModel, [...tasks.where((tks) => tks.isDone)]);
     });
-    if (!_isSelected) {
-      context.read<Tasks>().setSelectToFalse();
+  }
+
+  void removeAnimatedItems(
+      AnimatedListModel<Task> listModel, List<Task> tasks) {
+    for (var item in tasks) {
+      final index = listModel.indexWhere((element) => element.id == item.id);
+      listModel.removeAt(index);
+      context.read<Tasks>().removeTask(item);
     }
   }
 
-  AppBar _defaultAppBar(BuildContext context) => AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        toolbarHeight: 40,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          },
-        ),
-        iconTheme: IconThemeData(color: widget.color),
-        actionsIconTheme: IconThemeData(color: widget.color),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_vert),
-          ),
-        ],
-      );
+  void _onLongPressed([Task? task]) {
+    _toggleIsSelect();
+    if (!_isSelected) {
+      context.read<Tasks>().setSelectedTaskTo(false);
+    } else if (task != null) {
+      context.read<Tasks>().toggleIsSelected(task.id);
+    }
+  }
 
-  AppBar _selectAppBar(BuildContext context, int count) => AppBar(
-        elevation: 0,
-        backgroundColor: Colors.black,
-        leading: IconButton(
-          onPressed: onLongPressed,
-          icon: const Icon(Icons.cancel_outlined),
-        ),
-        title: Text('$count'),
-        actions: [
-          const Icon(Icons.sunny),
-          const SizedBox(width: 12),
-          const Icon(Icons.task),
-          PopupMenuButton(
-            itemBuilder: (ctx) => selectPopMenuEntries(ctx),
-          )
-        ],
-      );
+  void _toggleIsSelect() {
+    setState(() {
+      _isSelected = !_isSelected;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -209,13 +202,25 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: _isSelected
-          ? _selectAppBar(
-              context,
-              Provider.of<Tasks>(context, listen: false)
+          ? selectAppBar(
+              context: context,
+              count: Provider.of<Tasks>(context, listen: false)
                   .tasks
                   .where((tks) => tks.isSelected!)
-                  .length)
-          : _defaultAppBar(context),
+                  .length,
+              disMarkAsImpt:
+                  Provider.of<Tasks>(context, listen: false).hasStarredTask(),
+              cmpltdListModel: _completedListModel,
+              undonelistModel: _listModel,
+              onLongPressed: _onLongPressed,
+              onDelete: () {
+            _removeSelectedItemsFromUi(_listModel, _completedListModel,
+                Provider.of<Tasks>(context, listen: false).selectedTask);
+            _toggleIsSelect();
+            Navigator.of(context).pop();
+          }
+            )
+          : defaultAppBar(context, widget.color),
       body: Container(
         width: double.infinity,
         decoration: widget.bgImage != null
@@ -320,7 +325,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
           _removeFromUi(index, _listModel, _completedListModel),
       activityType: widget.activityType,
       isSelected: _isSelected,
-      onLongPress: onLongPressed,
+      onLongPress: _onLongPressed,
     );
   }
 
@@ -339,7 +344,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
           _removeFromUi(index, _completedListModel, _listModel),
       activityType: widget.activityType,
       isSelected: _isSelected,
-      onLongPress: onLongPressed,
+      onLongPress: _onLongPressed,
     );
   }
 

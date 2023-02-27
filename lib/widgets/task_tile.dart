@@ -13,30 +13,37 @@ import './dismissed_widget.dart';
 
 const duration = Duration(seconds: 3);
 
-/// [TaskTile] is a [ListTile] widget that is draggable. It displays the 
-/// properties of the task and can be manipulated to get the desired 
-/// customization offered by the [TaskTile] paramters. 
+/// [TaskTile] is a [ListTile] widget that is draggable. It displays the
+/// properties of the task and can be manipulated to get the desired
+/// customization offered by the [TaskTile] paramters.
 class TaskTile extends StatelessWidget {
-  /// This [Task] contains info about a task. 
+  /// This [Task] contains info about a task.
   final Task task;
+
   /// This handles the animation of the [TaskTile]
   final Animation<double> animation;
+
   /// This [onAddTaskFn] adds the task when it is removed by the [onRemoveFn]
   final Function(Task)? onAddTaskFn;
+
   /// This [onRemoveFn] deletes the task.
   final Function(Task)? onRemoveFn;
+
   /// This [onRemoveFromUiFn] deletes the task from the Screen.
   final Function()? onRemoveFromUiFn;
+
   /// [onLongPress] is executed when the [TaskTile] is pressed for long.
-  final Function()? onLongPress;
+  final Function(Task)? onLongPress;
+
   /// This [activityType] defines the type of [ActivityType] the task belongs
   /// to.
   final ActivityType activityType;
+
   /// Checks if the [TaskTile] is in selected mode to display the appropriate
   /// and corresponding widgets.
   final bool? isSelected;
 
-  /// This constructor initialized the parameters defined in the [TaskTile] 
+  /// This constructor initialized the parameters defined in the [TaskTile]
   /// class.
   const TaskTile({
     Key? key,
@@ -55,6 +62,7 @@ class TaskTile extends StatelessWidget {
     //* Handles the display of scaffold in this context
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final tksProvider = context.read<Tasks>();
+
     return SizeTransition(
       axisAlignment: -1,
       sizeFactor: CurvedAnimation(
@@ -125,7 +133,7 @@ class TaskTile extends StatelessWidget {
                           },
                         );
                       },
-                onLongPress: onLongPress,
+                onLongPress: () => onLongPress!(task),
                 selected: isSelected!,
                 horizontalTitleGap: 0,
                 leading: Transform.scale(

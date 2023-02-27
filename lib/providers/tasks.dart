@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/task.dart';
 
 class Tasks with ChangeNotifier {
-  final List<Task> _tasks = [];
+  List<Task> _tasks = [];
 
   List<Task> get tasks => _tasks;
 
@@ -16,20 +16,24 @@ class Tasks with ChangeNotifier {
   List<Task> get unDoneTasks =>
       _tasks.where((tsk) => tsk.isDone == false).toList();
 
+  List<Task> get selectedTask {
+    return _tasks.where((tks) => tks.isSelected!).toList();
+  }
+
   void insert(Task task, [int? index]) {
     int cIndex = index ?? _tasks.length;
     _tasks.insert(cIndex, task);
     notifyListeners();
   }
 
-  void removeTask(Task task) {
-    final index = _tasks.indexWhere((tks) => tks.id.contains(task.id));
-    _tasks.removeAt(index);
+  void insertAt(int index, Task task) {
+    _tasks.insert(index, task);
     notifyListeners();
   }
 
-  void insertAt(int index, Task task) {
-    _tasks.insert(index, task);
+  void removeTask(Task task) {
+    final index = _tasks.indexWhere((tks) => tks.id.contains(task.id));
+    _tasks.removeAt(index);
     notifyListeners();
   }
 
@@ -80,9 +84,36 @@ class Tasks with ChangeNotifier {
     notifyListeners();
   }
 
-  void setSelectToFalse() {
-    for (var i = 0; i < _tasks.length; i++) {
-      _tasks[i].isSelected = false;
+  bool hasStarredTask() {
+    var hasStarred = false;
+    final selectedTask = _tasks.where((tks) => tks.isSelected!);
+    for (var task in selectedTask) {
+      hasStarred = task.isStarred;
     }
+    return hasStarred;
+  }
+
+  void setSelectedTaskTo(bool value) {
+    List<Task> tempTask = [];
+    for (var i = 0; i < _tasks.length; i++) {
+      _tasks[i].isSelected = value;
+      tempTask.add(_tasks[i]);
+    }
+    _tasks = tempTask;
+    notifyListeners();
+  }
+
+  void starSelecedTask() {
+    for (var i = 0; i < _tasks.length; i++) {
+      if (_tasks[i].isSelected!) {
+        _tasks[i].isStarred = true;
+      }
+    }
+    notifyListeners();
+  }
+
+  void deleteSelectedTask() {
+    _tasks.removeWhere((tks) => tks.isSelected!);
+    notifyListeners();
   }
 }

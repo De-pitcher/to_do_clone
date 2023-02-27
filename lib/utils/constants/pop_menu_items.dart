@@ -147,26 +147,29 @@ List<PopupMenuEntry<GroupPopMenuValue>> groupPopMenuEntries(
     ];
 
 List<PopupMenuEntry<SelectPopMenuValue>> selectPopMenuEntries(
-        BuildContext context) =>
+  BuildContext context,
+  bool displayMarkAsImport,
+) =>
     [
       const PopupMenuItem(
         value: SelectPopMenuValue.selectAll,
-        child: Text('Select all'),
+        child: Text('Select all                       '),
       ),
+      if (!displayMarkAsImport)
+        const PopupMenuItem(
+          value: SelectPopMenuValue.markAsImportant,
+          child: Text('Mark as important'),
+        ),
       const PopupMenuItem(
-        value: SelectPopMenuValue.selectAll,
-        child: Text('Mark as important'),
-      ),
-      const PopupMenuItem(
-        value: SelectPopMenuValue.selectAll,
+        value: SelectPopMenuValue.move,
         child: Text('Move'),
       ),
       const PopupMenuItem(
-        value: SelectPopMenuValue.selectAll,
+        value: SelectPopMenuValue.copy,
         child: Text('Copy'),
       ),
       const PopupMenuItem(
-        value: SelectPopMenuValue.selectAll,
+        value: SelectPopMenuValue.deleteTask,
         child: Text('Delete task'),
       ),
     ];

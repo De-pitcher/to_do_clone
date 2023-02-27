@@ -51,5 +51,7 @@ class AnimatedListModel<E> {
 
   int indexOf(E item) => _items.indexOf(item);
 
+  int indexWhere(bool Function(E element) test) => _items.indexWhere(test);
+
   bool get isEmpty => _items.isEmpty;
 }
