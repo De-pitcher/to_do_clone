@@ -1,39 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../models/animated_list_model.dart';
-import './completed_task_header.dart';
+import 'completed_task_header.dart';
 
-/// This widget [AnimatedListWidget] creates a customized [AnimatedList].
 class AnimatedListWidget extends StatefulWidget {
-  /// Contains meta-data about the lists of tasks.
   final AnimatedListModel listModel;
-
-  /// This controlls the animation of [CompletedTaskHeader] widget.
-  /// And incase it is not desired it is nullable [Null] and initialy
-  /// assigned to be true in other for the list to be displayed.
   final bool? isExpanded;
-
-  /// This checks if a [CompletedTaskHeader] should be displayed or not.
   final bool displayHeaderWidget;
-
-  /// This is the color of the widget in the [CompletedTaskHeader].
   final Color color;
-
-  /// This function [itemBuilder] builds and handles the animation of
-  /// an item in the [AnimatedListWidget]
   final Widget Function(BuildContext, int, Animation<double>) itemBuilder;
-
-  /// This function [onHide] handles the animation of the
-  /// [CompletedTaskHeader]
   final Function(bool)? onHide;
-
-  /// This widget [AnimatedListWidget] creates a customized [AnimatedList].
-  /// This widget gives the capability of creating a [CompletedTaskHeader]
-  /// which is animated and it can be controlled using the [isExpanded]
-  /// variable.
-  ///
-  /// It accepts [AnimatedListModel] and a widget [itemBuilder] to display
-  /// the list
   const AnimatedListWidget({
     super.key,
     required this.listModel,
@@ -57,12 +33,11 @@ class _AnimatedListWidgetState extends State<AnimatedListWidget> {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Column(
               children: [
-                if (widget.displayHeaderWidget)
-                  CompletedTaskHeader(
-                    numCompleted: widget.listModel.length,
-                    color: widget.color,
-                    onHide: widget.onHide,
-                  ),
+                CompletedTaskHeader(
+                  numCompleted: widget.listModel.length,
+                  color: widget.color,
+                  onHide: widget.onHide,
+                ),
                 if (widget.isExpanded!)
                   AnimatedOpacity(
                     opacity: widget.isExpanded! ? 1 : 0,

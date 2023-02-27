@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../enums/select_pop_menu_value.dart';
 import '../providers/tasks.dart';
+import '../utils/constants/pop_menu_items.dart';
+import './completed_task_header.dart';
 import './task_tile.dart';
 import '../enums/activity_type.dart';
 import '../models/animated_list_model.dart';
@@ -9,9 +12,9 @@ import '../models/task.dart';
 import './animated_title.dart';
 import './bottom_sheet/add_task_bottom_sheet.dart';
 import './buttons/special_button.dart';
-import './animated_list_widget.dart';
-import './app_bars/default_app_bar.dart';
-import './app_bars/select_app_bar.dart';
+import 'app_bars/default_app_bar.dart';
+import 'app_bars/select_app_bar.dart';
+import 'pop_up_menus/select_pop_up_menu.dart';
 
 class ActivityWidget extends StatefulWidget {
   /// This is the title of the [ActivityWidget].
@@ -115,12 +118,12 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     _listModel = AnimatedListModel(
       listKey: _listKey,
       initialItems: widget.unDoneListModel,
-      removedItemBuilder: (_, __, ___) => Container(),
+      removedItemBuilder: _removedItemBuilder,
     );
     _completedListModel = AnimatedListModel(
       listKey: _completedListKey,
       initialItems: widget.completedListModel,
-      removedItemBuilder: (_, __, ___) => Container(),
+      removedItemBuilder: _removedItemBuilder,
     );
     super.didChangeDependencies();
   }
@@ -168,7 +171,6 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     });
   }
 
-  /// [removeAnimatedItems] reomves selected items.
   void removeAnimatedItems(
       AnimatedListModel<Task> listModel, List<Task> tasks) {
     for (var item in tasks) {
@@ -178,7 +180,6 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     }
   }
 
-  /// [onLongPressed] is executed when a [TaskTile] is long pressed.
   void onLongPressed([Task? task]) {
     _toggleIsSelect();
     if (!_isSelected) {
@@ -186,14 +187,6 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     } else if (task != null) {
       context.read<Tasks>().toggleIsSelected(task.id);
     }
-  }
-
-  /// [_onHide] controlls the animation of the completed
-  /// [AnimatedListWidget]
-  void _onHide(bool value) {
-    setState(() {
-      _isExpanded = value;
-    });
   }
 
   void _toggleIsSelect() {
@@ -204,7 +197,6 @@ class _ActivityWidgetState extends State<ActivityWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final taskProvider = Provider.of<Tasks>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.black54,
       resizeToAvoidBottomInset: false,
@@ -216,17 +208,14 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                   .tasks
                   .where((tks) => tks.isSelected!)
                   .length,
-              disMarkAsImpt: taskProvider.hasStarredTask(),
+              disMarkAsImpt:
+                  Provider.of<Tasks>(context, listen: false).hasStarredTask(),
               cmpltdListModel: _completedListModel,
               undonelistModel: _listModel,
-              clearAll: taskProvider.isAllTaskSelected(),
               onLongPressed: onLongPressed,
               onDelete: () {
-                _removeSelectedItemsFromUi(
-                  _listModel,
-                  _completedListModel,
-                  taskProvider.selectedTask,
-                );
+                _removeSelectedItemsFromUi(_listModel, _completedListModel,
+                    Provider.of<Tasks>(context, listen: false).selectedTask);
                 _toggleIsSelect();
                 Navigator.of(context).pop();
               })
@@ -263,32 +252,13 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                   widget.emptyWidget ?? const Text('')
                 else if (widget.unDoneListModel.isEmpty &&
                     widget.completedListModel!.isNotEmpty)
-                  AnimatedListWidget(
-                    listModel: _completedListModel,
-                    color: widget.color,
-                    itemBuilder: _buildCompletedTaskTile,
-                    onHide: _onHide,
-                    displayHeaderWidget: true,
-                    isExpanded: _isExpanded,
-                  )
+                  _buildCompletedAnimatedList()
                 else
                   Expanded(
                     child: Column(
                       children: [
-                        AnimatedListWidget(
-                          listModel: _listModel,
-                          color: widget.color,
-                          itemBuilder: _buildTaskTile,
-                          displayHeaderWidget: false,
-                        ),
-                        AnimatedListWidget(
-                          listModel: _completedListModel,
-                          color: widget.color,
-                          itemBuilder: _buildCompletedTaskTile,
-                          onHide: _onHide,
-                          displayHeaderWidget: true,
-                          isExpanded: _isExpanded,
-                        )
+                        _buildAnimatedList(),
+                        _buildCompletedAnimatedList()
                       ],
                     ),
                   )
@@ -375,6 +345,66 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       isSelected: _isSelected,
       onLongPress: onLongPressed,
     );
+  }
+
+  /// Builds the task that is animated. In this case it is not needed
+  /// so an empty [Container] is build instead.
+  Widget _removedItemBuilder(
+    Task task,
+    BuildContext context,
+    Animation<double> animation,
+  ) {
+    return Container();
+  }
+
+  /// [_buildAnimatedList] builds [AnimatedList] of undone [Task]s.
+  Padding _buildAnimatedList() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: SizedBox(
+        height: _listModel.length * 70,
+        child: AnimatedList(
+          key: _listKey,
+          initialItemCount: _listModel.length,
+          itemBuilder: _buildTaskTile,
+        ),
+      ),
+    );
+  }
+
+  /// [_buildCompletedAnimatedList] builds [AnimatedList] of undone [Task]s.
+  Widget _buildCompletedAnimatedList() {
+    return _completedListModel.isEmpty
+        ? Container()
+        : Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Column(
+              children: [
+                CompletedTaskHeader(
+                  numCompleted: _completedListModel.length,
+                  color: widget.color,
+                  onHide: (value) {
+                    setState(() {
+                      _isExpanded = value;
+                    });
+                  },
+                ),
+                if (_isExpanded)
+                  AnimatedOpacity(
+                    opacity: _isExpanded ? 1 : 0,
+                    duration: const Duration(milliseconds: 300),
+                    child: SizedBox(
+                      height: _completedListModel.length * 70,
+                      child: AnimatedList(
+                        key: _completedListKey,
+                        initialItemCount: _completedListModel.length,
+                        itemBuilder: _buildCompletedTaskTile,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          );
   }
 
   Future<dynamic> addTask(BuildContext context) {

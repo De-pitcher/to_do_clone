@@ -8,11 +8,10 @@ AppBar selectAppBar({
   required BuildContext context,
   required int count,
   required bool disMarkAsImpt,
-  required bool clearAll,
   required AnimatedListModel<Task> undonelistModel,
   required AnimatedListModel<Task> cmpltdListModel,
   Function()? onDelete,
-  Function()? onLongPressed,
+   Function()? onLongPressed,
 }) =>
     AppBar(
       elevation: 0,
@@ -29,7 +28,6 @@ AppBar selectAppBar({
         SelectPopUpMenu(
           disMrkAsImpt: disMarkAsImpt,
           onDelete: onDelete,
-          clearAll: clearAll,
         ),
       ],
     );

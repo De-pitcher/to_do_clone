@@ -149,18 +149,12 @@ List<PopupMenuEntry<GroupPopMenuValue>> groupPopMenuEntries(
 List<PopupMenuEntry<SelectPopMenuValue>> selectPopMenuEntries(
   BuildContext context,
   bool displayMarkAsImport,
-  bool clearAll,
 ) =>
     [
-      clearAll
-          ? const PopupMenuItem(
-              value: SelectPopMenuValue.clearAll,
-              child: Text('Clear all                       '),
-            )
-          : const PopupMenuItem(
-              value: SelectPopMenuValue.selectAll,
-              child: Text('Select all                       '),
-            ),
+      const PopupMenuItem(
+        value: SelectPopMenuValue.selectAll,
+        child: Text('Select all                       '),
+      ),
       if (!displayMarkAsImport)
         const PopupMenuItem(
           value: SelectPopMenuValue.markAsImportant,
