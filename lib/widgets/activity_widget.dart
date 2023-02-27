@@ -180,7 +180,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     }
   }
 
-  void _onLongPressed([Task? task]) {
+  void onLongPressed([Task? task]) {
     _toggleIsSelect();
     if (!_isSelected) {
       context.read<Tasks>().setSelectedTaskTo(false);
@@ -212,14 +212,13 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                   Provider.of<Tasks>(context, listen: false).hasStarredTask(),
               cmpltdListModel: _completedListModel,
               undonelistModel: _listModel,
-              onLongPressed: _onLongPressed,
+              onLongPressed: onLongPressed,
               onDelete: () {
-            _removeSelectedItemsFromUi(_listModel, _completedListModel,
-                Provider.of<Tasks>(context, listen: false).selectedTask);
-            _toggleIsSelect();
-            Navigator.of(context).pop();
-          }
-            )
+                _removeSelectedItemsFromUi(_listModel, _completedListModel,
+                    Provider.of<Tasks>(context, listen: false).selectedTask);
+                _toggleIsSelect();
+                Navigator.of(context).pop();
+              })
           : defaultAppBar(context, widget.color),
       body: Container(
         width: double.infinity,
@@ -325,7 +324,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
           _removeFromUi(index, _listModel, _completedListModel),
       activityType: widget.activityType,
       isSelected: _isSelected,
-      onLongPress: _onLongPressed,
+      onLongPress: onLongPressed,
     );
   }
 
@@ -344,7 +343,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
           _removeFromUi(index, _completedListModel, _listModel),
       activityType: widget.activityType,
       isSelected: _isSelected,
-      onLongPress: _onLongPressed,
+      onLongPress: onLongPressed,
     );
   }
 
