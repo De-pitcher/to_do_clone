@@ -220,6 +220,9 @@ class _ActivityWidgetState extends State<ActivityWidget> {
               cmpltdListModel: _completedListModel,
               undonelistModel: _listModel,
               clearAll: taskProvider.isAllTaskSelected(),
+              onClearAll: () {
+                if (!taskProvider.isAllTaskSelected()) _toggleIsSelect();
+              },
               onLongPressed: onLongPressed,
               onDelete: () {
                 _removeSelectedItemsFromUi(

@@ -13,6 +13,7 @@ AppBar selectAppBar({
   required AnimatedListModel<Task> cmpltdListModel,
   Function()? onDelete,
   Function()? onLongPressed,
+  Function()? onClearAll,
 }) =>
     AppBar(
       elevation: 0,
@@ -30,6 +31,7 @@ AppBar selectAppBar({
           disMrkAsImpt: disMarkAsImpt,
           onDelete: onDelete,
           clearAll: clearAll,
+          onClearAll: onClearAll,
         ),
       ],
     );

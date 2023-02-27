@@ -10,11 +10,13 @@ class SelectPopUpMenu extends StatelessWidget {
   final bool disMrkAsImpt;
   final bool clearAll;
   final Function()? onDelete;
+  final Function()? onClearAll;
   const SelectPopUpMenu(
       {super.key,
       required this.disMrkAsImpt,
       this.onDelete,
-      required this.clearAll});
+      required this.clearAll,
+      this.onClearAll});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class SelectPopUpMenu extends StatelessWidget {
             break;
           case SelectPopMenuValue.clearAll:
             context.read<Tasks>().setSelectedTaskTo(false);
-
+            onClearAll!();
             break;
           case SelectPopMenuValue.markAsImportant:
             context.read<Tasks>().starSelecedTask();
