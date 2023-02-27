@@ -93,6 +93,14 @@ class Tasks with ChangeNotifier {
     return hasStarred;
   }
 
+  bool isAllTaskSelected() {
+    bool isSelected = false;
+    for (var item in _tasks) {
+      isSelected = item.isSelected!;
+    }
+    return isSelected;
+  }
+
   void setSelectedTaskTo(bool value) {
     List<Task> tempTask = [];
     for (var i = 0; i < _tasks.length; i++) {
