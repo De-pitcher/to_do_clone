@@ -4,27 +4,26 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class AppColorModel {
-  
+class ListThemeModel {
   final int id;
   final Color? color;
   final List<Color> listOfColors;
   bool isSelected;
 
-  AppColorModel({
+  ListThemeModel({
     this.isSelected = false,
     this.color,
     required this.id,
     required this.listOfColors,
   });
 
-  AppColorModel copyWith({
+  ListThemeModel copyWith({
     int? id,
     Color? color,
     List<Color>? listOfColors,
     bool? isSelected,
   }) {
-    return AppColorModel(
+    return ListThemeModel(
       id: id ?? this.id,
       color: color ?? this.color,
       listOfColors: listOfColors ?? this.listOfColors,
@@ -41,8 +40,8 @@ class AppColorModel {
     };
   }
 
-  factory AppColorModel.fromMap(Map<String, dynamic> map) {
-    return AppColorModel(
+  factory ListThemeModel.fromMap(Map<String, dynamic> map) {
+    return ListThemeModel(
       id: map['id'] as int,
       color: map['color'] != null ? Color(map['color'] as int) : null,
       listOfColors: List<Color>.from(
@@ -56,8 +55,8 @@ class AppColorModel {
 
   String toJson() => json.encode(toMap());
 
-  factory AppColorModel.fromJson(String source) =>
-      AppColorModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ListThemeModel.fromJson(String source) =>
+      ListThemeModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -65,7 +64,7 @@ class AppColorModel {
   }
 
   @override
-  bool operator ==(covariant AppColorModel other) {
+  bool operator ==(covariant ListThemeModel other) {
     if (identical(this, other)) return true;
 
     return other.id == id &&

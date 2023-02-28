@@ -1,45 +1,47 @@
 import "package:flutter/material.dart";
-import 'login.dart';
-import '../service/auth.dart';
 
 
-class SignUp extends StatefulWidget {
-  static const String id = "/sign_up";
-  const SignUp({super.key});
+
+import 'sign_up.dart';
+
+import '../../service/auth.dart';
+import 'sign_up.dart';
+import '../landing.dart';
+
+
+class Login extends StatefulWidget {
+  static const String id = "/login_page";
+  const Login({super.key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<Login> createState() => _LoginState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _LoginState extends State<Login> {
   bool _isLoading = false;
-
   late final GlobalKey<FormState> formKey;
   late final GlobalKey<ScaffoldState> scaffoldKey;
-  late final TextEditingController name;
   late final TextEditingController email;
   late final TextEditingController password;
 
-  createUser() async {
+  loginUser() async {
     formKey.currentState!.validate();
     setState(() => _isLoading = true);
-    var response =
-        await Authentication.createAccount(email.text, password.text);
+    var response = await Authentication.loginUser(email.text, password.text);
 
     if (response != null && mounted) {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Colors.red[400],
+          backgroundColor: Colors.red[300],
           content: Text(response),
         ),
       );
     }
     setState(() => _isLoading = false);
     if (response == null && mounted) {
-      Navigator.of(context).pushNamed(Login.id);
+      Navigator.of(context).pushNamed(MainPage.id);
     }
-    name.clear();
     email.clear();
     password.clear();
   }
@@ -50,16 +52,13 @@ class _SignUpState extends State<SignUp> {
     formKey = GlobalKey<FormState>();
     scaffoldKey = GlobalKey<ScaffoldState>();
     email = TextEditingController();
-    name = TextEditingController();
     password = TextEditingController();
   }
 
   @override
   void dispose() {
     email.dispose();
-    name.dispose();
     password.dispose();
-    scaffoldKey.currentState!.dispose();
     formKey.currentState!.dispose();
     super.dispose();
   }
@@ -69,29 +68,12 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       key: scaffoldKey,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 300),
         child: Form(
           key: formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: [
-              TextFormField(
-                controller: name,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Name cannnot be empty";
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  label: const Text('Name'),
-                  hintText: 'John Doe',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
               TextFormField(
                 controller: email,
                 validator: (value) {
@@ -127,16 +109,36 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              const SizedBox(height: 15),
-              TextButton(
-                onPressed: _isLoading ? null : () async => await createUser(),
-                child: _isLoading
+              const SizedBox(height: 5),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed(''),
+                  child: const Text('Forgot Password?'),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextButton.icon(
+                onPressed: _isLoading ? null : () async => await loginUser(),
+                icon: _isLoading
                     ? const CircularProgressIndicator()
-                    : const Text('Sign up'),
-              )
+                    : const Icon(Icons.arrow_right_alt_rounded),
+                label: _isLoading ? const Text('') : const Text('Login'),
+              ),
             ],
           ),
         ),
+      ),
+      bottomSheet: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text("Don't have an account? "),
+          TextButton(
+            onPressed: () => Navigator.of(context).pushNamed(''),
+            child: const Text('Sign Up'),
+          ),
+        ],
       ),
     );
   }

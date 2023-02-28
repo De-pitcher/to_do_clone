@@ -5,10 +5,10 @@ import 'package:provider/provider.dart';
 import 'profile.dart';
 import 'list_screen.dart';
 import '../screens/activities/assigned_to_me.dart';
-import '../screens/activities/important.dart';
-import '../screens/activities/my_day.dart';
+import './activities/important_screen.dart';
+import 'activities/my_day_screen.dart';
 import '../screens/activities/planned.dart';
-import 'activities/tasks_screen.dart';
+import './activities/tasks_screen.dart';
 import '../widgets/dialogs/group_dialog.dart';
 import '../widgets/actions_widget.dart';
 import '../widgets/draggable_list_widget.dart';
@@ -44,30 +44,35 @@ class MainPage extends StatelessWidget {
             Flexible(
               child: Column(
                 children: [
+                  //* [MyDay] tile
                   ActionWidget(
                     icon: CupertinoIcons.brightness,
                     iconColor: Colors.purple[400],
                     action: 'My Day',
-                    routeName: MyDay.id,
+                    routeName: MyDayScreen.id,
                   ),
+                  //* [Important] tile
                   ActionWidget(
                     icon: CupertinoIcons.star,
                     iconColor: Colors.pink[200],
                     action: 'Important',
-                    routeName: Important.id,
+                    routeName: ImportantScreen.id,
                   ),
+                  //* [Planned] tile
                   ActionWidget(
                     icon: Icons.schedule,
                     iconColor: Colors.cyan[300],
                     action: 'Planned',
                     routeName: Planned.id,
                   ),
+                  //* [Assigned to me] tile
                   ActionWidget(
                     icon: CupertinoIcons.person,
                     iconColor: Colors.teal[200],
                     action: 'Assigned to me',
                     routeName: AssignedPage.id,
                   ),
+                  //* [Tasks] tile
                   ActionWidget(
                     icon: CupertinoIcons.home,
                     iconColor: Colors.deepPurple[300],
@@ -78,6 +83,7 @@ class MainPage extends StatelessWidget {
                     color: Colors.grey,
                     thickness: 1,
                   ),
+                  //* Displays the lists and groups of lists
                   const Expanded(
                     child: DraggableListWidget(),
                   ),

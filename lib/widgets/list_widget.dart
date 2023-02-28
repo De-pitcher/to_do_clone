@@ -5,10 +5,24 @@ import 'package:flutter/material.dart';
 import '../utils/constants/pop_menu_items.dart';
 
 class ListWidget extends StatelessWidget {
+  /// This is the title of the [ListWidget]
   final String title;
+
+  /// This is the image of the [ListWidget] which can be null when
+  /// not specified  but one of the both [image] or [fileImage]
+  /// must be specified
   final String? image;
+
+  /// This is the file image of the [ListWidget] which can be null
+  /// when not specified but one of the both [image] or [fileImage]
+  /// must be specified
   final File? fileImage;
+
+  /// Background color of the [ListWidget] 
   final Color bgColor;
+
+  /// A widget that holds the list of [TaskTile]s that contains
+  /// lists of tasks
   const ListWidget({
     Key? key,
     required this.title,

@@ -1,47 +1,43 @@
+
 import "package:flutter/material.dart";
+import 'login.dart';
+import '../../service/auth.dart';
 
-import 'package:to_do_clone/intro/forgot_password.dart';
 
-import '../screens/landing.dart';
-import '../service/auth.dart';
-import 'sign_up.dart';
-
-class Login extends StatefulWidget {
-  static const String id = "/login_page";
-  const Login({super.key});
+class SignUp extends StatefulWidget {
+  static const String id = "/sign_up";
+  const SignUp({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _LoginState extends State<Login> {
+class _SignUpState extends State<SignUp> {
   bool _isLoading = false;
+  final Authentication _authentication = Authentication();
+
   late final GlobalKey<FormState> formKey;
   late final GlobalKey<ScaffoldState> scaffoldKey;
+  late final TextEditingController name;
   late final TextEditingController email;
   late final TextEditingController password;
 
-  loginUser() async {
-    formKey.currentState!.validate();
-    setState(() => _isLoading = true);
-    var response = await Authentication.loginUser(email.text, password.text);
-
-    if (response != null && mounted) {
-      setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red[300],
-          content: Text(response),
-        ),
-      );
-    }
-    setState(() => _isLoading = false);
-    if (response == null && mounted) {
-      Navigator.of(context).pushNamed(MainPage.id);
-    }
-    email.clear();
-    password.clear();
-  }
+  // Future<void> createUser() async {
+  //   formKey.currentState!.validate();
+  //   setState(() => _isLoading = true);
+  //   try {
+  //     await _authentication
+  //         .createAccount(email: email.text, password: password.text)
+  //         .whenComplete(() => Navigator.of(context).pushNamed(Login.id));
+  //   } catch (error) {
+  //     setState(() => _isLoading = false);
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: AppError(error: error.toString()),
+  //       ),
+  //     );
+  //   }
+  // }
 
   @override
   void initState() {
@@ -49,13 +45,16 @@ class _LoginState extends State<Login> {
     formKey = GlobalKey<FormState>();
     scaffoldKey = GlobalKey<ScaffoldState>();
     email = TextEditingController();
+    name = TextEditingController();
     password = TextEditingController();
   }
 
   @override
   void dispose() {
     email.dispose();
+    name.dispose();
     password.dispose();
+    scaffoldKey.currentState!.dispose();
     formKey.currentState!.dispose();
     super.dispose();
   }
@@ -65,12 +64,29 @@ class _LoginState extends State<Login> {
     return Scaffold(
       key: scaffoldKey,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 300),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 200),
         child: Form(
           key: formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: [
+              TextFormField(
+                controller: name,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Name cannnot be empty";
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                  label: const Text('Name'),
+                  hintText: 'John Doe',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: email,
                 validator: (value) {
@@ -106,36 +122,18 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-              const SizedBox(height: 5),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () =>
-                      Navigator.of(context).pushNamed(ForgotPassword.id),
-                  child: const Text('Forgot Password?'),
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextButton.icon(
-                onPressed: _isLoading ? null : () async => await loginUser(),
-                icon: _isLoading
+              const SizedBox(height: 15),
+              TextButton(
+                onPressed: _isLoading ? null : () async => (() {
+                  
+                }),
+                child: _isLoading
                     ? const CircularProgressIndicator()
-                    : const Icon(Icons.arrow_right_alt_rounded),
-                label: _isLoading ? const Text('') : const Text('Login'),
-              ),
+                    : const Text('Sign up'),
+              )
             ],
           ),
         ),
-      ),
-      bottomSheet: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text("Don't have an account? "),
-          TextButton(
-            onPressed: () => Navigator.of(context).pushNamed(SignUp.id),
-            child: const Text('Sign Up'),
-          ),
-        ],
       ),
     );
   }

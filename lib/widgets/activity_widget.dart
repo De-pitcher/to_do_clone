@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'completed_task_header.dart';
 import 'task_tile.dart';
 
+import '../enums/activity_type.dart';
 import '../models/animated_list_model.dart';
 import '../models/task.dart';
 import 'animated_title.dart';
@@ -9,28 +11,41 @@ import 'bottom_sheet/add_task_bottom_sheet.dart';
 class ActivityWidget extends StatefulWidget {
   final String title;
   final String? subtitle;
+  final String? bgImage;
   final bool displaySubtitle;
-  final List<Task> listModel;
+  final List<Task> unDoneListModel;
+  final List<Task>? completedListModel;
   final Color color;
-  final Widget emptyWidget;
+  final Widget? emptyWidget;
   final Function(Task, int?)? insert;
-  final Function(int)? remove;
+  final Function(Task)? remove;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
-  final Widget? floatingActionButton;
+  final Widget? fabIcon;
   final Widget? bottomSheet;
+  final bool isExtended;
+  final List<Widget> specialButtons;
+  final ActivityType activityType;
+
+  /// [ActivityWidget] is a widget that is used to create different
+  /// activities that tasks can be grouped in
   const ActivityWidget({
     super.key,
-    required this.listModel,
+    required this.unDoneListModel,
     required this.color,
-    required this.emptyWidget,
+    this.emptyWidget,
     this.insert,
     this.remove,
     required this.title,
     required this.displaySubtitle,
     this.subtitle,
     this.floatingActionButtonLocation,
-    this.floatingActionButton,
+    this.fabIcon,
     this.bottomSheet,
+    required this.isExtended,
+    this.bgImage,
+    required this.specialButtons,
+    this.activityType = ActivityType.non,
+    this.completedListModel = const <Task>[],
   });
 
   @override
@@ -39,36 +54,54 @@ class ActivityWidget extends StatefulWidget {
 
 class _ActivityWidgetState extends State<ActivityWidget> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  final GlobalKey<AnimatedListState> _completedListKey =
+      GlobalKey<AnimatedListState>();
   late AnimatedListModel<Task> _listModel;
+  late AnimatedListModel<Task> _completedListModel;
   var _liftTitle = false;
+  var _isExpanded = true;
 
   @override
   void didChangeDependencies() {
     _listModel = AnimatedListModel(
       listKey: _listKey,
-      initialItems: widget.listModel,
+      initialItems: widget.unDoneListModel,
+      removedItemBuilder: _removedItemBuilder,
+    );
+    _completedListModel = AnimatedListModel(
+      listKey: _completedListKey,
+      initialItems: widget.completedListModel,
       removedItemBuilder: _removedItemBuilder,
     );
     super.didChangeDependencies();
   }
 
-  void _insert(Task item, [int? cIndex]) {
-    final index = cIndex ?? _listModel.length;
-    widget.insert!(item, index);
-    _listModel.insert(index, item);
+  void _insert(Task item, AnimatedListModel listModel, [int? cIndex]) {
+    widget.insert!(item, cIndex);
+    listModel.insert(cIndex ?? listModel.length, item);
   }
 
-  void _remove(int index) {
-    widget.remove!(index);
-    _listModel.removeAt(index);
+  void _remove(Task item, int index, AnimatedListModel<Task> listModel) {
+    widget.remove!(item);
+    listModel.removeAt(index);
+    setState(() {});
+  }
+
+  void _removeFromUi(int cIndex, AnimatedListModel<Task> listModel,
+      AnimatedListModel<Task> nextListModel) {
+    final item = listModel.removeAt(cIndex);
+    final index =
+        cIndex >= nextListModel.length ? nextListModel.length : cIndex;
+    nextListModel.insert(index, item);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white24,
       resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -89,38 +122,92 @@ class _ActivityWidgetState extends State<ActivityWidget> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: AnimatedTitle(
-                  driveAnimation: _liftTitle,
-                  title: widget.title,
-                  displaySubtitle: widget.displaySubtitle,
-                  titleColor: widget.color,
-                  subtitle: widget.subtitle,
+      body: Container(
+        width: double.infinity,
+        decoration: widget.bgImage != null
+            ? BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(widget.bgImage!),
+                  fit: BoxFit.cover,
                 ),
-              ),
-              widget.listModel.isEmpty
-                  ? widget.emptyWidget
-                  : buildAnimatedList(widget.listModel.length)
-            ],
+              )
+            : null,
+        child: SafeArea(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: AnimatedTitle(
+                    driveAnimation: _liftTitle,
+                    title: widget.title,
+                    displaySubtitle: widget.displaySubtitle,
+                    titleColor: widget.color,
+                    subtitle: widget.subtitle,
+                  ),
+                ),
+                if (widget.unDoneListModel.isEmpty &&
+                    widget.completedListModel!.isEmpty)
+                  widget.emptyWidget ?? const Text('')
+                else if (widget.unDoneListModel.isEmpty &&
+                    widget.completedListModel!.isNotEmpty)
+                  buildCompletedAnimatedList()
+                else
+                  Expanded(
+                    child: Column(
+                      children: [
+                        buildAnimatedList(),
+                        buildCompletedAnimatedList()
+                      ],
+                    ),
+                  )
+              ],
+            ),
           ),
         ),
       ),
       floatingActionButtonLocation: widget.floatingActionButtonLocation,
-      floatingActionButton: GestureDetector(
-        // heroTag: UniqueKey(),
-        onTap: () => addTask(context),
-        // backgroundColor: widget.color,
-        // foregroundColor: Colors.white,
-        child: widget.floatingActionButton,
-      ),
+      floatingActionButton: widget.isExtended
+          ? Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FloatingActionButton.extended(
+                    heroTag: UniqueKey(),
+                    elevation: 5,
+                    onPressed: () {},
+                    label: Row(
+                      children: const [
+                        Icon(Icons.lightbulb_outline_sharp),
+                        SizedBox(width: 10),
+                        Text('Suggestion'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 50),
+                  FloatingActionButton(
+                    heroTag: UniqueKey(),
+                    elevation: 5,
+                    onPressed: () => addTask(context),
+                    child: const Icon(
+                      Icons.add,
+                      color: Colors.black,
+                    ),
+                  )
+                ],
+              ),
+            )
+          : FloatingActionButton(
+              heroTag: UniqueKey(),
+              onPressed: () => addTask(context),
+              backgroundColor: widget.color,
+              foregroundColor: Colors.black,
+              child: widget.fabIcon,
+            ),
     );
   }
 
@@ -130,10 +217,29 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     Animation<double> animation,
   ) {
     return TaskTile(
-      task: widget.listModel[index],
+      task: widget.unDoneListModel[index],
       animation: animation,
-      onAddTaskFn: (task) => _insert(task, index),
-      onRemoveFn: () => _remove(index),
+      onAddTaskFn: (task) => _insert(task, _listModel, index),
+      onRemoveFn: (item) => _remove(item, index, _listModel),
+      onRemoveFromUiFn: () =>
+          _removeFromUi(index, _listModel, _completedListModel),
+      activityType: widget.activityType,
+    );
+  }
+
+  Widget _buildCompletedTaskTile(
+    BuildContext context,
+    int index,
+    Animation<double> animation,
+  ) {
+    return TaskTile(
+      task: widget.completedListModel![index],
+      animation: animation,
+      onAddTaskFn: (task) => _insert(task, _completedListModel, null),
+      onRemoveFn: (item) => _remove(item, index, _completedListModel),
+      onRemoveFromUiFn: () =>
+          _removeFromUi(index, _completedListModel, _listModel),
+      activityType: widget.activityType,
     );
   }
 
@@ -145,11 +251,11 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     return Container();
   }
 
-  Padding buildAnimatedList(int itemCount) {
+  Padding buildAnimatedList() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.85,
+        height: _listModel.length * 70,
         child: AnimatedList(
           key: _listKey,
           initialItemCount: _listModel.length,
@@ -157,6 +263,40 @@ class _ActivityWidgetState extends State<ActivityWidget> {
         ),
       ),
     );
+  }
+
+  Widget buildCompletedAnimatedList() {
+    return _completedListModel.isEmpty
+        ? Container()
+        : Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Column(
+              children: [
+                CompletedTaskHeader(
+                  numCompleted: _completedListModel.length,
+                  color: widget.color,
+                  onHide: (value) {
+                    setState(() {
+                      _isExpanded = value;
+                    });
+                  },
+                ),
+                if (_isExpanded)
+                  AnimatedOpacity(
+                    opacity: _isExpanded ? 1 : 0,
+                    duration: const Duration(milliseconds: 300),
+                    child: SizedBox(
+                      height: _completedListModel.length * 70,
+                      child: AnimatedList(
+                        key: _completedListKey,
+                        initialItemCount: _completedListModel.length,
+                        itemBuilder: _buildCompletedTaskTile,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          );
   }
 
   Future<dynamic> addTask(BuildContext context) {
@@ -168,7 +308,9 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       isDismissible: false,
       builder: (context) {
         return AddTaskBottomSheet(
-          addTaskFn: _insert,
+          addTaskFn: (item) => _insert(item, _listModel),
+          specialButtons: widget.specialButtons,
+          activityType: widget.activityType,
         );
       },
     );

@@ -31,13 +31,15 @@ environment:
 dependencies:
   cupertino_icons: ^1.0.2
   drag_and_drop_lists: ^0.3.3
-  firebase_auth: ^4.2.6
   flutter:
     sdk: flutter
   image_picker: ^0.8.6
   provider: ^6.0.5
   reorderables: ^0.5.1
   shared_preferences: ^2.0.18
+  uuid: ^3.0.7
+  firebase_core: ^2.7.0
+  firebase_auth: ^4.2.9
 
 dev_dependencies:
 

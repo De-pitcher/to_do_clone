@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/res/theme.dart';
 
+
 class ActionWidget extends StatefulWidget {
   final String action;
   final String? routeName;
@@ -8,6 +9,7 @@ class ActionWidget extends StatefulWidget {
   final Color? iconColor;
   final int? counter;
 
+/// [ActionWidget] is a list tile for displaying each activity type
   const ActionWidget({
     super.key,
     required this.action,
@@ -26,7 +28,7 @@ class _ActionWidgetState extends State<ActionWidget> {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () => Navigator.of(context).pushNamed(widget.routeName!,
-          arguments: {'color': widget.iconColor, 'parent': widget.action}),
+          arguments: {'color': widget.iconColor, 'action': widget.action}),
       leading: Icon(widget.icon, color: widget.iconColor),
       title: Text(
         widget.action,

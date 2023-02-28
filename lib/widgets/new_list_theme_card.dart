@@ -5,6 +5,9 @@ class NewListThemeCard extends StatelessWidget {
   final bool isEnabled;
   final String text;
   final Function()? onPressed;
+
+  /// [NewListThemeCard] builds a circular card that changes the theme of
+  /// the [ListWidget]
   const NewListThemeCard({
     required this.color,
     required this.isEnabled,

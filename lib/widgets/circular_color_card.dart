@@ -5,6 +5,8 @@ class CircularColorCard extends StatelessWidget {
   final List<Color?> listOfColor;
   final bool isSelected;
   final Function()? onTap;
+
+  /// A widget that displays the selected color for the [Listwidget]
   const CircularColorCard({
     this.color,
     required this.listOfColor,
