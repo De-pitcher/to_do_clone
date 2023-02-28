@@ -351,6 +351,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     return TaskTile(
       task: widget.unDoneListModel[index],
       animation: animation,
+      color: widget.color,
       onAddTaskFn: (task) => _insert(task, _listModel, index),
       onRemoveFn: (item) => _remove(item, index, _listModel),
       onRemoveFromUiFn: () =>
@@ -370,6 +371,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     return TaskTile(
       task: widget.completedListModel![index],
       animation: animation,
+      color: widget.color,
       onAddTaskFn: (task) => _insert(task, _completedListModel, null),
       onRemoveFn: (item) => _remove(item, index, _completedListModel),
       onRemoveFromUiFn: () =>

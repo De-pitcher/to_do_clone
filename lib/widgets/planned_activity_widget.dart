@@ -145,6 +145,7 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
     return TaskTile(
       task: widget.tasks[index],
       animation: animation,
+      color: widget.color,
       // onAddTaskFn: (task) => _insert(task, _listModel, index),
       // onRemoveFn: (item) => _remove(item, index, _listModel),
       // onRemoveFromUiFn: () =>

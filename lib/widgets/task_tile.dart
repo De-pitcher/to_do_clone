@@ -43,6 +43,9 @@ class TaskTile extends StatelessWidget {
   /// and corresponding widgets.
   final bool? isSelected;
 
+  ///This is the color of the icons
+  final Color color;
+
   /// This constructor initialized the parameters defined in the [TaskTile]
   /// class.
   const TaskTile({
@@ -55,6 +58,7 @@ class TaskTile extends StatelessWidget {
     this.onRemoveFromUiFn,
     this.onLongPress,
     this.isSelected = false,
+    required this.color,
   }) : super(key: key);
 
   @override
@@ -127,9 +131,7 @@ class TaskTile extends StatelessWidget {
                           arguments: {
                             'color': Colors.deepPurple,
                             'parent': 'Tasks',
-                            'taskValue': task.task,
-                            'steps': task.step,
-                            'id': task.id,
+                            'task': task,
                           },
                         );
                       },
@@ -223,7 +225,7 @@ class TaskTile extends StatelessWidget {
                         },
                   icon: Icon(
                     task.isStarred ? Icons.star : Icons.star_border,
-                    color: task.isStarred ? Colors.deepPurple : Colors.grey,
+                    color: task.isStarred ? color : Colors.grey,
                   ),
                 ),
               ),
