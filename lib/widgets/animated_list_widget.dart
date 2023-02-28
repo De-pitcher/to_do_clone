@@ -16,6 +16,10 @@ class AnimatedListWidget extends StatefulWidget {
   /// This checks if a [CompletedTaskHeader] should be displayed or not.
   final bool displayHeaderWidget;
 
+  /// This [headerWidget] is displayed when [displayHeaderWidget] is
+  /// set to null
+  final Widget? headerWidget;
+
   /// This is the color of the widget in the [CompletedTaskHeader].
   final Color color;
 
@@ -42,6 +46,7 @@ class AnimatedListWidget extends StatefulWidget {
     required this.itemBuilder,
     this.onHide,
     required this.displayHeaderWidget,
+    this.headerWidget,
   });
 
   @override
@@ -62,7 +67,9 @@ class _AnimatedListWidgetState extends State<AnimatedListWidget> {
                     numCompleted: widget.listModel.length,
                     color: widget.color,
                     onHide: widget.onHide,
-                  ),
+                  )
+                else
+                  widget.headerWidget ?? Container(),
                 if (widget.isExpanded!)
                   AnimatedOpacity(
                     opacity: widget.isExpanded! ? 1 : 0,

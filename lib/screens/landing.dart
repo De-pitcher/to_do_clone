@@ -7,7 +7,7 @@ import './list_screen.dart';
 import '../screens/activities/assigned_to_me.dart';
 import './activities/important_screen.dart';
 import './activities/my_day_screen.dart';
-import '../screens/activities/planned.dart';
+import 'activities/planned_screen.dart';
 import './activities/tasks_screen.dart';
 import '../widgets/dialogs/group_dialog.dart';
 import '../widgets/actions_widget.dart';
@@ -66,7 +66,7 @@ class MainPage extends StatelessWidget {
                     icon: Icons.schedule,
                     iconColor: Colors.cyan[300],
                     activity: 'Planned',
-                    routeName: Planned.id,
+                    routeName: PlannedScreen.id,
                   ),
                   //* [Assigned to me] tile
                   ActionWidget(
