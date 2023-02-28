@@ -50,7 +50,7 @@ class MainPage extends StatelessWidget {
                   //* [MyDay] tile
                   ActionWidget(
                     icon: CupertinoIcons.brightness,
-                    iconColor: Colors.purple[400],
+                    iconColor: Colors.cyanAccent[100],
                     activity: 'My Day',
                     routeName: MyDayScreen.id,
                   ),

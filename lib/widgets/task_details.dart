@@ -40,6 +40,7 @@ class _TaskDetailsState extends State<TaskDetails> {
               text: cTask.task,
               isDone: cTask.isDone,
               isStarred: cTask.isStarred,
+              color: widget.args['color'],
             ),
             Flexible(
               child: ListView(

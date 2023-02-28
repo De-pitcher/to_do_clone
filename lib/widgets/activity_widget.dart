@@ -311,6 +311,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                     heroTag: UniqueKey(),
                     elevation: 5,
                     onPressed: () {},
+                    backgroundColor: widget.color,
                     label: Row(
                       children: const [
                         Icon(Icons.lightbulb_outline_sharp),
@@ -323,6 +324,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                   FloatingActionButton(
                     heroTag: UniqueKey(),
                     elevation: 5,
+                    backgroundColor: widget.color,
                     onPressed: () => addTask(context),
                     child: const Icon(
                       Icons.add,

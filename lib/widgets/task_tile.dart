@@ -102,24 +102,12 @@ class TaskTile extends StatelessWidget {
               color: Theme.of(context).colorScheme.secondary,
               icon: Icons.sunny,
             ),
-            onDismissed: (direction) {
-              if (direction == DismissDirection.endToStart) {
-                scaffoldMessenger.hideCurrentSnackBar();
-                onRemoveFn!(task);
-                scaffoldMessenger.showSnackBar(
-                  snackbar(
-                      duration: duration,
-                      msg: 'Task deleted',
-                      scaffoldMessenger: scaffoldMessenger,
-                      onPressed: () {
-                        onAddTaskFn!(task);
-                        scaffoldMessenger.hideCurrentSnackBar();
-                      }),
-                );
-              } else if (direction == DismissDirection.startToEnd) {
-                tksProvider.toggleMyDay(task.id);
-              }
-            },
+            onDismissed: (direction) => onDismissed(
+              context: context,
+              direction: direction,
+              scaffoldMessenger: scaffoldMessenger,
+              task: task,
+            ),
             child: SizedBox(
               height: 60,
               child: ListTile(
@@ -148,7 +136,7 @@ class TaskTile extends StatelessWidget {
                             tksProvider.toggleIsSelected(task.id);
                           },
                           isRounded: false,
-                          isDone: task.isDone,
+                          value: task.isDone,
                         )
                       : TaskCheckbox(
                           color: color,
@@ -156,7 +144,7 @@ class TaskTile extends StatelessWidget {
                             onRemoveFromUiFn!();
                             tksProvider.toggleIsDone(task.id);
                           },
-                          isDone: task.isDone,
+                          value: task.isDone,
                         ),
                 ),
                 title: Column(
@@ -197,23 +185,7 @@ class TaskTile extends StatelessWidget {
                 trailing: IconButton(
                   onPressed: isSelected!
                       ? null
-                      : () {
-                          tksProvider.toggleIsStarred(task.id);
-                          if (task.isStarred == true &&
-                              activityType == ActivityType.important) {
-                            scaffoldMessenger.showSnackBar(
-                              snackbar(
-                                duration: duration,
-                                msg: 'Task removed from Importance',
-                                scaffoldMessenger: scaffoldMessenger,
-                                onPressed: () {
-                                  tksProvider.starTask(task.id);
-                                  scaffoldMessenger.hideCurrentSnackBar();
-                                },
-                              ),
-                            );
-                          }
-                        },
+                      : () => toggleStar(context, scaffoldMessenger),
                   icon: Icon(
                     task.isStarred ? Icons.star : Icons.star_border,
                     color: task.isStarred ? color : Colors.grey,
@@ -225,5 +197,49 @@ class TaskTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void onDismissed({
+    required BuildContext context,
+    required DismissDirection direction,
+    required ScaffoldMessengerState scaffoldMessenger,
+    required Task task,
+  }) {
+    if (direction == DismissDirection.endToStart) {
+      scaffoldMessenger.hideCurrentSnackBar();
+      onRemoveFn!(task);
+      scaffoldMessenger.showSnackBar(
+        snackbar(
+            duration: duration,
+            msg: 'Task deleted',
+            scaffoldMessenger: scaffoldMessenger,
+            onPressed: () {
+              onAddTaskFn!(task);
+              scaffoldMessenger.hideCurrentSnackBar();
+            }),
+      );
+    } else if (direction == DismissDirection.startToEnd) {
+      context.read<Tasks>().toggleMyDay(task.id);
+    }
+  }
+
+  void toggleStar(
+    BuildContext context,
+    ScaffoldMessengerState scaffoldMessenger,
+  ) {
+    context.read<Tasks>().toggleIsStarred(task.id);
+    if (task.isStarred == true && activityType == ActivityType.important) {
+      scaffoldMessenger.showSnackBar(
+        snackbar(
+          duration: duration,
+          msg: 'Task removed from Importance',
+          scaffoldMessenger: scaffoldMessenger,
+          onPressed: () {
+            context.read<Tasks>().starTask(task.id);
+            scaffoldMessenger.hideCurrentSnackBar();
+          },
+        ),
+      );
+    }
   }
 }

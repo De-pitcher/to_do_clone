@@ -27,7 +27,7 @@ class _MyDayScreenState extends State<MyDayScreen> {
     return SizedBox(
       child: ActivityWidget(
         title: widget.args['activity'],
-        color: Colors.white,
+        color: widget.args['color'],
         displaySubtitle: true,
         subtitle: DateFormat.MMMMEEEEd().format(DateTime.now()),
         completedListModel:

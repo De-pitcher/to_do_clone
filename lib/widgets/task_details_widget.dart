@@ -7,7 +7,6 @@ import '../providers/task_steps.dart';
 import '../providers/tasks.dart';
 import './task_detail_option_widget.dart';
 
-
 class TaskDetailsWidget extends StatefulWidget {
   final Task task;
   final Color color;
@@ -86,13 +85,13 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
       TaskDetailsOptionWidget(
         option: 'Add to my Day',
         icon: CupertinoIcons.brightness,
+        onTap: () => context.read<Tasks>().toggleMyDay(widget.task.id),
         isEnable: widget.task.myDay,
         color: widget.color,
       ),
       TaskDetailsOptionWidget(
         option: 'Remind me',
         icon: Icons.notifications_outlined,
-        onTap: () => context.read<Tasks>().toggleIsStarred(widget.task.id),
         isEnable: false,
         color: widget.color,
       ),
