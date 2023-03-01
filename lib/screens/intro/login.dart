@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'forgot_password.dart';
 
 
 
@@ -114,7 +115,7 @@ class _LoginState extends State<Login> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () =>
-                      Navigator.of(context).pushNamed(''),
+                      Navigator.of(context).pushNamed(ForgotPassword.id),
                   child: const Text('Forgot Password?'),
                 ),
               ),
@@ -135,7 +136,7 @@ class _LoginState extends State<Login> {
         children: [
           const Text("Don't have an account? "),
           TextButton(
-            onPressed: () => Navigator.of(context).pushNamed(''),
+            onPressed: () => Navigator.of(context).pushNamed(SignUp.id),
             child: const Text('Sign Up'),
           ),
         ],

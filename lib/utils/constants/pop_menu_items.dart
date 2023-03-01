@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../enums/pop_menu_value.dart';
 import '../../enums/group_pop_menu_value.dart';
+import '../../enums/pop_menu_value.dart';
 import '../../widgets/menu_item.dart';
 
 List<PopupMenuEntry<PopMenuValue>> popMenuEntries(BuildContext context) => [

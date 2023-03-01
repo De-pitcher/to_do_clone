@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../enums/activity_type.dart';
-import '../../widgets/activity_widget.dart';
 import '../../providers/tasks.dart';
+import '../../widgets/activity_widget.dart';
 import '../../widgets/buttons/special_button.dart';
 
 class ImportantScreen extends StatefulWidget {

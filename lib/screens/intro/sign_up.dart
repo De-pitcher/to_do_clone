@@ -1,8 +1,7 @@
-
 import "package:flutter/material.dart";
-import 'login.dart';
-import '../../service/auth.dart';
 
+import '../../service/auth.dart';
+import 'login.dart';
 
 class SignUp extends StatefulWidget {
   static const String id = "/sign_up";
@@ -14,30 +13,35 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   bool _isLoading = false;
-  final Authentication _authentication = Authentication();
-
   late final GlobalKey<FormState> formKey;
   late final GlobalKey<ScaffoldState> scaffoldKey;
   late final TextEditingController name;
   late final TextEditingController email;
   late final TextEditingController password;
 
-  // Future<void> createUser() async {
-  //   formKey.currentState!.validate();
-  //   setState(() => _isLoading = true);
-  //   try {
-  //     await _authentication
-  //         .createAccount(email: email.text, password: password.text)
-  //         .whenComplete(() => Navigator.of(context).pushNamed(Login.id));
-  //   } catch (error) {
-  //     setState(() => _isLoading = false);
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: AppError(error: error.toString()),
-  //       ),
-  //     );
-  //   }
-  // }
+  createUser() async {
+    formKey.currentState!.validate();
+    setState(() => _isLoading = true);
+    var response =
+        await Authentication.createAccount(email.text, password.text);
+
+    if (response != null && mounted) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red[400],
+          content: Text(response),
+        ),
+      );
+    }
+    setState(() => _isLoading = false);
+    if (response == null && mounted) {
+      Navigator.of(context).pushNamed(Login.id);
+    }
+    name.clear();
+    email.clear();
+    password.clear();
+  }
 
   @override
   void initState() {
@@ -124,9 +128,7 @@ class _SignUpState extends State<SignUp> {
               ),
               const SizedBox(height: 15),
               TextButton(
-                onPressed: _isLoading ? null : () async => (() {
-                  
-                }),
+                onPressed: _isLoading ? null : () async => await createUser(),
                 child: _isLoading
                     ? const CircularProgressIndicator()
                     : const Text('Sign up'),

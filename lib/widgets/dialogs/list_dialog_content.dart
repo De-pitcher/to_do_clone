@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../utils/res/theme.dart';
-import '../new_list_theme_card.dart';
-import '../circular_color_card.dart';
-import '../circular_image_card.dart';
-import '../picker.dart';
-import '../../providers/list_theme.dart';
 import '../../enums/new_list_theme_value.dart';
 import '../../providers/activities.dart';
+import '../../providers/list_theme.dart';
+import '../../utils/res/theme.dart';
+import '../circular_color_card.dart';
+import '../circular_image_card.dart';
+import '../new_list_theme_card.dart';
+import '../picker.dart';
 
 class ListDialogContent extends StatefulWidget {
   /// [ListDialogContent] a dialog for creating [ListWidget]s

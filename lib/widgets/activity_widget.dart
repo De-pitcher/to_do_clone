@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'completed_task_header.dart';
-import 'task_tile.dart';
 
 import '../enums/activity_type.dart';
 import '../models/animated_list_model.dart';
 import '../models/task.dart';
 import 'animated_title.dart';
 import 'bottom_sheet/add_task_bottom_sheet.dart';
+import 'completed_task_header.dart';
+import 'task_tile.dart';
 
 class ActivityWidget extends StatefulWidget {
   final String title;
