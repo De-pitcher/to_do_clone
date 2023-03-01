@@ -1,9 +1,7 @@
 import "package:flutter/material.dart";
 
-import './forgot_password.dart';
-import '../../screens/landing.dart';
 import '../../service/auth.dart';
-import 'sign_up.dart';
+import '../landing.dart';
 
 class Login extends StatefulWidget {
   static const String id = "/login_page";
@@ -29,7 +27,7 @@ class _LoginState extends State<Login> {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.red[300],
           content: Text(response),
         ),
       );
@@ -109,8 +107,7 @@ class _LoginState extends State<Login> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () =>
-                      Navigator.of(context).pushNamed(ForgotPassword.id),
+                  onPressed: () => Navigator.of(context).pushNamed(''),
                   child: const Text('Forgot Password?'),
                 ),
               ),
@@ -131,7 +128,7 @@ class _LoginState extends State<Login> {
         children: [
           const Text("Don't have an account? "),
           TextButton(
-            onPressed: () => Navigator.of(context).pushNamed(SignUp.id),
+            onPressed: () => Navigator.of(context).pushNamed(''),
             child: const Text('Sign Up'),
           ),
         ],

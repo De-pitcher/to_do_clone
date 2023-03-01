@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/tasks.dart';
-import '../../widgets/activity_widget.dart';
-import '../../widgets/buttons/special_button.dart';
 import '../../widgets/planned_activity_widget.dart';
 
 class PlannedScreen extends StatefulWidget {

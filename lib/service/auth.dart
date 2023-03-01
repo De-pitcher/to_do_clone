@@ -1,9 +1,9 @@
 import "package:firebase_auth/firebase_auth.dart";
 
+import '../exceptions/auth_exception.dart';
+
 class Authentication {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  FirebaseAuth get auth => _auth;
 
   static User? user;
 
@@ -13,7 +13,7 @@ class Authentication {
           email: email, password: password);
       return null;
     } on FirebaseAuthException catch (e) {
-      return "${e.code} : ${e.message}";
+      return AuthException.createUserException(e.code);
     }
   }
 
@@ -24,51 +24,31 @@ class Authentication {
           .then((value) => user = value.user);
       return null;
     } on FirebaseAuthException catch (error) {
-      return "${error.code} : ${error.message}";
+      return AuthException.signInException(error.code);
     }
   }
 
-  static Future<String?> resetPassword(String newPassword,
-      [String? code]) async {
+  static Future<String?> resetPassword(String email) async {
     try {
-      if (user != null) {
-        await _auth
-            .sendPasswordResetEmail(email: user!.email!)
-            .then((value) async {
-          // try {
-          //   await _auth.confirmPasswordReset(
-          //       code: code!, newPassword: newPassword);
-          //   return null;
-          // } on FirebaseAuthException catch (e) {
-          //   switch (e.code) {
-          //     case 'expired-action-code':
-          //       return 'Code entered has expired';
-          //     case 'invalid-action-code':
-          //       return 'This code is invalid';
-          //     case 'user-disabled':
-          //       return 'The user has been disabled.';
-          //     case 'user-not-found':
-          //       return 'This user does not exist';
-          //     case 'weak-password':
-          //       return 'Enter a strong password';
-
-          //   }
-          // }
-        });
-      }
+      await _auth.sendPasswordResetEmail(email: email);
       return null;
     } on FirebaseAuthException catch (err) {
-      if (err.code == 'auth/invalid-email') {
-        return 'Email is invalid';
-      } else if (err.code == 'auth/user-not-found') {
-        return 'User does not exist';
-      }
+      return AuthException.passwordResetException(err.code);
+    }
+  }
+
+  static Future<String?> confirmPasswordReset(
+      String code, String newPassword) async {
+    try {
+      await _auth.confirmPasswordReset(code: code, newPassword: newPassword);
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return AuthException.confirmPasswordResetException(e.code);
     }
   }
 
   static bool isSignedIn() {
-    // return user != null ? true : false;
-    return true;
+    return user != null ? true : false;
   }
 
   Future signOut() async {

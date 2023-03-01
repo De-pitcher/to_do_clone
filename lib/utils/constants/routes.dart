@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../screens/intro/forgot_password.dart';
 import '../../screens/intro/login.dart';
 import '../../screens/intro/sign_up.dart';
 import '../../widgets/task_details.dart';
@@ -19,8 +18,8 @@ MaterialPageRoute routeGen(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const Login());
     case SignUp.id:
       return MaterialPageRoute(builder: (context) => const SignUp());
-    case ForgotPassword.id:
-      return MaterialPageRoute(builder: (context) => const ForgotPassword());
+    // case ForgotPassword.id:
+    //   return MaterialPageRoute(builder: (context) => const ForgotPassword());
     case MainPage.id:
       return MaterialPageRoute(builder: (_) => const MainPage());
     case ProfileAccount.id:
