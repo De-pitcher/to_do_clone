@@ -1,5 +1,4 @@
 import "package:firebase_auth/firebase_auth.dart";
-
 import '../exceptions/auth_exception.dart';
 
 class Authentication {

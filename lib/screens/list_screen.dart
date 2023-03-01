@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/list_theme.dart';
 import '../widgets/dialogs/list_dialog_content.dart';
 import '../widgets/list_widget.dart';
-import '../providers/list_theme.dart';
 
 class ListScreen extends StatefulWidget {
   static const id = '/list-screen';

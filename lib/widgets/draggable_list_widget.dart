@@ -7,8 +7,8 @@ import '../enums/group_pop_menu_value.dart';
 import '../models/activity.dart';
 import '../models/group.dart';
 import 'list_tile_widget.dart';
-import './group_header_widget.dart';
-import './dialogs/add_or_remove_dialog.dart';
+import 'group_header_widget.dart';
+import 'dialogs/add_or_remove_dialog.dart';
 import '../providers/activities.dart';
 import '../providers/groups.dart';
 

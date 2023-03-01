@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-import '../models/group.dart';
 import '../models/activity.dart';
+import '../models/group.dart';
 
 class Groups extends ChangeNotifier {
   List<Group> _groups = [];
