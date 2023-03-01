@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../enums/group_pop_menu_value.dart';
-import '../utils/constants/pop_menu_items.dart';
+import '../utils/constants/constants.dart';
 
 class GroupHeaderWidget extends StatefulWidget {
   /// name of the group

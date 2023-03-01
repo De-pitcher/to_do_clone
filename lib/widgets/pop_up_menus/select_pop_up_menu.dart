@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../enums/select_pop_menu_value.dart';
 import '../../providers/tasks.dart';
-import '../../utils/constants/pop_menu_items.dart';
+import '../../utils/constants/constants.dart';
 import '../dialogs/confirm_delete_dialog.dart';
 
 class SelectPopUpMenu extends StatelessWidget {

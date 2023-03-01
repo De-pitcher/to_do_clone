@@ -1,5 +1,5 @@
 enum NewListThemeValue {
   color,
   photo,
-  custom,
+  custom,expo
 }
