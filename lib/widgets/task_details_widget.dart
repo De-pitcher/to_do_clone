@@ -91,7 +91,8 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
         color: widget.color,
       ),
       RemindMePopupMenu(
-        isEnabled: true,
+        id: widget.task.id,
+        isEnabled: widget.task.remindMe,
         color: widget.color,
       ),
       const Divider(

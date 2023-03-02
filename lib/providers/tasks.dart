@@ -37,6 +37,8 @@ class Tasks with ChangeNotifier {
     notifyListeners();
   }
 
+  Task getTaskById(String id) => _tasks.firstWhere((tks) => tks.id == id);
+
   void renameTask(String id, String newTaskName) {
     final currentIndex = _tasks.indexWhere((e) => e.id == id);
     if (newTaskName.isNotEmpty) {
@@ -81,6 +83,13 @@ class Tasks with ChangeNotifier {
     final tempIsSelected = _tasks[currentIndex].isSelected;
     _tasks[currentIndex] =
         _tasks[currentIndex].copyWith(isSelected: !tempIsSelected);
+    notifyListeners();
+  }
+
+  void toggleRemindMe(String id) {
+    final currentIndex = _tasks.indexWhere((e) => e.id == id);
+    final tempRemidMe = _tasks[currentIndex].remindMe;
+    _tasks[currentIndex] = _tasks[currentIndex]..remindMe = !tempRemidMe;
     notifyListeners();
   }
 

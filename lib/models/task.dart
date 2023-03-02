@@ -23,6 +23,9 @@ class Task {
   /// This [isSelected] is used to check if the task is currently selected.
   bool isSelected;
 
+  /// This [remindMe] is used to check if the task is should be reminded.
+  bool remindMe;
+
   Task({
     required this.id,
     required this.step,
@@ -31,6 +34,7 @@ class Task {
     this.isStarred = false,
     this.myDay = false,
     this.isSelected = false,
+    this.remindMe = false,
   });
 
   Task copyWith({
@@ -41,6 +45,7 @@ class Task {
     bool? isStarred,
     bool? myDay,
     bool? isSelected,
+    bool? remindMe,
   }) {
     return Task(
       id: id ?? this.id,
@@ -50,6 +55,7 @@ class Task {
       isStarred: isStarred ?? this.isStarred,
       myDay: myDay ?? this.myDay,
       isSelected: isSelected ?? this.isSelected,
+      remindMe: remindMe ?? this.remindMe,
     );
   }
 }

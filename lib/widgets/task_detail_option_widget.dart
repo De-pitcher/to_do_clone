@@ -5,6 +5,7 @@ class TaskDetailsOptionWidget extends StatelessWidget {
   final String? subtitle;
   final IconData icon;
   final Function()? onTap;
+  final Function()? onCancel;
   final Color color;
   final bool isEnabled;
   const TaskDetailsOptionWidget({
@@ -15,6 +16,7 @@ class TaskDetailsOptionWidget extends StatelessWidget {
     this.onTap,
     required this.isEnabled,
     required this.color,
+    this.onCancel,
   });
 
   @override
@@ -39,9 +41,12 @@ class TaskDetailsOptionWidget extends StatelessWidget {
                   .copyWith(color: Colors.grey),
             ),
       trailing: isEnabled
-          ? const Icon(
-              Icons.cancel,
-              color: Colors.white38,
+          ? IconButton(
+              onPressed: onCancel,
+              icon: const Icon(
+                Icons.cancel,
+                color: Colors.white38,
+              ),
             )
           : null,
     );

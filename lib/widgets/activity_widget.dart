@@ -149,8 +149,8 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   void _removeFromUi(Task task, AnimatedListModel<Task> listModel,
       AnimatedListModel<Task> nextListModel) {
     final cIndex = listModel.indexWhere((element) => element.id == task.id);
-
     final item = listModel.removeAt(cIndex);
+    
     final index =
         cIndex >= nextListModel.length ? nextListModel.length : cIndex;
     if (!item.isStarred) {

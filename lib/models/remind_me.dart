@@ -1,10 +1,19 @@
-import 'task.dart';
+import 'package:intl/intl.dart';
 
 class RemindMe {
-  final Task task;
+  final String id;
   final DateTime date;
-  const RemindMe(this.task, this.date);
+  const RemindMe(this.id, this.date);
 
-  RemindMe copyWith({Task? task, DateTime? date}) =>
-      RemindMe(task ?? this.task, date ?? this.date);
+  String get title {
+    if (date.day == DateTime.now().day) {
+      return 'Today';
+    } else if (date.day == DateTime.now().day + 1) {
+      return 'Tomorrow';
+    }
+    return DateFormat.E().add_MMMd().format(date);
+  }
+
+  RemindMe copyWith({String? id, DateTime? date}) =>
+      RemindMe(id ?? this.id, date ?? this.date);
 }

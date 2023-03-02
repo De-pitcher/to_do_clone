@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
-import 'providers/list_theme.dart';
-import 'providers/activities.dart';
-import 'providers/groups.dart';
-import 'providers/tasks.dart';
-import 'providers/task_steps.dart';
-import 'utils/constants/routes.dart';
-import 'utils/res/theme.dart';
+import './providers/list_theme.dart';
+import './providers/activities.dart';
+import './providers/groups.dart';
+import './providers/tasks.dart';
+import './providers/task_steps.dart';
+import './utils/constants/routes.dart';
+import './utils/res/theme.dart';
 import '../screens/intro/login.dart';
 import '../screens/landing.dart';
 import '../service/auth.dart';
+import './providers/remind_me_list.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,6 +42,9 @@ class ToDoClone extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => TaskSteps(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => RemindMeList(),
         ),
       ],
       child: MaterialApp(
