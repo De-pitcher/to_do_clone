@@ -21,7 +21,7 @@ class Task {
   bool myDay;
 
   /// This [isSelected] is used to check if the task is currently selected.
-  bool? isSelected;
+  bool isSelected;
 
   Task({
     required this.id,

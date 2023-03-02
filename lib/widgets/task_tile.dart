@@ -30,7 +30,7 @@ class TaskTile extends StatelessWidget {
   final Function(Task)? onRemoveFn;
 
   /// This [onRemoveFromUiFn] deletes the task from the Screen.
-  final Function()? onRemoveFromUiFn;
+  final Function(Task)? onRemoveFromUiFn;
 
   /// [onLongPress] is executed when the [TaskTile] is pressed for long.
   final Function(Task)? onLongPress;
@@ -132,16 +132,15 @@ class TaskTile extends StatelessWidget {
                       ? TaskCheckbox(
                           color: color,
                           onChanged: (_) {
-                            onRemoveFromUiFn!();
                             tksProvider.toggleIsSelected(task.id);
                           },
                           isRounded: false,
-                          value: task.isDone,
+                          value: task.isSelected,
                         )
                       : TaskCheckbox(
                           color: color,
                           onChanged: (_) {
-                            onRemoveFromUiFn!();
+                            onRemoveFromUiFn!(task);
                             tksProvider.toggleIsDone(task.id);
                           },
                           value: task.isDone,
@@ -227,7 +226,13 @@ class TaskTile extends StatelessWidget {
     BuildContext context,
     ScaffoldMessengerState scaffoldMessenger,
   ) {
-    context.read<Tasks>().toggleIsStarred(task.id);
+    final taskProvider = context.read<Tasks>();
+    if (activityType == ActivityType.important) {
+      taskProvider.toggleIsStarred(task.id);
+      onRemoveFromUiFn!(task);
+    } else {
+      taskProvider.toggleIsStarred(task.id);
+    }
     if (task.isStarred == true && activityType == ActivityType.important) {
       scaffoldMessenger.showSnackBar(
         snackbar(
@@ -235,7 +240,8 @@ class TaskTile extends StatelessWidget {
           msg: 'Task removed from Importance',
           scaffoldMessenger: scaffoldMessenger,
           onPressed: () {
-            context.read<Tasks>().starTask(task.id);
+            taskProvider.starTask(task.id);
+            onAddTaskFn!(task);
             scaffoldMessenger.hideCurrentSnackBar();
           },
         ),

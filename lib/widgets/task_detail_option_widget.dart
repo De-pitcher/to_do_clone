@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class TaskDetailsOptionWidget extends StatelessWidget {
-  final String option;
+  final String title;
+  final String? subtitle;
   final IconData icon;
   final Function()? onTap;
   final Color color;
   final bool isEnabled;
   const TaskDetailsOptionWidget({
     super.key,
-    required this.option,
+    required this.title,
+    this.subtitle,
     required this.icon,
     this.onTap,
     required this.isEnabled,
@@ -21,12 +23,21 @@ class TaskDetailsOptionWidget extends StatelessWidget {
       onTap: onTap,
       leading: Icon(icon, color: isEnabled ? color : Colors.white38),
       title: Text(
-        option,
+        title,
         style: Theme.of(context)
             .textTheme
             .titleSmall!
             .copyWith(color: isEnabled ? color : Colors.white38),
       ),
+      subtitle: subtitle == null
+          ? null
+          : Text(
+              subtitle!,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleSmall!
+                  .copyWith(color: Colors.grey),
+            ),
       trailing: isEnabled
           ? const Icon(
               Icons.cancel,

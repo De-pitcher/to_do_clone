@@ -17,7 +17,7 @@ class Tasks with ChangeNotifier {
       _tasks.where((tsk) => tsk.isDone == false).toList();
 
   List<Task> get selectedTask {
-    return _tasks.where((tks) => tks.isSelected!).toList();
+    return _tasks.where((tks) => tks.isSelected).toList();
   }
 
   void insert(Task task, [int? index]) {
@@ -80,13 +80,13 @@ class Tasks with ChangeNotifier {
     final currentIndex = _tasks.indexWhere((e) => e.id == id);
     final tempIsSelected = _tasks[currentIndex].isSelected;
     _tasks[currentIndex] =
-        _tasks[currentIndex].copyWith(isSelected: !tempIsSelected!);
+        _tasks[currentIndex].copyWith(isSelected: !tempIsSelected);
     notifyListeners();
   }
 
   bool hasStarredTask() {
     var hasStarred = false;
-    final selectedTask = _tasks.where((tks) => tks.isSelected!);
+    final selectedTask = _tasks.where((tks) => tks.isSelected);
     for (var task in selectedTask) {
       hasStarred = task.isStarred;
     }
@@ -95,7 +95,7 @@ class Tasks with ChangeNotifier {
 
   bool isAllTaskSelected() {
     for (var item in _tasks) {
-      if (!item.isSelected!) return false;
+      if (!item.isSelected) return false;
     }
     return true;
   }
@@ -112,7 +112,7 @@ class Tasks with ChangeNotifier {
 
   void starSelecedTask() {
     for (var i = 0; i < _tasks.length; i++) {
-      if (_tasks[i].isSelected!) {
+      if (_tasks[i].isSelected) {
         _tasks[i].isStarred = true;
       }
     }
@@ -120,7 +120,7 @@ class Tasks with ChangeNotifier {
   }
 
   void deleteSelectedTask() {
-    _tasks.removeWhere((tks) => tks.isSelected!);
+    _tasks.removeWhere((tks) => tks.isSelected);
     notifyListeners();
   }
 }

@@ -1,11 +1,12 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../enums/enums.dart';
 import '../../utils/constants/constants.dart';
 import '../task_detail_option_widget.dart';
 
-class RemindMePopupMenu extends StatelessWidget {
+class RemindMePopupMenu extends StatefulWidget {
   final bool isEnabled;
   final Color color;
   const RemindMePopupMenu({
@@ -13,6 +14,21 @@ class RemindMePopupMenu extends StatelessWidget {
     required this.isEnabled,
     required this.color,
   });
+
+  @override
+  State<RemindMePopupMenu> createState() => _RemindMePopupMenuState();
+}
+
+class _RemindMePopupMenuState extends State<RemindMePopupMenu> {
+  DateTime? date;
+  String formateDate(DateTime date) {
+    if (date == DateTime.now()) {
+      return 'Today';
+    } else if (date.day == DateTime.now().day + 1) {
+      return 'Tomorrow';
+    }
+    return DateFormat.E().add_MMMd().format(date);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +60,7 @@ class RemindMePopupMenu extends StatelessWidget {
                             dateLabelText: 'Date',
                             timeLabelText: "Hour",
                             selectableDayPredicate: (date) {
+                              date = date;
                               // Disable weekend days to select from the calendar
                               if (date.weekday == 6 || date.weekday == 7) {
                                 return false;
@@ -51,22 +68,25 @@ class RemindMePopupMenu extends StatelessWidget {
 
                               return true;
                             },
-                            onChanged: (val) => print(val),
+                            onChanged: (val) {
+                              date = DateTime.parse(val);
+                              print(DateFormat.Hms().format(date!));
+                            },
                             validator: (val) {
-                              print(val);
+                              // print(val);
                               return null;
                             },
-                            onSaved: (val) => print(val),
+                            onSaved: (val) => print(
+                              DateFormat.jm().format(date!),
+                            ),
                           ),
                         ),
-                        Align(
-                          // alignment: Alignment.center,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('OK'),
-                          ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {});
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('OK'),
                         )
                       ],
                     ),
@@ -76,10 +96,16 @@ class RemindMePopupMenu extends StatelessWidget {
         }
       },
       child: TaskDetailsOptionWidget(
-        option: 'Remind me',
+        title:
+            'Remind me ${date == null ? '' : 'at ${DateFormat.jm().format(date!)}'}',
         icon: Icons.notifications_outlined,
-        isEnabled: isEnabled,
-        color: color,
+        subtitle: widget.isEnabled
+            ? date == null
+                ? null
+                : formateDate(date!)
+            : null,
+        isEnabled: widget.isEnabled,
+        color: widget.color,
       ),
     );
   }

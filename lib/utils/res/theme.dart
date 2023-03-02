@@ -17,7 +17,6 @@ class AppTheme {
 
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    backgroundColor: Colors.white10,
     scaffoldBackgroundColor: Colors.white10,
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,

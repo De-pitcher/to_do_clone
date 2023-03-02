@@ -84,7 +84,7 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
         ),
       ),
       TaskDetailsOptionWidget(
-        option: 'Add to my Day',
+        title: 'Add to my Day',
         icon: CupertinoIcons.brightness,
         onTap: () => context.read<Tasks>().toggleMyDay(widget.task.id),
         isEnabled: widget.task.myDay,
@@ -100,7 +100,7 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
         indent: 70,
       ),
       TaskDetailsOptionWidget(
-        option: 'Add due time',
+        title: 'Add due time',
         icon: CupertinoIcons.calendar,
         isEnabled: false,
         color: widget.color,
@@ -111,13 +111,13 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
         indent: 70,
       ),
       TaskDetailsOptionWidget(
-        option: 'Repeat',
+        title: 'Repeat',
         icon: CupertinoIcons.repeat,
         isEnabled: false,
         color: widget.color,
       ),
       TaskDetailsOptionWidget(
-        option: 'Add file',
+        title: 'Add file',
         icon: Icons.file_open,
         isEnabled: false,
         color: widget.color,

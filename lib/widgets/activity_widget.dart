@@ -146,12 +146,16 @@ class _ActivityWidgetState extends State<ActivityWidget> {
 
   /// [_removeFromUi] function removes task from the current [AnimatedList]
   /// ([listModel]) and adds it to the next [AnimatedList] ([nextListModel]).
-  void _removeFromUi(int cIndex, AnimatedListModel<Task> listModel,
+  void _removeFromUi(Task task, AnimatedListModel<Task> listModel,
       AnimatedListModel<Task> nextListModel) {
+    final cIndex = listModel.indexWhere((element) => element.id == task.id);
+
     final item = listModel.removeAt(cIndex);
     final index =
         cIndex >= nextListModel.length ? nextListModel.length : cIndex;
-    nextListModel.insert(index, item);
+    if (!item.isStarred) {
+      nextListModel.insert(index, item);
+    }
     setState(() {});
   }
 
@@ -214,7 +218,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
               context: context,
               count: Provider.of<Tasks>(context, listen: false)
                   .tasks
-                  .where((tks) => tks.isSelected!)
+                  .where((tks) => tks.isSelected)
                   .length,
               disMarkAsImpt: taskProvider.hasStarredTask(),
               cmpltdListModel: _completedListModel,
@@ -354,10 +358,10 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       task: widget.unDoneListModel[index],
       animation: animation,
       color: widget.color,
-      onAddTaskFn: (task) => _insert(task, _listModel, index),
+      onAddTaskFn: (item) => _insert(item, _listModel, index),
       onRemoveFn: (item) => _remove(item, index, _listModel),
-      onRemoveFromUiFn: () =>
-          _removeFromUi(index, _listModel, _completedListModel),
+      onRemoveFromUiFn: (item) =>
+          _removeFromUi(item, _listModel, _completedListModel),
       activityType: widget.activityType,
       isSelected: _isSelected,
       onLongPress: onLongPressed,
@@ -374,10 +378,10 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       task: widget.completedListModel![index],
       animation: animation,
       color: widget.color,
-      onAddTaskFn: (task) => _insert(task, _completedListModel, null),
+      onAddTaskFn: (item) => _insert(item, _completedListModel, null),
       onRemoveFn: (item) => _remove(item, index, _completedListModel),
-      onRemoveFromUiFn: () =>
-          _removeFromUi(index, _completedListModel, _listModel),
+      onRemoveFromUiFn: (item) =>
+          _removeFromUi(item, _completedListModel, _listModel),
       activityType: widget.activityType,
       isSelected: _isSelected,
       onLongPress: onLongPressed,
