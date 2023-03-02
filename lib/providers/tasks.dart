@@ -93,6 +93,13 @@ class Tasks with ChangeNotifier {
     notifyListeners();
   }
 
+  void toggleAddDueDate(String id) {
+    final currentIndex = _tasks.indexWhere((e) => e.id == id);
+    final tempAddDueDate = _tasks[currentIndex].addDueDate;
+    _tasks[currentIndex] = _tasks[currentIndex]..addDueDate = !tempAddDueDate;
+    notifyListeners();
+  }
+
   bool hasStarredTask() {
     var hasStarred = false;
     final selectedTask = _tasks.where((tks) => tks.isSelected);

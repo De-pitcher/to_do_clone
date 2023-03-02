@@ -2,7 +2,6 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:to_do_clone/models/remind_me.dart';
 
 import '../../enums/enums.dart';
 import '../../providers/tasks.dart';
@@ -99,7 +98,11 @@ class _RemindMePopupMenuState extends State<RemindMePopupMenu> {
         icon: Icons.notifications_outlined,
         subtitle: widget.isEnabled ? remindMe?.title ?? '' : null,
         isEnabled: widget.isEnabled,
-        color: widget.color,
+        color: remindMe != null
+            ? remindMe.date.day != DateTime.now().day
+                ? Colors.grey
+                : widget.color
+            : widget.color,
         onCancel: () {
           context.read<Tasks>().toggleRemindMe(widget.id);
         },
@@ -130,53 +133,3 @@ class _RemindMePopupMenuState extends State<RemindMePopupMenu> {
   }
 }
 
-class DateWidget extends StatelessWidget {
-  final String date;
-  final Function(String)? onChanged;
-  final Function()? onSubmit;
-  const DateWidget({
-    super.key,
-    required this.date,
-    this.onChanged,
-    this.onSubmit,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      elevation: 0,
-      child: SizedBox(
-        height: 120,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: DateTimePicker(
-                  type: DateTimePickerType.dateTimeSeparate,
-                  dateMask: 'd MMM, yyyy',
-                  initialValue: date,
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                  icon: const Icon(Icons.event),
-                  dateLabelText: 'Date',
-                  timeLabelText: "Hour",
-                  selectableDayPredicate: (date) {
-                    // Disable weekend days to select from the calendar
-                    if (date.weekday == 6 || date.weekday == 7) {
-                      return false;
-                    }
-                    return true;
-                  },
-                  onChanged: onChanged),
-            ),
-            ElevatedButton(
-              onPressed: onSubmit,
-              child: const Text('OK'),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}

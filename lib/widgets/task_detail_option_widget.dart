@@ -23,13 +23,13 @@ class TaskDetailsOptionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onTap,
-      leading: Icon(icon, color: isEnabled ? color : Colors.white38),
+      leading: Icon(icon, color: isEnabled ? color : Colors.grey),
       title: Text(
         title,
         style: Theme.of(context)
             .textTheme
             .titleSmall!
-            .copyWith(color: isEnabled ? color : Colors.white38),
+            .copyWith(color: isEnabled ? color : Colors.grey),
       ),
       subtitle: subtitle == null
           ? null
@@ -45,7 +45,7 @@ class TaskDetailsOptionWidget extends StatelessWidget {
               onPressed: onCancel,
               icon: const Icon(
                 Icons.cancel,
-                color: Colors.white38,
+                color: Colors.grey,
               ),
             )
           : null,
