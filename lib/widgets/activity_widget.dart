@@ -150,7 +150,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       AnimatedListModel<Task> nextListModel) {
     final cIndex = listModel.indexWhere((element) => element.id == task.id);
     final item = listModel.removeAt(cIndex);
-    
+
     final index =
         cIndex >= nextListModel.length ? nextListModel.length : cIndex;
     if (!item.isStarred) {
@@ -355,7 +355,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     Animation<double> animation,
   ) {
     return TaskTile(
-      task: widget.unDoneListModel[index],
+      id: _listModel[index].id,
       animation: animation,
       color: widget.color,
       onAddTaskFn: (item) => _insert(item, _listModel, index),
@@ -375,7 +375,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     Animation<double> animation,
   ) {
     return TaskTile(
-      task: widget.completedListModel![index],
+      id: _completedListModel[index].id,
       animation: animation,
       color: widget.color,
       onAddTaskFn: (item) => _insert(item, _completedListModel, null),

@@ -143,7 +143,7 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
     Animation<double> animation,
   ) {
     return TaskTile(
-      task: widget.tasks[index],
+      id: widget.tasks[index].id,
       animation: animation,
       color: widget.color,
       // onAddTaskFn: (task) => _insert(task, _listModel, index),

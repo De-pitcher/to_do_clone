@@ -17,8 +17,8 @@ const duration = Duration(seconds: 3);
 /// properties of the task and can be manipulated to get the desired
 /// customization offered by the [TaskTile] paramters.
 class TaskTile extends StatelessWidget {
-  /// This [Task] contains info about a task.
-  final Task task;
+  /// This parameter is used fetch a task from the [Tasks] class. 
+  final String id;
 
   /// This handles the animation of the [TaskTile]
   final Animation<double> animation;
@@ -50,7 +50,7 @@ class TaskTile extends StatelessWidget {
   /// class.
   const TaskTile({
     Key? key,
-    required this.task,
+    required this.id,
     required this.animation,
     this.onRemoveFn,
     this.onAddTaskFn,
@@ -66,6 +66,7 @@ class TaskTile extends StatelessWidget {
     //* Handles the display of scaffold in this context
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final tksProvider = context.read<Tasks>();
+    final taskData = Provider.of<Tasks>(context).getTaskById(id);
 
     return SizeTransition(
       axisAlignment: -1,
@@ -106,24 +107,24 @@ class TaskTile extends StatelessWidget {
               context: context,
               direction: direction,
               scaffoldMessenger: scaffoldMessenger,
-              task: task,
+              task: taskData,
             ),
             child: SizedBox(
               height: 60,
               child: ListTile(
                 onTap: isSelected!
-                    ? () => tksProvider.toggleIsSelected(task.id)
+                    ? () => tksProvider.toggleIsSelected(taskData.id)
                     : () {
                         Navigator.of(context).pushNamed(
                           TaskDetails.id,
                           arguments: {
                             'color': color,
                             'parent': 'Tasks',
-                            'task': task,
+                            'task': taskData,
                           },
                         );
                       },
-                onLongPress: () => onLongPress!(task),
+                onLongPress: () => onLongPress!(taskData),
                 selected: isSelected!,
                 horizontalTitleGap: 0,
                 leading: Transform.scale(
@@ -132,18 +133,18 @@ class TaskTile extends StatelessWidget {
                       ? TaskCheckbox(
                           color: color,
                           onChanged: (_) {
-                            tksProvider.toggleIsSelected(task.id);
+                            tksProvider.toggleIsSelected(taskData.id);
                           },
                           isRounded: false,
-                          value: task.isSelected,
+                          value: taskData.isSelected,
                         )
                       : TaskCheckbox(
                           color: color,
                           onChanged: (_) {
-                            onRemoveFromUiFn!(task);
-                            tksProvider.toggleIsDone(task.id);
+                            onRemoveFromUiFn!(taskData);
+                            tksProvider.toggleIsDone(taskData.id);
                           },
-                          value: task.isDone,
+                          value: taskData.isDone,
                         ),
                 ),
                 title: Column(
@@ -151,12 +152,12 @@ class TaskTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TaskTextWidget(
-                      text: task.task,
+                      text: taskData.task,
                       context: context,
                       color: Colors.white,
-                      isDone: task.isDone,
+                      isDone: taskData.isDone,
                     ),
-                    activityType != ActivityType.myDay && task.myDay
+                    activityType != ActivityType.myDay && taskData.myDay
                         ? Row(
                             children: [
                               const Icon(
@@ -172,7 +173,7 @@ class TaskTile extends StatelessWidget {
                               ),
                             ],
                           )
-                        : activityType == ActivityType.myDay && task.myDay
+                        : activityType == ActivityType.myDay && taskData.myDay
                             ? TaskTextWidget(
                                 text: 'Tasks',
                                 context: context,
@@ -184,10 +185,10 @@ class TaskTile extends StatelessWidget {
                 trailing: IconButton(
                   onPressed: isSelected!
                       ? null
-                      : () => toggleStar(context, scaffoldMessenger),
+                      : () => toggleStar(context, scaffoldMessenger, taskData),
                   icon: Icon(
-                    task.isStarred ? Icons.star : Icons.star_border,
-                    color: task.isStarred ? color : Colors.grey,
+                    taskData.isStarred ? Icons.star : Icons.star_border,
+                    color: taskData.isStarred ? color : Colors.grey,
                   ),
                 ),
               ),
@@ -225,6 +226,7 @@ class TaskTile extends StatelessWidget {
   void toggleStar(
     BuildContext context,
     ScaffoldMessengerState scaffoldMessenger,
+    Task task,
   ) {
     final taskProvider = context.read<Tasks>();
     if (activityType == ActivityType.important) {
