@@ -125,11 +125,9 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     super.didChangeDependencies();
   }
 
-  /// [_insert] function handles the insertion of [Task]s both to the
-  /// [AnimatedList] and to the [Task] provider.
+  /// [_insert] function handles the insertion of [Task]s to
+  /// the [AnimatedList].
   void _insert(Task item, AnimatedListModel listModel, [int? cIndex]) {
-    //* Inserts to the [Tasks] provider
-    widget.insert!(item, cIndex);
     //* Inserts to the [AnimatedList].
     listModel.insert(cIndex ?? listModel.length, item);
   }
@@ -144,18 +142,26 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     setState(() {});
   }
 
-  /// [_removeFromUi] function removes task from the current [AnimatedList]
+  /// [_swapItemFromUI] function removes task from the current [AnimatedList]
   /// ([listModel]) and adds it to the next [AnimatedList] ([nextListModel]).
-  void _removeFromUi(Task task, AnimatedListModel<Task> listModel,
+  void _swapItemFromUI(Task task, AnimatedListModel<Task> listModel,
       AnimatedListModel<Task> nextListModel) {
     final cIndex = listModel.indexWhere((element) => element.id == task.id);
     final item = listModel.removeAt(cIndex);
 
     final index =
         cIndex >= nextListModel.length ? nextListModel.length : cIndex;
-    if (!item.isStarred) {
-      nextListModel.insert(index, item);
-    }
+    nextListModel.insert(index, item);
+
+    setState(() {});
+  }
+
+  /// [_removeFromUI] function removes task from the current [AnimatedList]
+  /// ([listModel]).
+  void _removeFromUI(Task task, AnimatedListModel<Task> listModel) {
+    final cIndex = listModel.indexWhere((element) => element.id == task.id);
+    listModel.removeAt(cIndex);
+
     setState(() {});
   }
 
@@ -360,8 +366,9 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       color: widget.color,
       onAddTaskFn: (item) => _insert(item, _listModel, index),
       onRemoveFn: (item) => _remove(item, index, _listModel),
-      onRemoveFromUiFn: (item) =>
-          _removeFromUi(item, _listModel, _completedListModel),
+      onSwapItemRemoveFromUiFn: (item) =>
+          _swapItemFromUI(item, _listModel, _completedListModel),
+      onRemoveFromUI: (item) => _removeFromUI(item, _listModel),
       activityType: widget.activityType,
       isSelected: _isSelected,
       onLongPress: onLongPressed,
@@ -380,8 +387,9 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       color: widget.color,
       onAddTaskFn: (item) => _insert(item, _completedListModel, null),
       onRemoveFn: (item) => _remove(item, index, _completedListModel),
-      onRemoveFromUiFn: (item) =>
-          _removeFromUi(item, _completedListModel, _listModel),
+      onSwapItemRemoveFromUiFn: (item) =>
+          _swapItemFromUI(item, _completedListModel, _listModel),
+      onRemoveFromUI: (item) => _removeFromUI(item, _completedListModel),
       activityType: widget.activityType,
       isSelected: _isSelected,
       onLongPress: onLongPressed,
@@ -397,7 +405,10 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       isDismissible: false,
       builder: (context) {
         return AddTaskBottomSheet(
-          addTaskFn: (item) => _insert(item, _listModel),
+          addTaskFn: (item) {
+            _insert(item, _listModel);
+            widget.insert!(item, null);
+          },
           specialButtons: widget.specialButtons,
           activityType: widget.activityType,
         );

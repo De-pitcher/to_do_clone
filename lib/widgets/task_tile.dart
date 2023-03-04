@@ -17,7 +17,7 @@ const duration = Duration(seconds: 3);
 /// properties of the task and can be manipulated to get the desired
 /// customization offered by the [TaskTile] paramters.
 class TaskTile extends StatelessWidget {
-  /// This parameter is used fetch a task from the [Tasks] class. 
+  /// This parameter is used fetch a task from the [Tasks] class.
   final String id;
 
   /// This handles the animation of the [TaskTile]
@@ -29,8 +29,12 @@ class TaskTile extends StatelessWidget {
   /// This [onRemoveFn] deletes the task.
   final Function(Task)? onRemoveFn;
 
-  /// This [onRemoveFromUiFn] deletes the task from the Screen.
-  final Function(Task)? onRemoveFromUiFn;
+  /// This [onSwapItemRemoveFromUiFn] deletes the task from the [AnimatedList]
+  ///  and it to another [AnimatedList].
+  final Function(Task)? onSwapItemRemoveFromUiFn;
+
+  /// This [onRemoveFromUI] deletes the task from the Screen.
+  final Function(Task)? onRemoveFromUI;
 
   /// [onLongPress] is executed when the [TaskTile] is pressed for long.
   final Function(Task)? onLongPress;
@@ -55,10 +59,11 @@ class TaskTile extends StatelessWidget {
     this.onRemoveFn,
     this.onAddTaskFn,
     this.activityType = ActivityType.non,
-    this.onRemoveFromUiFn,
+    this.onSwapItemRemoveFromUiFn,
     this.onLongPress,
     this.isSelected = false,
     required this.color,
+    this.onRemoveFromUI,
   }) : super(key: key);
 
   @override
@@ -141,8 +146,8 @@ class TaskTile extends StatelessWidget {
                       : TaskCheckbox(
                           color: color,
                           onChanged: (_) {
-                            onRemoveFromUiFn!(taskData);
-                            tksProvider.toggleIsDone(taskData.id);
+                            onSwapItemRemoveFromUiFn!(taskData);
+                            context.read<Tasks>().toggleIsDone(taskData.id);
                           },
                           value: taskData.isDone,
                         ),
@@ -220,6 +225,9 @@ class TaskTile extends StatelessWidget {
       );
     } else if (direction == DismissDirection.startToEnd) {
       context.read<Tasks>().toggleMyDay(task.id);
+      if (activityType == ActivityType.myDay) {
+        onRemoveFromUI!(task);
+      }
     }
   }
 
@@ -230,11 +238,9 @@ class TaskTile extends StatelessWidget {
   ) {
     final taskProvider = context.read<Tasks>();
     if (activityType == ActivityType.important) {
-      taskProvider.toggleIsStarred(task.id);
-      onRemoveFromUiFn!(task);
-    } else {
-      taskProvider.toggleIsStarred(task.id);
+      onRemoveFromUI!(task);
     }
+    taskProvider.toggleIsStarred(task.id);
     if (task.isStarred == true && activityType == ActivityType.important) {
       scaffoldMessenger.showSnackBar(
         snackbar(

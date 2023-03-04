@@ -52,8 +52,7 @@ class Tasks with ChangeNotifier {
   void toggleIsDone(String id) {
     final currentIndex = _tasks.indexWhere((e) => e.id == id);
     final tempIsDoneVal = _tasks[currentIndex].isDone;
-    _tasks[currentIndex] =
-        _tasks[currentIndex].copyWith(isDone: !tempIsDoneVal);
+    _tasks[currentIndex] = _tasks[currentIndex]..isDone = !tempIsDoneVal;
     notifyListeners();
   }
 
