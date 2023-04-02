@@ -50,7 +50,8 @@ class Authentication {
     return user != null ? true : false;
   }
 
-  Future signOut() async {
+  static Future<bool> signOut() async {
     await _auth.signOut();
+    return true;
   }
 }

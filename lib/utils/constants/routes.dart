@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_clone/screens/manage_account/accounts.dart';
+import 'package:to_do_clone/screens/manage_account/add_account.dart';
+import 'package:to_do_clone/screens/manage_account/settings.dart';
 
 import '../../screens/intro/login.dart';
 import '../../screens/intro/sign_up.dart';
@@ -11,7 +14,7 @@ import '../../screens/activities/tasks_screen.dart';
 import '../../screens/intro/forgot_password.dart';
 import '../../screens/landing.dart';
 import '../../screens/list_screen.dart';
-import '../../screens/profile.dart';
+import '../../screens/manage_account/profile.dart';
 
 MaterialPageRoute routeGen(RouteSettings settings) {
   switch (settings.name) {
@@ -25,6 +28,12 @@ MaterialPageRoute routeGen(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const MainPage());
     case ProfileAccount.id:
       return MaterialPageRoute(builder: (_) => const ProfileAccount());
+    case AddAccount.id:
+      return MaterialPageRoute(builder: (_) => const AddAccount());
+    case Accounts.id:
+      return MaterialPageRoute(builder: (_) => const Accounts());
+    case Settings.id:
+       return MaterialPageRoute(builder: (_) => const Settings());
     case ListScreen.id:
       return MaterialPageRoute(builder: (_) => const ListScreen());
     case AssignedPage.id:

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './profile.dart';
+import 'manage_account/profile.dart';
 import './list_screen.dart';
 import '../screens/activities/assigned_to_me.dart';
 import './activities/important_screen.dart';

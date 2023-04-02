@@ -17,7 +17,6 @@ class AppTheme {
 
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    backgroundColor: Colors.white10,
     scaffoldBackgroundColor: Colors.white10,
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
@@ -32,6 +31,13 @@ class AppTheme {
       bodySmall: TextStyle(color: Colors.white),
       headlineSmall: TextStyle(fontSize: 14),
     ),
+    // colorScheme: ColorScheme(
+    //     brightness: Brightness.dark,
+    //     secondary: Colors.white,
+    //     onSecondary: Colors.white,
+    //     onPrimary: Colors.white10,
+    //     primary: Colors.white,
+    //     background: Colors.white10),
   );
 
   static UnderlineInputBorder underlineInputBorder(Color color) =>

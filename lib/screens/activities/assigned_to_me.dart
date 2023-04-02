@@ -11,6 +11,12 @@ class AssignedPage extends StatefulWidget {
 class _AssignedPageState extends State<AssignedPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: Column(
+        children: [
+          
+        ],
+      ),
+    );
   }
 }

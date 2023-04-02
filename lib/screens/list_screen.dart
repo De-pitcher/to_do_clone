@@ -20,7 +20,6 @@ class _ListScreenState extends State<ListScreen> {
   @override
   void initState() {
     super.initState();
-
     Timer.run(() {
       Provider.of<ListTheme>(context, listen: false).resetListTitle();
 

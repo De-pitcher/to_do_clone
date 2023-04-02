@@ -8,7 +8,7 @@ import '../../widgets/buttons/special_button.dart';
 
 class ImportantScreen extends StatefulWidget {
   static const String id = '/important';
-
+ 
   /// This retrieves the name and color of the parent [ActionWidget]
   final Map<String, dynamic> args;
   const ImportantScreen({super.key, required this.args});
