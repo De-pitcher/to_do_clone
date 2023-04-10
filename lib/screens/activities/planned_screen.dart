@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/tasks.dart';
+import '../../providers/planned_tasks.dart';
 import '../../widgets/planned_activity_widget.dart';
 
 class PlannedScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class _PlannedScreenState extends State<PlannedScreen> {
     return PlannedActivityWidget(
       title: widget.args['activity'],
       color: widget.args['color'],
-      tasks: Provider.of<Tasks>(context).tasks,
+      tasks: Provider.of<PlannedTasks>(context).tasks,
     );
     // return ActivityWidget(
     //   title: widget.args['activity'],
