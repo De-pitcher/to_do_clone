@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../enums/activity_type.dart';
+import '../enums/planned_menu_value.dart';
 import '../models/task.dart';
+import '../providers/remind_me_list.dart';
 import '../providers/tasks.dart';
 import '../utils/res/app_snackbar.dart';
 import '../widgets/task_details.dart';
@@ -72,6 +74,8 @@ class TaskTile extends StatelessWidget {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final tksProvider = context.read<Tasks>();
     final taskData = Provider.of<Tasks>(context).getTaskById(id);
+    final remindMe =
+        Provider.of<RemindMeList>(context, listen: false).getReminderById(id);
 
     return SizeTransition(
       axisAlignment: -1,
@@ -99,7 +103,7 @@ class TaskTile extends StatelessWidget {
             secondaryBackground: DismissedWidget(
               alignment: Alignment.centerRight,
               padding: const EdgeInsets.only(right: 10),
-              color: Theme.of(context).errorColor,
+              color: Theme.of(context).colorScheme.error,
               icon: Icons.delete,
             ),
             background: DismissedWidget(
@@ -158,33 +162,46 @@ class TaskTile extends StatelessWidget {
                   children: [
                     TaskTextWidget(
                       text: taskData.task,
-                      context: context,
                       color: Colors.white,
                       isDone: taskData.isDone,
                     ),
-                    activityType != ActivityType.myDay && taskData.myDay
-                        ? Row(
-                            children: [
-                              const Icon(
-                                Icons.sunny,
-                                size: 16,
-                                color: Colors.grey,
-                              ),
-                              const SizedBox(width: 10),
-                              TaskTextWidget(
-                                text: 'My Day',
-                                context: context,
-                                color: Colors.grey,
-                              ),
-                            ],
-                          )
-                        : activityType == ActivityType.myDay && taskData.myDay
-                            ? TaskTextWidget(
-                                text: 'Tasks',
-                                context: context,
-                                color: Colors.grey,
-                              )
-                            : Container(),
+                    if (activityType == ActivityType.important ||
+                        activityType == ActivityType.planned)
+                      Row(
+                        children: [
+                          if (taskData.myDay)
+                            _taskWidget(Icons.sunny, Colors.grey, 'My Day'),
+                          const TaskTextWidget(
+                              text: 'Tasks', color: Colors.grey),
+                          const SizedBox(width: 5),
+                          if (remindMe != null)
+                            _taskWidget(
+                                taskData.remindMe
+                                    ? Icons.alarm
+                                    : Icons.task_outlined,
+                                color,
+                                remindMe.title)
+                        ],
+                      ),
+                    if (activityType == ActivityType.non ||
+                        activityType == ActivityType.myDay)
+                      Row(
+                        children: [
+                          if (activityType == ActivityType.myDay)
+                            const TaskTextWidget(
+                                text: 'Tasks', color: Colors.grey),
+                          if (activityType == ActivityType.non &&
+                              taskData.myDay)
+                            _taskWidget(Icons.sunny, Colors.grey, 'My Day'),
+                          if (remindMe != null)
+                            _taskWidget(
+                                taskData.remindMe
+                                    ? Icons.alarm
+                                    : Icons.task_outlined,
+                                color,
+                                remindMe.title)
+                        ],
+                      ),
                   ],
                 ),
                 trailing: IconButton(
@@ -201,6 +218,24 @@ class TaskTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _taskWidget(IconData icon, Color color, String title) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 16,
+          color: color,
+        ),
+        const SizedBox(width: 5),
+        TaskTextWidget(
+          text: title,
+          color: color,
+        ),
+        const SizedBox(width: 5),
+      ],
     );
   }
 

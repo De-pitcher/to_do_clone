@@ -23,32 +23,6 @@ class _PlannedScreenState extends State<PlannedScreen> {
       color: widget.args['color'],
       tasks: Provider.of<PlannedTasks>(context).tasks,
     );
-    // return ActivityWidget(
-    //   title: widget.args['activity'],
-    //   displaySubtitle: false,
-    //   unDoneListModel: Provider.of<Tasks>(context).unDoneTasks,
-    //   completedListModel: Provider.of<Tasks>(context).isDoneTasks,
-    //   color: widget.args['color'],
-    //   insert: (item, index) => context.read<Tasks>().insert(item, index),
-    //   remove: (index) => context.read<Tasks>().removeTask(index),
-    //   emptyWidget: _buildEmptyWidget(context),
-    //   isExtended: false,
-    //   fabIcon: const Icon(Icons.add, size: 32),
-    //   specialButtons: const [
-    //     SpecialButton(
-    //       label: 'Set due date',
-    //       icon: Icons.calendar_month_rounded,
-    //     ),
-    //     SpecialButton(
-    //       label: 'Remind me',
-    //       icon: Icons.notifications_on_outlined,
-    //     ),
-    //     SpecialButton(
-    //       label: 'Repeat',
-    //       icon: Icons.repeat,
-    //     ),
-    //   ],
-    // );
   }
 
   Center _buildEmptyWidget(BuildContext context) {

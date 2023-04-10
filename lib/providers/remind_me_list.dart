@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../enums/planned_menu_value.dart';
 import '../models/remind_me.dart';
 
 class RemindMeList with ChangeNotifier {
@@ -13,7 +14,7 @@ class RemindMeList with ChangeNotifier {
         return;
       }
     }
-    _items.add(RemindMe(id, date));
+    _items.add(RemindMe(id: id, date: date));
     notifyListeners();
   }
 
@@ -26,9 +27,14 @@ class RemindMeList with ChangeNotifier {
     return null;
   }
 
-  void setDateTime(String id, DateTime date) {
+  void setDateTime(
+    String id,
+    DateTime date,
+    PlannedMenuValue plannedMenuValue,
+  ) {
     final index = _items.indexWhere((item) => item.id == id);
-    _items[index] = _items[index].copyWith(date: date);
+    _items[index] =
+        _items[index].copyWith(date: date, plannedMenuValue: plannedMenuValue);
     notifyListeners();
   }
 }

@@ -40,6 +40,8 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
   var _isExpanded = true;
   //*
   var _isSelected = false;
+  //* this is the title of the [PlannedPopupMenu]
+  var _plannedPopUpTitle = 'All planned';
 
   @override
   void didChangeDependencies() {
@@ -51,6 +53,34 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
     );
 
     super.didChangeDependencies();
+  }
+
+  void changePopupTitle(String value) {
+    setState(() {
+      _plannedPopUpTitle = value;
+    });
+  }
+
+  void _onSelected(PlannedMenuValue value) {
+    switch (value) {
+      case PlannedMenuValue.overDue:
+        changePopupTitle('Overdue');
+        break;
+      case PlannedMenuValue.today:
+        changePopupTitle('Today');
+        break;
+      case PlannedMenuValue.tomorrow:
+        changePopupTitle('Tomorrow');
+        break;
+      case PlannedMenuValue.thisWeek:
+        changePopupTitle('This week');
+        break;
+      case PlannedMenuValue.later:
+        changePopupTitle('Later');
+        break;
+      default:
+        changePopupTitle('All planned');
+    }
   }
 
   @override
@@ -83,48 +113,17 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
                     titleColor: widget.color,
                   ),
                 ),
-                // if (widget.unDoneListModel.isEmpty &&
-                //     widget.completedListModel!.isEmpty)
-                //   widget.emptyWidget ?? const Text('')
-                // else if (widget.unDoneListModel.isEmpty &&
-                //     widget.completedListModel!.isNotEmpty)
-                //   AnimatedListWidget(
-                //     listModel: _completedListModel,
-                //     color: widget.color,
-                //     itemBuilder: _buildCompletedTaskTile,
-                //     onHide: _onHide,
-                //     displayHeaderWidget: true,
-                //     isExpanded: _isExpanded,
-                //   )
-                // else
-                //   Expanded(
-                //     child: Column(
-                //       children: [
-                //         AnimatedListWidget(
-                //           listModel: _listModel,
-                //           color: widget.color,
-                //           itemBuilder: _buildTaskTile,
-                //           displayHeaderWidget: false,
-                //         ),
-                //         AnimatedListWidget(
-                //           listModel: _completedListModel,
-                //           color: widget.color,
-                //           itemBuilder: _buildCompletedTaskTile,
-                //           onHide: _onHide,
-                //           displayHeaderWidget: true,
-                //           isExpanded: _isExpanded,
-                //         )
-
-                //       ],
-                //     ),
-                //   ),
                 AnimatedListWidget(
                   listModel: _listModel,
                   color: widget.color,
                   itemBuilder: _buildTaskTile,
                   // onHide: _onHide,
                   displayHeaderWidget: false,
-                  headerWidget: PlannedPopupMenu(color: widget.color),
+                  headerWidget: PlannedPopupMenu(
+                    color: widget.color,
+                    title: _plannedPopUpTitle,
+                    onSelected: _onSelected,
+                  ),
 
                   // isExpanded: _isExpanded,
                 )
@@ -151,6 +150,7 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
       // onRemoveFromUiFn: () =>
       // _removeFromUi(index, _listModel, _completedListModel),
       activityType: ActivityType.planned,
+      // plannedMenuValue: ,
       // isSelected: _isSelected,
       // onLongPress: onLongPressed,
     );

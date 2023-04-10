@@ -1,4 +1,3 @@
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -14,11 +13,13 @@ class RemindMePopupMenu extends StatefulWidget {
   final String id;
   final bool isEnabled;
   final Color color;
+  // final PlannedMenuValue plannedMenuValue;
   const RemindMePopupMenu({
     super.key,
     required this.id,
     required this.isEnabled,
     required this.color,
+    // required this.plannedMenuValue,
   });
 
   @override
@@ -35,7 +36,12 @@ class _RemindMePopupMenuState extends State<RemindMePopupMenu> {
     }
   }
 
-  void setReminder(RemindMePopupValue value, String id, DateTime date) {
+  void setReminder({
+    required RemindMePopupValue value,
+    // required PlannedMenuValue plannedMenuValue,
+    required String id,
+    required DateTime date,
+  }) {
     final now = DateTime.now();
 
     switch (value) {
@@ -43,34 +49,24 @@ class _RemindMePopupMenuState extends State<RemindMePopupMenu> {
         _toggleRemindMe(widget.isEnabled == false);
         context.read<RemindMeList>().setDateTime(
               id,
-              DateTime(
-                now.year,
-                now.month,
-                now.day,
-                22,
-              ),
+              DateTime(now.year, now.month, now.day, 22),
+              PlannedMenuValue.today,
             );
         break;
       case RemindMePopupValue.tomorrow:
+        _toggleRemindMe(widget.isEnabled == false);
         context.read<RemindMeList>().setDateTime(
               id,
-              DateTime(
-                now.year,
-                now.month,
-                now.day + 1,
-                21,
-              ),
+              DateTime(now.year, now.month, now.day + 1, 21),
+              PlannedMenuValue.tomorrow,
             );
         break;
       case RemindMePopupValue.nextWeek:
+        _toggleRemindMe(widget.isEnabled == false);
         context.read<RemindMeList>().setDateTime(
               id,
-              DateTime(
-                now.year,
-                now.month,
-                now.day + 7,
-                21,
-              ),
+              DateTime(now.year, now.month, now.day + 7, 21),
+              PlannedMenuValue.later
             );
         break;
       case RemindMePopupValue.pickADateAndTime:
@@ -90,9 +86,9 @@ class _RemindMePopupMenuState extends State<RemindMePopupMenu> {
       position: PopupMenuPosition.under,
       offset: Offset.fromDirection(1),
       onSelected: (value) => setReminder(
-        value,
-        widget.id,
-        remindMe?.date ?? DateTime.now(),
+        value: value,
+        id: widget.id,
+        date: remindMe?.date ?? DateTime.now(),
       ),
       child: TaskDetailsOptionWidget(
         title: 'Remind me ${widget.isEnabled ? 'at $time' : ''}',
@@ -123,7 +119,7 @@ class _RemindMePopupMenuState extends State<RemindMePopupMenu> {
                   .addReminder(widget.id, DateTime.now());
               context
                   .read<RemindMeList>()
-                  .setDateTime(widget.id, DateTime.parse(val));
+                  .setDateTime(widget.id, DateTime.parse(val),PlannedMenuValue.later);
             },
             onSubmit: () {
               _toggleRemindMe(widget.isEnabled == false);
@@ -133,4 +129,3 @@ class _RemindMePopupMenuState extends State<RemindMePopupMenu> {
         });
   }
 }
-
