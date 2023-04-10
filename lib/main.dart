@@ -8,7 +8,7 @@ import './providers/activities.dart';
 import './providers/groups.dart';
 import './providers/tasks.dart';
 import './providers/task_steps.dart';
-import './utils/constants/routes.dart';
+import 'utils/routes/routes.dart';
 import './utils/res/theme.dart';
 import '../screens/intro/login.dart';
 import '../screens/landing.dart';

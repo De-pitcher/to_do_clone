@@ -173,14 +173,18 @@ class TaskTile extends StatelessWidget {
                             _taskWidget(Icons.sunny, Colors.grey, 'My Day'),
                           const TaskTextWidget(
                               text: 'Tasks', color: Colors.grey),
-                          const SizedBox(width: 5),
-                          if (remindMe != null)
-                            _taskWidget(
-                                taskData.remindMe
-                                    ? Icons.alarm
-                                    : Icons.task_outlined,
-                                color,
-                                remindMe.title)
+                          if (remindMe != null && taskData.remindMe)
+                            Row(
+                              children: [
+                                const SizedBox(width: 5),
+                                _taskWidget(
+                                    taskData.remindMe
+                                        ? Icons.alarm
+                                        : Icons.task_outlined,
+                                    color,
+                                    remindMe.title)
+                              ],
+                            )
                         ],
                       ),
                     if (activityType == ActivityType.non ||
@@ -193,7 +197,7 @@ class TaskTile extends StatelessWidget {
                           if (activityType == ActivityType.non &&
                               taskData.myDay)
                             _taskWidget(Icons.sunny, Colors.grey, 'My Day'),
-                          if (remindMe != null)
+                          if (remindMe != null && taskData.remindMe)
                             _taskWidget(
                                 taskData.remindMe
                                     ? Icons.alarm

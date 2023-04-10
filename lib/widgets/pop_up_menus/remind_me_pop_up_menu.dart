@@ -64,10 +64,9 @@ class _RemindMePopupMenuState extends State<RemindMePopupMenu> {
       case RemindMePopupValue.nextWeek:
         _toggleRemindMe(widget.isEnabled == false);
         context.read<RemindMeList>().setDateTime(
-              id,
-              DateTime(now.year, now.month, now.day + 7, 21),
-              PlannedMenuValue.later
-            );
+            id,
+            DateTime(now.year, now.month, now.day + 7, 21),
+            PlannedMenuValue.later);
         break;
       case RemindMePopupValue.pickADateAndTime:
         showDialogFn(context, date);
@@ -82,7 +81,7 @@ class _RemindMePopupMenuState extends State<RemindMePopupMenu> {
     final remindMe = remindMeProvider.getReminderById(widget.id);
     final time = remindMe == null ? '' : DateFormat.jm().format(remindMe.date);
     return PopupMenuButton(
-      itemBuilder: (ctx) => remindMePopMenuEntries(ctx),
+      itemBuilder: (_) => remindMePopMenuEntries(),
       position: PopupMenuPosition.under,
       offset: Offset.fromDirection(1),
       onSelected: (value) => setReminder(
@@ -117,9 +116,8 @@ class _RemindMePopupMenuState extends State<RemindMePopupMenu> {
               context
                   .read<RemindMeList>()
                   .addReminder(widget.id, DateTime.now());
-              context
-                  .read<RemindMeList>()
-                  .setDateTime(widget.id, DateTime.parse(val),PlannedMenuValue.later);
+              context.read<RemindMeList>().setDateTime(
+                  widget.id, DateTime.parse(val), PlannedMenuValue.later);
             },
             onSubmit: () {
               _toggleRemindMe(widget.isEnabled == false);

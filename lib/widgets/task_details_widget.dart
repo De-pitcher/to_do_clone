@@ -6,6 +6,7 @@ import '../models/task.dart';
 import '../providers/task_steps.dart';
 import '../providers/tasks.dart';
 import './task_detail_option_widget.dart';
+import 'pop_up_menus/add_due_date_pop_up_menu.dart';
 import 'pop_up_menus/remind_me_pop_up_menu.dart';
 
 class TaskDetailsWidget extends StatefulWidget {
@@ -100,12 +101,13 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
         color: Colors.white30,
         indent: 70,
       ),
-      TaskDetailsOptionWidget(
-        title: 'Add due time',
-        icon: CupertinoIcons.calendar,
-        isEnabled: false,
-        color: widget.color,
-      ),
+      // TaskDetailsOptionWidget(
+      //   title: 'Add due time',
+      //   icon: CupertinoIcons.calendar,
+      //   isEnabled: false,
+      //   color: widget.color,
+      // ),
+      AddDueDatePopupMenu(color: widget.color),
       const Divider(
         thickness: 1.5,
         color: Colors.white30,
