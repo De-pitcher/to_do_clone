@@ -8,6 +8,7 @@ import './providers/activities.dart';
 import './providers/groups.dart';
 import './providers/tasks.dart';
 import './providers/task_steps.dart';
+import 'providers/add_due_date_list.dart';
 import 'utils/routes/routes.dart';
 import './utils/res/theme.dart';
 import '../screens/intro/login.dart';
@@ -51,6 +52,9 @@ class ToDoClone extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => RemindMeList(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AddDueDateList(),
         ),
       ],
       child: MaterialApp(
