@@ -23,7 +23,7 @@ class AppTheme {
       elevation: 0,
     ),
     bottomSheetTheme: const BottomSheetThemeData(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black,
       elevation: 0,
     ),
     iconTheme: const IconThemeData(color: Colors.white),
