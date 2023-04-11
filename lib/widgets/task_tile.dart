@@ -181,14 +181,14 @@ class TaskTile extends StatelessWidget {
                           const TaskTextWidget(
                               text: 'Tasks', color: Colors.grey),
                           if ((remindMe != null || addDueDate != null) &&
-                              taskData.remindMe)
+                              (taskData.remindMe || taskData.addDueDate))
                             Row(
                               children: [
                                 const SizedBox(width: 5),
                                 _taskWidget(
-                                    taskData.remindMe
-                                        ? Icons.alarm
-                                        : Icons.task_outlined,
+                                    taskData.addDueDate
+                                        ? Icons.task_outlined
+                                        : Icons.notifications_none,
                                     color,
                                     addDueDate?.title ?? remindMe!.title)
                               ],
@@ -208,11 +208,9 @@ class TaskTile extends StatelessWidget {
                           if ((remindMe != null || addDueDate != null) &&
                               (taskData.remindMe || taskData.addDueDate))
                             _taskWidget(
-                                taskData.addDueDate && taskData.remindMe
+                                taskData.addDueDate
                                     ? Icons.task_outlined
-                                    : taskData.remindMe
-                                        ? Icons.notifications_none
-                                        : Icons.task_outlined,
+                                    : Icons.notifications_none,
                                 color,
                                 addDueDate?.title ?? remindMe!.title)
                         ],
