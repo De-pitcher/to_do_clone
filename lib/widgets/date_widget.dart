@@ -32,14 +32,8 @@ class DateWidget extends StatelessWidget {
                 icon: const Icon(Icons.event),
                 dateLabelText: 'Date',
                 timeLabelText: "Hour",
-                selectableDayPredicate: (date) {
-                  onChanged!(date.toIso8601String());
-                  // Disable weekend days to select from the calendar
-                  if (date.weekday == 6 || date.weekday == 7) {
-                    return false;
-                  }
-                  return true;
-                },
+                selectableDayPredicate: (date) =>
+                    (date.weekday == 6 || date.weekday == 7),
                 onChanged: onChanged,
               ),
             ),
