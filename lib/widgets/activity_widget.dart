@@ -128,6 +128,8 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   /// [_insert] function handles the insertion of [Task]s to
   /// the [AnimatedList].
   void _insert(Task item, AnimatedListModel listModel, [int? cIndex]) {
+    //* Insert [item ]to the [Tasks] provider using the [widget.insert()]
+    //* function
     widget.insert!(item, cIndex);
     //* Inserts to the [AnimatedList].
     listModel.insert(cIndex ?? listModel.length, item);
