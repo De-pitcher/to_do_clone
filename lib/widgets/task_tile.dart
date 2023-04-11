@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../enums/activity_type.dart';
 import '../models/task.dart';
+import '../providers/add_due_date_list.dart';
+import '../providers/remind_me_list.dart';
 import '../providers/tasks.dart';
 import '../utils/res/app_snackbar.dart';
 import '../widgets/task_details.dart';
@@ -17,8 +19,8 @@ const duration = Duration(seconds: 3);
 /// properties of the task and can be manipulated to get the desired
 /// customization offered by the [TaskTile] paramters.
 class TaskTile extends StatelessWidget {
-  /// This [Task] contains info about a task.
-  final Task task;
+  /// This parameter is used fetch a task from the [Tasks] class.
+  final String id;
 
   /// This handles the animation of the [TaskTile]
   final Animation<double> animation;
@@ -29,8 +31,12 @@ class TaskTile extends StatelessWidget {
   /// This [onRemoveFn] deletes the task.
   final Function(Task)? onRemoveFn;
 
-  /// This [onRemoveFromUiFn] deletes the task from the Screen.
-  final Function()? onRemoveFromUiFn;
+  /// This [onSwapItemRemoveFromUiFn] deletes the task from the [AnimatedList]
+  ///  and it to another [AnimatedList].
+  final Function(Task)? onSwapItemRemoveFromUiFn;
+
+  /// This [onRemoveFromUI] deletes the task from the Screen.
+  final Function(Task)? onRemoveFromUI;
 
   /// [onLongPress] is executed when the [TaskTile] is pressed for long.
   final Function(Task)? onLongPress;
@@ -50,15 +56,16 @@ class TaskTile extends StatelessWidget {
   /// class.
   const TaskTile({
     Key? key,
-    required this.task,
+    required this.id,
     required this.animation,
     this.onRemoveFn,
     this.onAddTaskFn,
     this.activityType = ActivityType.non,
-    this.onRemoveFromUiFn,
+    this.onSwapItemRemoveFromUiFn,
     this.onLongPress,
     this.isSelected = false,
     required this.color,
+    this.onRemoveFromUI,
   }) : super(key: key);
 
   @override
@@ -66,6 +73,11 @@ class TaskTile extends StatelessWidget {
     //* Handles the display of scaffold in this context
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final tksProvider = context.read<Tasks>();
+    final taskData = Provider.of<Tasks>(context).getTaskById(id);
+    final remindMe =
+        Provider.of<RemindMeList>(context, listen: false).getReminderById(id);
+    final addDueDate =
+        Provider.of<AddDueDateList>(context, listen: false).getReminderById(id);
 
     return SizeTransition(
       axisAlignment: -1,
@@ -93,7 +105,7 @@ class TaskTile extends StatelessWidget {
             secondaryBackground: DismissedWidget(
               alignment: Alignment.centerRight,
               padding: const EdgeInsets.only(right: 10),
-              color: Theme.of(context).errorColor,
+              color: Theme.of(context).colorScheme.error,
               icon: Icons.delete,
             ),
             background: DismissedWidget(
@@ -106,24 +118,24 @@ class TaskTile extends StatelessWidget {
               context: context,
               direction: direction,
               scaffoldMessenger: scaffoldMessenger,
-              task: task,
+              task: taskData,
             ),
             child: SizedBox(
               height: 60,
               child: ListTile(
                 onTap: isSelected!
-                    ? () => tksProvider.toggleIsSelected(task.id)
+                    ? () => tksProvider.toggleIsSelected(taskData.id)
                     : () {
                         Navigator.of(context).pushNamed(
                           TaskDetails.id,
                           arguments: {
                             'color': color,
                             'parent': 'Tasks',
-                            'task': task,
+                            'task': taskData,
                           },
                         );
                       },
-                onLongPress: () => onLongPress!(task),
+                onLongPress: () => onLongPress!(taskData),
                 selected: isSelected!,
                 horizontalTitleGap: 0,
                 leading: Transform.scale(
@@ -132,63 +144,86 @@ class TaskTile extends StatelessWidget {
                       ? TaskCheckbox(
                           color: color,
                           onChanged: (_) {
-                            onRemoveFromUiFn!();
-                            tksProvider.toggleIsSelected(task.id);
+                            tksProvider.toggleIsSelected(taskData.id);
                           },
                           isRounded: false,
-                          value: task.isDone,
+                          value: taskData.isSelected,
                         )
                       : TaskCheckbox(
                           color: color,
                           onChanged: (_) {
-                            onRemoveFromUiFn!();
-                            tksProvider.toggleIsDone(task.id);
+                            activityType != ActivityType.planned
+                                ? onSwapItemRemoveFromUiFn!(taskData)
+                                : null;
+                            context.read<Tasks>().toggleIsDone(taskData.id);
                           },
-                          value: task.isDone,
+                          value: taskData.isDone,
                         ),
                 ),
                 title: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // This widget displays the title of the task
                     TaskTextWidget(
-                      text: task.task,
-                      context: context,
+                      text: taskData.task,
                       color: Colors.white,
-                      isDone: task.isDone,
+                      isDone: taskData.isDone,
                     ),
-                    activityType != ActivityType.myDay && task.myDay
-                        ? Row(
-                            children: [
-                              const Icon(
-                                Icons.sunny,
-                                size: 16,
-                                color: Colors.grey,
-                              ),
-                              const SizedBox(width: 10),
-                              TaskTextWidget(
-                                text: 'My Day',
-                                context: context,
-                                color: Colors.grey,
-                              ),
-                            ],
-                          )
-                        : activityType == ActivityType.myDay && task.myDay
-                            ? TaskTextWidget(
-                                text: 'Tasks',
-                                context: context,
-                                color: Colors.grey,
-                              )
-                            : Container(),
+                    // The is if statement checks and adds the subtitle widgets
+                    // for the appropriate screen
+                    if (activityType == ActivityType.important ||
+                        activityType == ActivityType.planned)
+                      Row(
+                        children: [
+                          if (taskData.myDay)
+                            _taskWidget(Icons.sunny, Colors.grey, 'My Day'),
+                          const TaskTextWidget(
+                              text: 'Tasks', color: Colors.grey),
+                          if ((remindMe != null || addDueDate != null) &&
+                              (taskData.remindMe || taskData.addDueDate))
+                            Row(
+                              children: [
+                                const SizedBox(width: 5),
+                                _taskWidget(
+                                    taskData.addDueDate
+                                        ? Icons.task_outlined
+                                        : Icons.notifications_none,
+                                    color,
+                                    addDueDate?.title ?? remindMe!.title)
+                              ],
+                            )
+                        ],
+                      ),
+                    if (activityType == ActivityType.non ||
+                        activityType == ActivityType.myDay)
+                      Row(
+                        children: [
+                          if (activityType == ActivityType.myDay)
+                            const TaskTextWidget(
+                                text: 'Tasks', color: Colors.grey),
+                          if (activityType == ActivityType.non &&
+                              taskData.myDay)
+                            _taskWidget(Icons.sunny, Colors.grey, 'My Day'),
+                          if ((remindMe != null || addDueDate != null) &&
+                              (taskData.remindMe || taskData.addDueDate))
+                            _taskWidget(
+                                taskData.addDueDate
+                                    ? Icons.task_outlined
+                                    : Icons.notifications_none,
+                                color,
+                                addDueDate?.title ?? remindMe!.title)
+                        ],
+                      ),
                   ],
                 ),
                 trailing: IconButton(
                   onPressed: isSelected!
                       ? null
-                      : () => toggleStar(context, scaffoldMessenger),
+                      : () => toggleStar(context, scaffoldMessenger, taskData),
                   icon: Icon(
-                    task.isStarred ? Icons.star : Icons.star_border,
-                    color: task.isStarred ? color : Colors.grey,
+                    taskData.isStarred ? Icons.star : Icons.star_border,
+                    color: taskData.isStarred ? color : Colors.grey,
                   ),
                 ),
               ),
@@ -196,6 +231,24 @@ class TaskTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _taskWidget(IconData icon, Color color, String title) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 16,
+          color: color,
+        ),
+        const SizedBox(width: 5),
+        TaskTextWidget(
+          text: title,
+          color: color,
+        ),
+        const SizedBox(width: 5),
+      ],
     );
   }
 
@@ -220,14 +273,22 @@ class TaskTile extends StatelessWidget {
       );
     } else if (direction == DismissDirection.startToEnd) {
       context.read<Tasks>().toggleMyDay(task.id);
+      if (activityType == ActivityType.myDay) {
+        onRemoveFromUI!(task);
+      }
     }
   }
 
   void toggleStar(
     BuildContext context,
     ScaffoldMessengerState scaffoldMessenger,
+    Task task,
   ) {
-    context.read<Tasks>().toggleIsStarred(task.id);
+    final taskProvider = context.read<Tasks>();
+    if (activityType == ActivityType.important) {
+      onRemoveFromUI!(task);
+    }
+    taskProvider.toggleIsStarred(task.id);
     if (task.isStarred == true && activityType == ActivityType.important) {
       scaffoldMessenger.showSnackBar(
         snackbar(
@@ -235,7 +296,8 @@ class TaskTile extends StatelessWidget {
           msg: 'Task removed from Importance',
           scaffoldMessenger: scaffoldMessenger,
           onPressed: () {
-            context.read<Tasks>().starTask(task.id);
+            taskProvider.starTask(task.id);
+            onAddTaskFn!(task);
             scaffoldMessenger.hideCurrentSnackBar();
           },
         ),

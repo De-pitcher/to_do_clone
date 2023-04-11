@@ -8,11 +8,14 @@ import './providers/activities.dart';
 import './providers/groups.dart';
 import './providers/tasks.dart';
 import './providers/task_steps.dart';
-import './utils/constants/routes.dart';
+import 'providers/add_due_date_list.dart';
+import 'utils/routes/routes.dart';
 import './utils/res/theme.dart';
 import '../screens/intro/login.dart';
 import '../screens/landing.dart';
 import '../service/auth.dart';
+import './providers/remind_me_list.dart';
+import 'providers/planned_tasks.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,8 +42,19 @@ class ToDoClone extends StatelessWidget {
         ChangeNotifierProvider<Tasks>(
           create: (_) => Tasks(),
         ),
+        ChangeNotifierProxyProvider<Tasks, PlannedTasks>(
+          create: (_) => PlannedTasks(),
+          update: (_, tasksProvider, __) =>
+              PlannedTasks()..initTasks(tasksProvider.tasks),
+        ),
         ChangeNotifierProvider(
           create: (_) => TaskSteps(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => RemindMeList(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AddDueDateList(),
         ),
       ],
       child: MaterialApp(

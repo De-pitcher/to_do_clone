@@ -125,10 +125,11 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     super.didChangeDependencies();
   }
 
-  /// [_insert] function handles the insertion of [Task]s both to the
-  /// [AnimatedList] and to the [Task] provider.
+  /// [_insert] function handles the insertion of [Task]s to
+  /// the [AnimatedList].
   void _insert(Task item, AnimatedListModel listModel, [int? cIndex]) {
-    //* Inserts to the [Tasks] provider
+    //* Insert [item ]to the [Tasks] provider using the [widget.insert()]
+    //* function
     widget.insert!(item, cIndex);
     //* Inserts to the [AnimatedList].
     listModel.insert(cIndex ?? listModel.length, item);
@@ -144,14 +145,26 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     setState(() {});
   }
 
-  /// [_removeFromUi] function removes task from the current [AnimatedList]
+  /// [_swapItemFromUI] function removes task from the current [AnimatedList]
   /// ([listModel]) and adds it to the next [AnimatedList] ([nextListModel]).
-  void _removeFromUi(int cIndex, AnimatedListModel<Task> listModel,
+  void _swapItemFromUI(Task task, AnimatedListModel<Task> listModel,
       AnimatedListModel<Task> nextListModel) {
+    final cIndex = listModel.indexWhere((element) => element.id == task.id);
     final item = listModel.removeAt(cIndex);
+
     final index =
         cIndex >= nextListModel.length ? nextListModel.length : cIndex;
     nextListModel.insert(index, item);
+
+    setState(() {});
+  }
+
+  /// [_removeFromUI] function removes task from the current [AnimatedList]
+  /// ([listModel]).
+  void _removeFromUI(Task task, AnimatedListModel<Task> listModel) {
+    final cIndex = listModel.indexWhere((element) => element.id == task.id);
+    listModel.removeAt(cIndex);
+
     setState(() {});
   }
 
@@ -214,7 +227,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
               context: context,
               count: Provider.of<Tasks>(context, listen: false)
                   .tasks
-                  .where((tks) => tks.isSelected!)
+                  .where((tks) => tks.isSelected)
                   .length,
               disMarkAsImpt: taskProvider.hasStarredTask(),
               cmpltdListModel: _completedListModel,
@@ -351,13 +364,14 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     Animation<double> animation,
   ) {
     return TaskTile(
-      task: widget.unDoneListModel[index],
+      id: _listModel[index].id,
       animation: animation,
       color: widget.color,
-      onAddTaskFn: (task) => _insert(task, _listModel, index),
+      onAddTaskFn: (item) => _insert(item, _listModel, index),
       onRemoveFn: (item) => _remove(item, index, _listModel),
-      onRemoveFromUiFn: () =>
-          _removeFromUi(index, _listModel, _completedListModel),
+      onSwapItemRemoveFromUiFn: (item) =>
+          _swapItemFromUI(item, _listModel, _completedListModel),
+      onRemoveFromUI: (item) => _removeFromUI(item, _listModel),
       activityType: widget.activityType,
       isSelected: _isSelected,
       onLongPress: onLongPressed,
@@ -371,13 +385,14 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     Animation<double> animation,
   ) {
     return TaskTile(
-      task: widget.completedListModel![index],
+      id: _completedListModel[index].id,
       animation: animation,
       color: widget.color,
-      onAddTaskFn: (task) => _insert(task, _completedListModel, null),
+      onAddTaskFn: (item) => _insert(item, _completedListModel, null),
       onRemoveFn: (item) => _remove(item, index, _completedListModel),
-      onRemoveFromUiFn: () =>
-          _removeFromUi(index, _completedListModel, _listModel),
+      onSwapItemRemoveFromUiFn: (item) =>
+          _swapItemFromUI(item, _completedListModel, _listModel),
+      onRemoveFromUI: (item) => _removeFromUI(item, _completedListModel),
       activityType: widget.activityType,
       isSelected: _isSelected,
       onLongPress: onLongPressed,
@@ -393,7 +408,9 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       isDismissible: false,
       builder: (context) {
         return AddTaskBottomSheet(
-          addTaskFn: (item) => _insert(item, _listModel),
+          addTaskFn: (item) {
+            _insert(item, _listModel, null);
+          },
           specialButtons: widget.specialButtons,
           activityType: widget.activityType,
         );

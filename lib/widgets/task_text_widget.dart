@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
-
 class TaskTextWidget extends StatelessWidget {
   final String text;
-  final BuildContext context;
   final Color color;
   final bool? isDone;
   const TaskTextWidget(
       {required this.text,
-      required this.context,
       required this.color,
       this.isDone = false,
       super.key});

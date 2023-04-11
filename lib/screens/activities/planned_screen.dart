@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../providers/planned_tasks.dart';
 import '../../providers/tasks.dart';
 import '../../widgets/planned_activity_widget.dart';
 
@@ -21,34 +22,10 @@ class _PlannedScreenState extends State<PlannedScreen> {
     return PlannedActivityWidget(
       title: widget.args['activity'],
       color: widget.args['color'],
-      tasks: Provider.of<Tasks>(context).tasks,
+      tasks: Provider.of<PlannedTasks>(context).tasks,
+      insert: (item, index) => context.read<Tasks>().insert(item, index),
+      remove: (index) => context.read<Tasks>().removeTask(index),
     );
-    // return ActivityWidget(
-    //   title: widget.args['activity'],
-    //   displaySubtitle: false,
-    //   unDoneListModel: Provider.of<Tasks>(context).unDoneTasks,
-    //   completedListModel: Provider.of<Tasks>(context).isDoneTasks,
-    //   color: widget.args['color'],
-    //   insert: (item, index) => context.read<Tasks>().insert(item, index),
-    //   remove: (index) => context.read<Tasks>().removeTask(index),
-    //   emptyWidget: _buildEmptyWidget(context),
-    //   isExtended: false,
-    //   fabIcon: const Icon(Icons.add, size: 32),
-    //   specialButtons: const [
-    //     SpecialButton(
-    //       label: 'Set due date',
-    //       icon: Icons.calendar_month_rounded,
-    //     ),
-    //     SpecialButton(
-    //       label: 'Remind me',
-    //       icon: Icons.notifications_on_outlined,
-    //     ),
-    //     SpecialButton(
-    //       label: 'Repeat',
-    //       icon: Icons.repeat,
-    //     ),
-    //   ],
-    // );
   }
 
   Center _buildEmptyWidget(BuildContext context) {

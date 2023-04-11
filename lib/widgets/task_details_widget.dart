@@ -6,6 +6,8 @@ import '../models/task.dart';
 import '../providers/task_steps.dart';
 import '../providers/tasks.dart';
 import './task_detail_option_widget.dart';
+import 'pop_up_menus/add_due_date_pop_up_menu.dart';
+import 'pop_up_menus/remind_me_pop_up_menu.dart';
 
 class TaskDetailsWidget extends StatefulWidget {
   final Task task;
@@ -83,16 +85,31 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
         ),
       ),
       TaskDetailsOptionWidget(
-        option: 'Add to my Day',
+        title: 'Add to my Day',
         icon: CupertinoIcons.brightness,
         onTap: () => context.read<Tasks>().toggleMyDay(widget.task.id),
-        isEnable: widget.task.myDay,
+        isEnabled: widget.task.myDay,
         color: widget.color,
       ),
-      TaskDetailsOptionWidget(
-        option: 'Remind me',
-        icon: Icons.notifications_outlined,
-        isEnable: false,
+      RemindMePopupMenu(
+        id: widget.task.id,
+        isEnabled: widget.task.remindMe,
+        color: widget.color,
+      ),
+      const Divider(
+        thickness: 1.5,
+        color: Colors.white30,
+        indent: 70,
+      ),
+      // TaskDetailsOptionWidget(
+      //   title: 'Add due time',
+      //   icon: CupertinoIcons.calendar,
+      //   isEnabled: false,
+      //   color: widget.color,
+      // ),
+      AddDueDatePopupMenu(
+        id: widget.task.id,
+        isEnabled: widget.task.addDueDate,
         color: widget.color,
       ),
       const Divider(
@@ -101,26 +118,15 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
         indent: 70,
       ),
       TaskDetailsOptionWidget(
-        option: 'Add due time',
-        icon: CupertinoIcons.calendar,
-        isEnable: false,
-        color: widget.color,
-      ),
-      const Divider(
-        thickness: 1.5,
-        color: Colors.white30,
-        indent: 70,
-      ),
-      TaskDetailsOptionWidget(
-        option: 'Repeat',
+        title: 'Repeat',
         icon: CupertinoIcons.repeat,
-        isEnable: false,
+        isEnabled: false,
         color: widget.color,
       ),
       TaskDetailsOptionWidget(
-        option: 'Add file',
+        title: 'Add file',
         icon: Icons.file_open,
-        isEnable: false,
+        isEnabled: false,
         color: widget.color,
       ),
       const SizedBox(height: 5),
