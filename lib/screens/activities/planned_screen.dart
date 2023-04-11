@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/planned_tasks.dart';
+import '../../providers/tasks.dart';
 import '../../widgets/planned_activity_widget.dart';
 
 class PlannedScreen extends StatefulWidget {
@@ -22,6 +23,8 @@ class _PlannedScreenState extends State<PlannedScreen> {
       title: widget.args['activity'],
       color: widget.args['color'],
       tasks: Provider.of<PlannedTasks>(context).tasks,
+      remove: (index) => context.read<Tasks>().removeTask(index),
+
     );
   }
 

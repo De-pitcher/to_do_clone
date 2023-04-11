@@ -149,7 +149,9 @@ class TaskTile extends StatelessWidget {
                       : TaskCheckbox(
                           color: color,
                           onChanged: (_) {
-                            onSwapItemRemoveFromUiFn!(taskData);
+                            activityType != ActivityType.planned
+                                ? onSwapItemRemoveFromUiFn!(taskData)
+                                : null;
                             context.read<Tasks>().toggleIsDone(taskData.id);
                           },
                           value: taskData.isDone,
