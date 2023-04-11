@@ -91,14 +91,12 @@ class _RemindMePopupMenuState extends State<RemindMePopupMenu> {
       ),
       child: TaskDetailsOptionWidget(
         title: 'Remind me ${widget.isEnabled ? 'at $time' : ''}',
-        icon: Icons.notifications_outlined,
+        icon: widget.isEnabled
+            ? Icons.notifications_off_outlined
+            : Icons.notifications_outlined,
         subtitle: widget.isEnabled ? remindMe?.title ?? '' : null,
         isEnabled: widget.isEnabled,
-        color: remindMe != null
-            ? remindMe.date.day != DateTime.now().day
-                ? Colors.grey
-                : widget.color
-            : widget.color,
+        color: widget.isEnabled ? widget.color : Colors.grey,
         onCancel: () {
           context.read<Tasks>().toggleRemindMe(widget.id);
         },
