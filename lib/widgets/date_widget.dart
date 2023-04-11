@@ -33,7 +33,7 @@ class DateWidget extends StatelessWidget {
                 dateLabelText: 'Date',
                 timeLabelText: "Hour",
                 selectableDayPredicate: (date) =>
-                    (date.weekday == 6 || date.weekday == 7),
+                    !(date.weekday == 6 || date.weekday == 7),
                 onChanged: onChanged,
               ),
             ),
