@@ -107,7 +107,11 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
       //   isEnabled: false,
       //   color: widget.color,
       // ),
-      AddDueDatePopupMenu(color: widget.color),
+      AddDueDatePopupMenu(
+        id: widget.task.id,
+        isEnabled: widget.task.addDueDate,
+        color: widget.color,
+      ),
       const Divider(
         thickness: 1.5,
         color: Colors.white30,
