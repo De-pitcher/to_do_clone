@@ -40,12 +40,6 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   //* Animated list of undone tasks
   late AnimatedListModel<Task> _listModel;
-  //* Animated the title of the activity screen when set to true
-  var _liftTitle = false;
-  //* Handles the animated of the [CompletedTaskHeader].
-  var _isExpanded = true;
-  //*
-  var _isSelected = false;
   //* this is the title of the [PlannedPopupMenu]
   var _plannedPopUpTitle = 'All planned';
 
@@ -152,7 +146,7 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: AnimatedTitle(
-                    driveAnimation: _liftTitle,
+                    driveAnimation: !_listModel.isEmpty,
                     title: widget.title,
                     displaySubtitle: false,
                     titleColor: widget.color,
