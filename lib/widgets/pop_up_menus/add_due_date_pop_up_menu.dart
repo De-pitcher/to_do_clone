@@ -73,8 +73,7 @@ class _AddDueDatePopupMenuState extends State<AddDueDatePopupMenu> {
   Widget build(BuildContext context) {
     final addDueDateProvider = Provider.of<AddDueDateList>(context);
     final addDueDate = addDueDateProvider.getReminderById(widget.id);
-    final time =
-        addDueDate == null ? '' : DateFormat.jm().format(addDueDate.date);
+    
     return PopupMenuButton(
       itemBuilder: (_) => addDueDatePopMenuEntries(),
       position: PopupMenuPosition.under,

@@ -23,8 +23,8 @@ class _PlannedScreenState extends State<PlannedScreen> {
       title: widget.args['activity'],
       color: widget.args['color'],
       tasks: Provider.of<PlannedTasks>(context).tasks,
+      insert: (item, index) => context.read<Tasks>().insert(item, index),
       remove: (index) => context.read<Tasks>().removeTask(index),
-
     );
   }
 

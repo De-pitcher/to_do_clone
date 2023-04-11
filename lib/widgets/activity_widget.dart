@@ -409,8 +409,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       builder: (context) {
         return AddTaskBottomSheet(
           addTaskFn: (item) {
-            _insert(item, _listModel);
-            widget.insert!(item, null);
+            _insert(item, _listModel, null);
           },
           specialButtons: widget.specialButtons,
           activityType: widget.activityType,

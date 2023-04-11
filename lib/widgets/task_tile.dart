@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../enums/activity_type.dart';
 import '../models/task.dart';
+import '../providers/add_due_date_list.dart';
 import '../providers/remind_me_list.dart';
 import '../providers/tasks.dart';
 import '../utils/res/app_snackbar.dart';
@@ -75,6 +76,8 @@ class TaskTile extends StatelessWidget {
     final taskData = Provider.of<Tasks>(context).getTaskById(id);
     final remindMe =
         Provider.of<RemindMeList>(context, listen: false).getReminderById(id);
+    final addDueDate =
+        Provider.of<AddDueDateList>(context, listen: false).getReminderById(id);
 
     return SizeTransition(
       axisAlignment: -1,
@@ -177,7 +180,8 @@ class TaskTile extends StatelessWidget {
                             _taskWidget(Icons.sunny, Colors.grey, 'My Day'),
                           const TaskTextWidget(
                               text: 'Tasks', color: Colors.grey),
-                          if (remindMe != null && taskData.remindMe)
+                          if ((remindMe != null || addDueDate != null) &&
+                              taskData.remindMe)
                             Row(
                               children: [
                                 const SizedBox(width: 5),
@@ -186,7 +190,7 @@ class TaskTile extends StatelessWidget {
                                         ? Icons.alarm
                                         : Icons.task_outlined,
                                     color,
-                                    remindMe.title)
+                                    addDueDate?.title ?? remindMe!.title)
                               ],
                             )
                         ],
@@ -201,7 +205,7 @@ class TaskTile extends StatelessWidget {
                           if (activityType == ActivityType.non &&
                               taskData.myDay)
                             _taskWidget(Icons.sunny, Colors.grey, 'My Day'),
-                          if (remindMe != null &&
+                          if ((remindMe != null || addDueDate != null) &&
                               (taskData.remindMe || taskData.addDueDate))
                             _taskWidget(
                                 taskData.addDueDate && taskData.remindMe
@@ -210,7 +214,7 @@ class TaskTile extends StatelessWidget {
                                         ? Icons.notifications_none
                                         : Icons.task_outlined,
                                 color,
-                                remindMe.title)
+                                addDueDate?.title ?? remindMe!.title)
                         ],
                       ),
                   ],

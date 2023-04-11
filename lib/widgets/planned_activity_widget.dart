@@ -18,6 +18,7 @@ class PlannedActivityWidget extends StatefulWidget {
   final String title;
   final Color color;
   final List<Task> tasks;
+  final Function(Task, int?)? insert;
   final Function(Task)? remove;
   const PlannedActivityWidget({
     super.key,
@@ -26,6 +27,7 @@ class PlannedActivityWidget extends StatefulWidget {
     required this.color,
     required this.tasks,
     this.remove,
+    this.insert,
   });
 
   @override
@@ -139,14 +141,15 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
     );
   }
 
-
   /// [_insert] function handles the insertion of [Task]s to
   /// the [AnimatedList].
   void _insert(Task item, AnimatedListModel listModel, [int? cIndex]) {
+    //* Insert [item ]to the [Tasks] provider using the [widget.insert()]
+    //* function
+    widget.insert!(item, cIndex);
     //* Inserts to the [AnimatedList].
     listModel.insert(cIndex ?? listModel.length, item);
   }
-
 
   /// [_remove] function handles the insertion of [Task]s both to the
   /// [AnimatedList] and to the [Task] provider.
@@ -214,7 +217,7 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
       id: _listModel[index].id,
       animation: animation,
       color: widget.color,
-      // onAddTaskFn: (task) => _insert(task, _listModel, index),
+      onAddTaskFn: (task) => _insert(task, _listModel, index),
       // onRemoveFn: (item) => _remove(item, index, _listModel),
       // onRemoveFromUiFn: () =>
       // _removeFromUi(index, _listModel, _completedListModel),
