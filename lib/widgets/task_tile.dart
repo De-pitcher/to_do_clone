@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../enums/activity_type.dart';
-import '../enums/planned_menu_value.dart';
 import '../models/task.dart';
 import '../providers/remind_me_list.dart';
 import '../providers/tasks.dart';
@@ -160,11 +159,14 @@ class TaskTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // This widget displays the title of the task
                     TaskTextWidget(
                       text: taskData.task,
                       color: Colors.white,
                       isDone: taskData.isDone,
                     ),
+                    // The is if statement checks and adds the subtitle widgets
+                    // for the appropriate screen
                     if (activityType == ActivityType.important ||
                         activityType == ActivityType.planned)
                       Row(
@@ -197,11 +199,14 @@ class TaskTile extends StatelessWidget {
                           if (activityType == ActivityType.non &&
                               taskData.myDay)
                             _taskWidget(Icons.sunny, Colors.grey, 'My Day'),
-                          if (remindMe != null && taskData.remindMe)
+                          if (remindMe != null &&
+                              (taskData.remindMe || taskData.addDueDate))
                             _taskWidget(
-                                taskData.remindMe
-                                    ? Icons.alarm
-                                    : Icons.task_outlined,
+                                taskData.addDueDate && taskData.remindMe
+                                    ? Icons.task_outlined
+                                    : taskData.remindMe
+                                        ? Icons.notifications_none
+                                        : Icons.task_outlined,
                                 color,
                                 remindMe.title)
                         ],
