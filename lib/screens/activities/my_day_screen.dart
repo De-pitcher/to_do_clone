@@ -5,6 +5,7 @@ import 'package:intl/intl.dart' show DateFormat;
 import 'package:provider/provider.dart';
 
 import '../../enums/activity_type.dart';
+import '../../providers/my_day_tasks.dart';
 import '../../providers/tasks.dart';
 import '../../widgets/activity_widget.dart';
 import '../../widgets/buttons/special_button.dart';
@@ -23,7 +24,7 @@ class MyDayScreen extends StatefulWidget {
 class _MyDayScreenState extends State<MyDayScreen> {
   @override
   Widget build(BuildContext context) {
-    final tasksProvider = Provider.of<Tasks>(context);
+    final tasksProvider = Provider.of<MyDayTasks>(context);
     return SizedBox(
       child: ActivityWidget(
         title: widget.args['activity'],
@@ -31,9 +32,9 @@ class _MyDayScreenState extends State<MyDayScreen> {
         displaySubtitle: true,
         subtitle: DateFormat.MMMMEEEEd().format(DateTime.now()),
         completedListModel:
-            tasksProvider.myDayTasks.where((tks) => tks.isDone).toList(),
+            tasksProvider.doneTask,
         unDoneListModel:
-            tasksProvider.myDayTasks.where((tks) => !tks.isDone).toList(),
+            tasksProvider.undoneTasks,
         bgImage: 'assets/images/my_day.png',
         insert: (item, index) => context.read<Tasks>().insert(item, index),
         remove: (index) => context.read<Tasks>().removeTask(index),

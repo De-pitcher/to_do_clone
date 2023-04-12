@@ -9,6 +9,7 @@ import './providers/groups.dart';
 import './providers/tasks.dart';
 import './providers/task_steps.dart';
 import 'providers/add_due_date_list.dart';
+import 'providers/my_day_tasks.dart';
 import 'utils/routes/routes.dart';
 import './utils/res/theme.dart';
 import '../screens/intro/login.dart';
@@ -46,6 +47,11 @@ class ToDoClone extends StatelessWidget {
           create: (_) => PlannedTasks(),
           update: (_, tasksProvider, __) =>
               PlannedTasks()..initTasks(tasksProvider.tasks),
+        ),
+        ChangeNotifierProxyProvider<Tasks, MyDayTasks>(
+          create: (_) => MyDayTasks(),
+          update: (_, tasksProvider, __) =>
+              MyDayTasks()..initTasks(tasksProvider.tasks),
         ),
         ChangeNotifierProvider(
           create: (_) => TaskSteps(),

@@ -9,5 +9,6 @@ class PlannedTasks extends ChangeNotifier {
 
   void initTasks(List<Task> tasks) {
     _tasks = [...tasks.where((e) => e.remindMe || e.addDueDate)];
+    notifyListeners();
   }
 }
