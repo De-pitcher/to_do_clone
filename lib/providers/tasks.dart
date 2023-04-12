@@ -6,15 +6,9 @@ class Tasks with ChangeNotifier {
   List<Task> _tasks = [];
 
   List<Task> get tasks => _tasks;
+  List<Task> get doneTasks => _tasks.where((tks) => tks.isDone).toList();
 
-  List<Task> get myDayTasks => _tasks.where((tks) => tks.myDay).toList();
-
-  List<Task> get important => _tasks.where((tks) => tks.isStarred).toList();
-
-  List<Task> get isDoneTasks => _tasks.where((tsk) => tsk.isDone).toList();
-
-  List<Task> get unDoneTasks =>
-      _tasks.where((tsk) => tsk.isDone == false).toList();
+  List<Task> get undoneTasks => _tasks.where((tks) => !tks.isDone).toList();
 
   List<Task> get selectedTask {
     return _tasks.where((tks) => tks.isSelected).toList();

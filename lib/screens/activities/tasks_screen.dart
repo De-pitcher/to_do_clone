@@ -22,8 +22,8 @@ class TasksScreen extends StatelessWidget {
     return ActivityWidget(
       title: args['activity'],
       displaySubtitle: false,
-      unDoneListModel: Provider.of<Tasks>(context).unDoneTasks,
-      completedListModel: Provider.of<Tasks>(context).isDoneTasks,
+      unDoneListModel: Provider.of<Tasks>(context).undoneTasks,
+      completedListModel: Provider.of<Tasks>(context).doneTasks,
       color: args['color'],
       insert: (item, index) => context.read<Tasks>().insert(item, index),
       remove: (index) => context.read<Tasks>().removeTask(index),

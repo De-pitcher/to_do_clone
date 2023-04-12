@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../enums/activity_type.dart';
+import '../../providers/important_tasks.dart';
 import '../../providers/tasks.dart';
 import '../../widgets/activity_widget.dart';
 import '../../widgets/buttons/special_button.dart';
@@ -25,14 +26,8 @@ class _ImportantScreenState extends State<ImportantScreen> {
       title: widget.args['activity'],
       displaySubtitle: false,
       isExtended: false,
-      completedListModel: Provider.of<Tasks>(context)
-          .important
-          .where((tks) => tks.isDone)
-          .toList(),
-      unDoneListModel: Provider.of<Tasks>(context)
-          .important
-          .where((tks) => !tks.isDone)
-          .toList(),
+      completedListModel: Provider.of<ImportantTasks>(context).doneTask,
+      unDoneListModel: Provider.of<ImportantTasks>(context).undoneTasks,
       fabIcon: const Icon(Icons.add, size: 32),
       activityType: ActivityType.important,
       specialButtons: const [
