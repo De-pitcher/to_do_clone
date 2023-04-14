@@ -5,8 +5,10 @@ import 'package:to_do_clone/enums/activity_type.dart';
 import '../enums/planned_menu_value.dart';
 import '../models/animated_list_model.dart';
 import '../models/task.dart';
+import '../providers/add_due_date_list.dart';
+import '../providers/planned_tasks.dart';
+import '../providers/remind_me_list.dart';
 import '../providers/tasks.dart';
-import '../utils/constants/pop_menu_items.dart';
 import 'animated_list_widget.dart';
 import 'animated_title.dart';
 import 'app_bars/default_app_bar.dart';
@@ -14,12 +16,6 @@ import 'pop_up_menus/planned_pop_up_menu.dart';
 import 'task_tile.dart';
 
 class PlannedActivityWidget extends StatefulWidget {
-  final String? bgImage;
-  final String title;
-  final Color color;
-  final List<Task> tasks;
-  final Function(Task, int?)? insert;
-  final Function(Task)? remove;
   const PlannedActivityWidget({
     super.key,
     this.bgImage,
@@ -30,6 +26,13 @@ class PlannedActivityWidget extends StatefulWidget {
     this.insert,
   });
 
+  final Function(Task, int?)? insert;
+  final Function(Task)? remove;
+  final String? bgImage;
+  final Color color;
+  final List<Task> tasks;
+  final String title;
+
   @override
   State<PlannedActivityWidget> createState() => _PlannedActivityWidgetState();
 }
@@ -38,20 +41,17 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
   //* This is a GlobalKey for handling the [AnimatedListState] of the
   //* undone tasks.
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+
   //* Animated list of undone tasks
   late AnimatedListModel<Task> _listModel;
+
   //* this is the title of the [PlannedPopupMenu]
   var _plannedPopUpTitle = 'All planned';
 
   @override
   void didChangeDependencies() {
-    //* Initialized the undone and the completed list of tasks.
-    _listModel = AnimatedListModel(
-      listKey: _listKey,
-      initialItems: widget.tasks,
-      removedItemBuilder: (_, __, ___) => Container(),
-    );
-
+    _initListModel(Provider.of<PlannedTasks>(context).filteredTask);
+    // _initListModel([]);
     super.didChangeDependencies();
   }
 
@@ -59,6 +59,25 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
     setState(() {
       _plannedPopUpTitle = value;
     });
+  }
+
+  /// [removeAnimatedItems] reomves selected items.
+  void removeAnimatedItems(
+      AnimatedListModel<Task> listModel, List<Task> tasks) {
+    for (var item in tasks) {
+      final index = listModel.indexWhere((element) => element.id == item.id);
+      listModel.removeAt(index);
+      context.read<Tasks>().removeTask(item);
+    }
+  }
+
+  /// Initializes [_listModel] with list of [Task]s.
+  void _initListModel(List<Task> tasks) {
+    _listModel = AnimatedListModel(
+      listKey: _listKey,
+      initialItems: tasks,
+      removedItemBuilder: (_, __, ___) => Container(),
+    );
   }
 
   /// [_insert] function handles the insertion of [Task]s to
@@ -90,36 +109,55 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
     setState(() {});
   }
 
-  /// [removeAnimatedItems] reomves selected items.
-  void removeAnimatedItems(
-      AnimatedListModel<Task> listModel, List<Task> tasks) {
-    for (var item in tasks) {
-      final index = listModel.indexWhere((element) => element.id == item.id);
-      listModel.removeAt(index);
-      context.read<Tasks>().removeTask(item);
-    }
+  void _toggleOnSelected(
+    List<String> idList,
+    PlannedMenuValue value,
+    String poptitle,
+  ) {
+    idList.addAll([...context.read<RemindMeList>().filterItem(value)]);
+    idList.addAll([...context.read<AddDueDateList>().filterItem(value)]);
+    idList.toSet();
+    _listModel.filterItem(
+        context.read<PlannedTasks>().filterTask(idList), widget.tasks);
+    changePopupTitle(poptitle);
   }
 
   void _onSelected(PlannedMenuValue value) {
+    List<String> idList = [];
+
     switch (value) {
       case PlannedMenuValue.overDue:
-        changePopupTitle('Overdue');
+        _toggleOnSelected(idList, value, 'Overdue');
         break;
       case PlannedMenuValue.today:
-        changePopupTitle('Today');
+        _toggleOnSelected(idList, value, 'Today');
         break;
       case PlannedMenuValue.tomorrow:
-        changePopupTitle('Tomorrow');
+        _toggleOnSelected(idList, value, 'Tomorrow');
         break;
       case PlannedMenuValue.thisWeek:
-        changePopupTitle('This week');
+        _toggleOnSelected(idList, value, 'This week');
         break;
       case PlannedMenuValue.later:
-        changePopupTitle('Later');
+        _toggleOnSelected(idList, value, 'Later');
         break;
       default:
-        changePopupTitle('All planned');
+        _toggleOnSelected(idList, value, 'All planned');
     }
+  }
+
+  /// Builds the undone [TaskTile].
+  Widget _buildTaskTile(BuildContext context, int index,
+      Animation<double> animation, AnimatedListModel<Task> listModel) {
+    return TaskTile(
+      id: listModel[index].id,
+      animation: animation,
+      color: widget.color,
+      onAddTaskFn: (task) => _insert(task, listModel, index),
+      onRemoveFn: (item) => _remove(item, index, listModel),
+      onRemoveFromUI: (item) => _removeFromUI(item, listModel),
+      activityType: ActivityType.planned,
+    );
   }
 
   @override
@@ -155,7 +193,8 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
                 AnimatedListWidget(
                   listModel: _listModel,
                   color: widget.color,
-                  itemBuilder: _buildTaskTile,
+                  itemBuilder: (ctx, index, animation) =>
+                      _buildTaskTile(ctx, index, animation, _listModel),
                   displayHeaderWidget: false,
                   headerWidget: PlannedPopupMenu(
                     color: widget.color,
@@ -168,23 +207,6 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
           ),
         ),
       ),
-    );
-  }
-
-  /// Builds the undone [TaskTile].
-  Widget _buildTaskTile(
-    BuildContext context,
-    int index,
-    Animation<double> animation,
-  ) {
-    return TaskTile(
-      id: _listModel[index].id,
-      animation: animation,
-      color: widget.color,
-      onAddTaskFn: (task) => _insert(task, _listModel, index),
-      onRemoveFn: (item) => _remove(item, index, _listModel),
-      onRemoveFromUI: (item) => _removeFromUI(item, _listModel),
-      activityType: ActivityType.planned,
     );
   }
 }

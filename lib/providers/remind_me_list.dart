@@ -37,4 +37,36 @@ class RemindMeList with ChangeNotifier {
         _items[index].copyWith(date: date, plannedMenuValue: plannedMenuValue);
     notifyListeners();
   }
+
+  List<String> filterItem(PlannedMenuValue plannedMenuValue) {
+    switch (plannedMenuValue) {
+      case PlannedMenuValue.today:
+        return _items
+            .where((e) => e.plannedMenuValue == plannedMenuValue)
+            .map((e) => e.id)
+            .toList();
+      case PlannedMenuValue.tomorrow:
+        return _items
+            .where((e) => e.plannedMenuValue == plannedMenuValue)
+            .map((e) => e.id)
+            .toList();
+      case PlannedMenuValue.thisWeek:
+        return _items
+            .where((e) => e.plannedMenuValue == plannedMenuValue)
+            .map((e) => e.id)
+            .toList();
+      case PlannedMenuValue.later:
+        return _items
+            .where((e) => e.plannedMenuValue == plannedMenuValue)
+            .map((e) => e.id)
+            .toList();
+      case PlannedMenuValue.overDue:
+        return _items
+            .where((e) => e.plannedMenuValue == plannedMenuValue)
+            .map((e) => e.id)
+            .toList();
+      default:
+        return _items.map((e) => e.id).toList();
+    }
+  }
 }

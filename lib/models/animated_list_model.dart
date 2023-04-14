@@ -35,6 +35,7 @@ class AnimatedListModel<E> {
   E removeAt(int index) {
     final E removedItem = _items.removeAt(index);
     if (removedItem != null) {
+      if (_animatedList == null) return removedItem;
       _animatedList!.removeItem(
         index,
         (BuildContext context, Animation<double> animation) {
@@ -43,6 +44,40 @@ class AnimatedListModel<E> {
       );
     }
     return removedItem;
+  }
+
+  void filterItem(List<E> idList, List<E> initTasks) {
+    // if idList is empty is removes the items from the
+    // _items and returns
+    if (idList.isEmpty) {
+      while (_items.isNotEmpty) {
+        for (var i = 0; i < _items.length; i++) {
+          removeAt(i);
+        }
+      }
+      return;
+    }
+
+    // Readd any item that might have been deleted from the previous
+    // filter operation by checking if it does not exist
+    for (var i = 0; i < initTasks.length; i++) {
+      final index = _items.indexWhere((idL) => idL == initTasks[i]);
+      if (index == -1) {
+        insert(i, initTasks[i]);
+      }
+    }
+
+    // The _items is assigned to tempList
+    List<E> tempList = List.from(_items);
+
+    // Loops and remove any _items item that is not idList
+    for (var element in tempList) {
+      final index = idList.indexWhere((idL) => idL == element);
+      if (index == -1) {
+        final cIndex = indexOf(element);
+        removeAt(cIndex);
+      }
+    }
   }
 
   int get length => _items.length;

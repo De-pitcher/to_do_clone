@@ -56,7 +56,7 @@ class AnimatedListWidget extends StatefulWidget {
 class _AnimatedListWidgetState extends State<AnimatedListWidget> {
   @override
   Widget build(BuildContext context) {
-    return widget.listModel.isEmpty
+    return widget.listModel.isEmpty && widget.headerWidget == null
         ? Container()
         : Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -70,7 +70,7 @@ class _AnimatedListWidgetState extends State<AnimatedListWidget> {
                   )
                 else
                   widget.headerWidget ?? Container(),
-                if (widget.isExpanded!)
+                if (widget.isExpanded! && !widget.listModel.isEmpty)
                   AnimatedOpacity(
                     opacity: widget.isExpanded! ? 1 : 0,
                     duration: const Duration(milliseconds: 300),

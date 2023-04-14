@@ -135,7 +135,8 @@ class TaskTile extends StatelessWidget {
                           },
                         );
                       },
-                onLongPress: () => onLongPress!(taskData),
+                onLongPress: () =>
+                    onLongPress != null ? onLongPress!(taskData) : null,
                 selected: isSelected!,
                 horizontalTitleGap: 0,
                 leading: Transform.scale(
