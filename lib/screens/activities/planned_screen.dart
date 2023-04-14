@@ -19,10 +19,12 @@ class PlannedScreen extends StatefulWidget {
 class _PlannedScreenState extends State<PlannedScreen> {
   @override
   Widget build(BuildContext context) {
+    final plannedTksProvider = Provider.of<PlannedTasks>(context);
     return PlannedActivityWidget(
       title: widget.args['activity'],
       color: widget.args['color'],
-      tasks: Provider.of<PlannedTasks>(context).tasks,
+      tasks: plannedTksProvider.tasks,
+      popupTitle: plannedTksProvider.popupTitle,
       insert: (item, index) => context.read<Tasks>().insert(item, index),
       remove: (index) => context.read<Tasks>().removeTask(index),
     );

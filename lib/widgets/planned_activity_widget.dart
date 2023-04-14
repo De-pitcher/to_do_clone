@@ -16,6 +16,13 @@ import 'pop_up_menus/planned_pop_up_menu.dart';
 import 'task_tile.dart';
 
 class PlannedActivityWidget extends StatefulWidget {
+  final String title;
+  final String popupTitle;
+  final List<Task> tasks;
+  final String? bgImage;
+  final Color color;
+  final Function(Task, int?)? insert;
+  final Function(Task)? remove;
   const PlannedActivityWidget({
     super.key,
     this.bgImage,
@@ -24,14 +31,8 @@ class PlannedActivityWidget extends StatefulWidget {
     required this.tasks,
     this.remove,
     this.insert,
+    required this.popupTitle,
   });
-
-  final Function(Task, int?)? insert;
-  final Function(Task)? remove;
-  final String? bgImage;
-  final Color color;
-  final List<Task> tasks;
-  final String title;
 
   @override
   State<PlannedActivityWidget> createState() => _PlannedActivityWidgetState();
@@ -45,20 +46,11 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
   //* Animated list of undone tasks
   late AnimatedListModel<Task> _listModel;
 
-  //* this is the title of the [PlannedPopupMenu]
-  var _plannedPopUpTitle = 'All planned';
-
   @override
   void didChangeDependencies() {
     _initListModel(Provider.of<PlannedTasks>(context).filteredTask);
     // _initListModel([]);
     super.didChangeDependencies();
-  }
-
-  void changePopupTitle(String value) {
-    setState(() {
-      _plannedPopUpTitle = value;
-    });
   }
 
   /// [removeAnimatedItems] reomves selected items.
@@ -109,6 +101,8 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
     setState(() {});
   }
 
+  /// This function toggles the popup title, and the filters the items in the
+  /// [AnimatedListWidget]
   void _toggleOnSelected(
     List<String> idList,
     PlannedMenuValue value,
@@ -118,10 +112,13 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
     idList.addAll([...context.read<AddDueDateList>().filterItem(value)]);
     idList.toSet();
     _listModel.filterItem(
-        context.read<PlannedTasks>().filterTask(idList), widget.tasks);
-    changePopupTitle(poptitle);
+        (context.read<PlannedTasks>()..changePopupTitle(poptitle))
+            .filterTask(idList),
+        widget.tasks);
   }
 
+  /// This function execute the [_toggleOnSelected] as reagrds to the
+  /// value selected
   void _onSelected(PlannedMenuValue value) {
     List<String> idList = [];
 
@@ -198,7 +195,7 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
                   displayHeaderWidget: false,
                   headerWidget: PlannedPopupMenu(
                     color: widget.color,
-                    title: _plannedPopUpTitle,
+                    title: widget.popupTitle,
                     onSelected: _onSelected,
                   ),
                 )

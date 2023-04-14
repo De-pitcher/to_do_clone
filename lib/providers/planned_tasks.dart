@@ -9,6 +9,13 @@ class PlannedTasks extends ChangeNotifier {
 
   List<Task> get tasks => _tasks;
 
+  String popupTitle = 'All planned';
+
+  void changePopupTitle(String value) {
+    popupTitle = value;
+    notifyListeners();
+  }
+
   void initTasks(List<Task> tasks) {
     _tasks = [...tasks.where((e) => e.remindMe || e.addDueDate)];
     filteredTask = _tasks;
