@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../enums/activity_type.dart';
 import '../models/task.dart';
 import '../providers/task_steps.dart';
 import '../providers/tasks.dart';
@@ -10,12 +11,18 @@ import 'pop_up_menus/add_due_date_pop_up_menu.dart';
 import 'pop_up_menus/remind_me_pop_up_menu.dart';
 
 class TaskDetailsWidget extends StatefulWidget {
-  final Task task;
+  final String id;
   final Color color;
+  final ActivityType activityType;
+  final Function(Task)? onRemoveFromUI;
+  final Function(Task)? onSwapItemRemoveFromUiFn;
   const TaskDetailsWidget({
     super.key,
-    required this.task,
+    required this.id,
     required this.color,
+    required this.activityType,
+    this.onRemoveFromUI,
+    this.onSwapItemRemoveFromUiFn,
   });
 
   @override
@@ -40,6 +47,8 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final task = Provider.of<Tasks>(context).getTaskById(widget.id);
+
     return Column(children: [
       ListTile(
         //* _addStep.hasFocus displays a rounded rectangle if the addStep
@@ -87,13 +96,18 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
       TaskDetailsOptionWidget(
         title: 'Add to my Day',
         icon: CupertinoIcons.brightness,
-        onTap: () => context.read<Tasks>().toggleMyDay(widget.task.id),
-        isEnabled: widget.task.myDay,
+        onTap: () {
+          if (widget.activityType == ActivityType.myDay) {
+            widget.onRemoveFromUI!(task);
+          }
+          context.read<Tasks>().toggleMyDay(widget.id);
+        },
+        isEnabled: task.myDay,
         color: widget.color,
       ),
       RemindMePopupMenu(
-        id: widget.task.id,
-        isEnabled: widget.task.remindMe,
+        id: widget.id,
+        isEnabled: task.remindMe,
         color: widget.color,
       ),
       const Divider(
@@ -102,8 +116,8 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
         indent: 70,
       ),
       AddDueDatePopupMenu(
-        id: widget.task.id,
-        isEnabled: widget.task.addDueDate,
+        id: widget.id,
+        isEnabled: task.addDueDate,
         color: widget.color,
       ),
       const Divider(

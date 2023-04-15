@@ -59,16 +59,24 @@ class _TaskDetailsState extends State<TaskDetails> {
                 children: stepsList.steps.isEmpty
                     ? [
                         TaskDetailsWidget(
-                          task: widget.task,
+                          id: widget.task.id,
                           color: widget.color,
+                          activityType: widget.activityType,
+                          onRemoveFromUI: widget.onRemoveFromUI,
+                          onSwapItemRemoveFromUiFn:
+                              widget.onSwapItemRemoveFromUiFn,
                         )
                       ]
                     : [
                         ...stepsList.steps,
                         ...[
                           TaskDetailsWidget(
-                            task: widget.task,
+                            id: widget.task.id,
                             color: widget.color,
+                            activityType: widget.activityType,
+                            onRemoveFromUI: widget.onRemoveFromUI,
+                            onSwapItemRemoveFromUiFn:
+                                widget.onSwapItemRemoveFromUiFn,
                           )
                         ]
                       ],

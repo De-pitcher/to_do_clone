@@ -19,7 +19,8 @@ class EdittableTaskTile extends StatefulWidget {
     required this.id,
     required this.activityType,
     this.onRemoveFromUI,
-    this.onSwapItemRemoveFromUiFn, required this.initText,
+    this.onSwapItemRemoveFromUiFn,
+    required this.initText,
   });
 
   @override
@@ -58,7 +59,10 @@ class _EdittableTaskTileState extends State<EdittableTaskTile> {
               color: widget.color,
               onChanged: (_) {
                 setState(() {
-                  if (widget.activityType == ActivityType.important) {
+                  // Swaps the task from the completed task list to the
+                  // undone task list when the task detail is an ancestor
+                  // of planned screen
+                  if (widget.activityType != ActivityType.planned) {
                     widget.onSwapItemRemoveFromUiFn!(task);
                   }
                   context.read<Tasks>().toggleIsDone(widget.id);
@@ -92,6 +96,11 @@ class _EdittableTaskTileState extends State<EdittableTaskTile> {
           ),
           IconButton(
             onPressed: () {
+              // Removes the task from the ui when the task detail is
+              // an ancestor of planned screen
+              if (widget.activityType == ActivityType.important) {
+                widget.onRemoveFromUI!(task);
+              }
               context.read<Tasks>().toggleIsStarred(widget.id);
             },
             icon: Icon(
