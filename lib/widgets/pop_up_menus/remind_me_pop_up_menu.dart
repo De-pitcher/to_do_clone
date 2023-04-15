@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 import '../../enums/enums.dart';
+import '../../models/task.dart';
 import '../../providers/tasks.dart';
 import '../../utils/constants/constants.dart';
 import '../date_widget.dart';
@@ -13,13 +14,17 @@ class RemindMePopupMenu extends StatefulWidget {
   final String id;
   final bool isEnabled;
   final Color color;
-  // final PlannedMenuValue plannedMenuValue;
+  final ActivityType activityType;
+  final Function(Task)? onRemoveFromUI;
+  final Function(Task)? onSwapItemRemoveFromUiFn;
   const RemindMePopupMenu({
     super.key,
     required this.id,
     required this.isEnabled,
     required this.color,
-    // required this.plannedMenuValue,
+    required this.activityType,
+    this.onRemoveFromUI,
+    this.onSwapItemRemoveFromUiFn,
   });
 
   @override
@@ -31,6 +36,10 @@ class _RemindMePopupMenuState extends State<RemindMePopupMenu> {
     context.read<RemindMeList>().addReminder(widget.id, DateTime.now());
     if (value == true) {
       setState(() {
+        final task = context.read<Tasks>().getTaskById(widget.id);
+        if (widget.activityType == ActivityType.planned && task.remindMe) {
+          widget.onRemoveFromUI!(task);
+        }
         context.read<Tasks>().toggleRemindMe(widget.id);
       });
     }
@@ -98,6 +107,10 @@ class _RemindMePopupMenuState extends State<RemindMePopupMenu> {
         isEnabled: widget.isEnabled,
         color: widget.isEnabled ? widget.color : Colors.grey,
         onCancel: () {
+          final task = context.read<Tasks>().getTaskById(widget.id);
+          if (widget.activityType == ActivityType.planned) {
+            widget.onRemoveFromUI!(task);
+          }
           context.read<Tasks>().toggleRemindMe(widget.id);
         },
       ),

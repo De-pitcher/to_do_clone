@@ -109,6 +109,9 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
         id: widget.id,
         isEnabled: task.remindMe,
         color: widget.color,
+        activityType: widget.activityType,
+        onRemoveFromUI: widget.onRemoveFromUI,
+        onSwapItemRemoveFromUiFn: widget.onSwapItemRemoveFromUiFn,
       ),
       const Divider(
         thickness: 1.5,
@@ -119,6 +122,9 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
         id: widget.id,
         isEnabled: task.addDueDate,
         color: widget.color,
+        activityType: widget.activityType,
+        onRemoveFromUI: widget.onRemoveFromUI,
+        onSwapItemRemoveFromUiFn: widget.onSwapItemRemoveFromUiFn,
       ),
       const Divider(
         thickness: 1.5,

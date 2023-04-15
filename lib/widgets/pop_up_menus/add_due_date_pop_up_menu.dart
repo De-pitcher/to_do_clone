@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
+import '../../enums/activity_type.dart';
 import '../../enums/add_due_date_pop_up_value.dart';
+import '../../models/task.dart';
 import '../../providers/add_due_date_list.dart';
 import '../../providers/tasks.dart';
 import '../../utils/constants/add_due_date_pop_up_menu_entries.dart';
@@ -14,11 +16,17 @@ class AddDueDatePopupMenu extends StatefulWidget {
   final String id;
   final bool isEnabled;
   final Color color;
+  final ActivityType activityType;
+  final Function(Task)? onRemoveFromUI;
+  final Function(Task)? onSwapItemRemoveFromUiFn;
   const AddDueDatePopupMenu({
     super.key,
     required this.color,
     required this.id,
     required this.isEnabled,
+    required this.activityType,
+    this.onRemoveFromUI,
+    this.onSwapItemRemoveFromUiFn,
   });
 
   @override
@@ -30,6 +38,10 @@ class _AddDueDatePopupMenuState extends State<AddDueDatePopupMenu> {
     context.read<AddDueDateList>().addReminder(widget.id, DateTime.now());
     if (value == true) {
       setState(() {
+        final task = context.read<Tasks>().getTaskById(widget.id);
+        if (widget.activityType == ActivityType.planned && task.addDueDate) {
+          widget.onRemoveFromUI!(task);
+        }
         context.read<Tasks>().toggleAddDueDate(widget.id);
       });
     }
@@ -37,7 +49,6 @@ class _AddDueDatePopupMenuState extends State<AddDueDatePopupMenu> {
 
   void setReminder({
     required AddDueDatePopupValue value,
-    // required PlannedMenuValue plannedMenuValue,
     required String id,
     required DateTime date,
   }) {
@@ -73,7 +84,7 @@ class _AddDueDatePopupMenuState extends State<AddDueDatePopupMenu> {
   Widget build(BuildContext context) {
     final addDueDateProvider = Provider.of<AddDueDateList>(context);
     final addDueDate = addDueDateProvider.getReminderById(widget.id);
-    
+
     return PopupMenuButton(
       itemBuilder: (_) => addDueDatePopMenuEntries(),
       position: PopupMenuPosition.under,
@@ -91,6 +102,10 @@ class _AddDueDatePopupMenuState extends State<AddDueDatePopupMenu> {
         isEnabled: widget.isEnabled,
         color: widget.isEnabled ? widget.color : Colors.grey,
         onCancel: () {
+          final task = context.read<Tasks>().getTaskById(widget.id);
+          if (widget.activityType == ActivityType.planned) {
+            widget.onRemoveFromUI!(task);
+          }
           context.read<Tasks>().toggleAddDueDate(widget.id);
         },
       ),
