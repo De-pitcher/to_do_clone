@@ -26,7 +26,6 @@ class _ImportantScreenState extends State<ImportantScreen> {
       title: widget.args['activity'],
       displaySubtitle: false,
       isExtended: false,
-      completedListModel: Provider.of<ImportantTasks>(context).doneTask,
       unDoneListModel: Provider.of<ImportantTasks>(context).undoneTasks,
       fabIcon: const Icon(Icons.add, size: 32),
       activityType: ActivityType.important,
