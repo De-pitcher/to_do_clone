@@ -126,14 +126,23 @@ class TaskTile extends StatelessWidget {
                 onTap: isSelected!
                     ? () => tksProvider.toggleIsSelected(taskData.id)
                     : () {
-                        Navigator.of(context).pushNamed(
-                          TaskDetails.id,
-                          arguments: {
-                            'color': color,
-                            'parent': 'Tasks',
-                            'task': taskData,
-                          },
-                        );
+                        // Navigator.of(context).pushNamed(
+                        //   TaskDetails.id,
+                        //   arguments: {
+                        //     'color': color,
+                        //     'parent': 'Tasks',
+                        //     'task': taskData,
+                        //   },
+                        // );
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => TaskDetails(
+                                  task: taskData,
+                                  parent: 'Tasks',
+                                  color: color,
+                                  activityType: activityType,
+                                  onRemoveFromUI: onRemoveFromUI,
+                                  onSwapItemRemoveFromUiFn: onSwapItemRemoveFromUiFn,
+                                )));
                       },
                 onLongPress: () =>
                     onLongPress != null ? onLongPress!(taskData) : null,

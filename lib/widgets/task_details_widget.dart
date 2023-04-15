@@ -101,12 +101,6 @@ class _TaskDetailsWidgetState extends State<TaskDetailsWidget> {
         color: Colors.white30,
         indent: 70,
       ),
-      // TaskDetailsOptionWidget(
-      //   title: 'Add due time',
-      //   icon: CupertinoIcons.calendar,
-      //   isEnabled: false,
-      //   color: widget.color,
-      // ),
       AddDueDatePopupMenu(
         id: widget.task.id,
         isEnabled: widget.task.addDueDate,

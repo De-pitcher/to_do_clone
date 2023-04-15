@@ -52,11 +52,11 @@ MaterialPageRoute routeGen(RouteSettings settings) {
           args: settings.arguments as Map<String, dynamic>,
         ),
       );
-    case TaskDetails.id:
-      return MaterialPageRoute(
-        builder: (_) =>
-            TaskDetails(args: settings.arguments as Map<String, dynamic>),
-      );
+    // case TaskDetails.id:
+    //   return MaterialPageRoute(
+    //     builder: (_) =>
+    //         TaskDetails(args: settings.arguments as Map<String, dynamic>),
+    //   );
     default:
       return MaterialPageRoute(
         builder: (context) {

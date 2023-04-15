@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../enums/activity_type.dart';
+import '../models/task.dart';
 import '../providers/tasks.dart';
 import 'checkboxs/task_checkbox.dart';
 
 class EdittableTaskTile extends StatefulWidget {
   final String id;
-  final String text;
-  final bool isDone;
-  final bool isStarred;
+  final String initText;
+  final ActivityType activityType;
+  final Function(Task)? onRemoveFromUI;
+  final Function(Task)? onSwapItemRemoveFromUiFn;
   final Color color;
   const EdittableTaskTile({
     super.key,
-    required this.id,
-    required this.text,
-    required this.isDone,
-    required this.isStarred,
     required this.color,
+    required this.id,
+    required this.activityType,
+    this.onRemoveFromUI,
+    this.onSwapItemRemoveFromUiFn, required this.initText,
   });
 
   @override
@@ -31,7 +34,7 @@ class _EdittableTaskTileState extends State<EdittableTaskTile> {
   void initState() {
     super.initState();
     _controller = TextEditingController(
-      text: widget.text,
+      text: widget.initText,
     );
   }
 
@@ -44,6 +47,7 @@ class _EdittableTaskTileState extends State<EdittableTaskTile> {
 
   @override
   Widget build(BuildContext context) {
+    final task = Provider.of<Tasks>(context).getTaskById(widget.id);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Row(
@@ -54,17 +58,20 @@ class _EdittableTaskTileState extends State<EdittableTaskTile> {
               color: widget.color,
               onChanged: (_) {
                 setState(() {
+                  if (widget.activityType == ActivityType.important) {
+                    widget.onSwapItemRemoveFromUiFn!(task);
+                  }
                   context.read<Tasks>().toggleIsDone(widget.id);
                 });
               },
-              value: widget.isDone,
+              value: task.isDone,
             ),
           ),
           Expanded(
             child: TextField(
               controller: _controller,
               style: TextStyle(
-                decoration: widget.isDone
+                decoration: task.isDone
                     ? TextDecoration.lineThrough
                     : TextDecoration.none,
               ),
@@ -88,8 +95,8 @@ class _EdittableTaskTileState extends State<EdittableTaskTile> {
               context.read<Tasks>().toggleIsStarred(widget.id);
             },
             icon: Icon(
-              widget.isStarred ? Icons.star : Icons.star_border,
-              color: widget.isStarred ? widget.color : Colors.grey,
+              task.isStarred ? Icons.star : Icons.star_border,
+              color: task.isStarred ? widget.color : Colors.grey,
             ),
           ),
         ],
