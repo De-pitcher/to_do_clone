@@ -25,10 +25,10 @@ class SelectPopUpMenu extends StatelessWidget {
       onSelected: (value) {
         switch (value) {
           case SelectPopMenuValue.selectAll:
-            context.read<Tasks>().setSelectedTaskTo(true);
+            context.read<Tasks>().setAllTaskToSelected(true);
             break;
           case SelectPopMenuValue.clearAll:
-            context.read<Tasks>().setSelectedTaskTo(false);
+            context.read<Tasks>().setAllTaskToSelected(false);
             onClearAll!();
             break;
           case SelectPopMenuValue.markAsImportant:

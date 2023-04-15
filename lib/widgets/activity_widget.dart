@@ -195,7 +195,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   void onLongPressed([Task? task]) {
     _toggleIsSelect();
     if (!_isSelected) {
-      context.read<Tasks>().setSelectedTaskTo(false);
+      context.read<Tasks>().setAllTaskToSelected(false);
     } else if (task != null) {
       context.read<Tasks>().toggleIsSelected(task.id);
     }
@@ -230,13 +230,15 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                   .where((tks) => tks.isSelected)
                   .length,
               disMarkAsImpt: taskProvider.hasStarredTask(),
-              cmpltdListModel: _completedListModel,
-              undonelistModel: _listModel,
               clearAll: taskProvider.isAllTaskSelected(),
+              hasMyDay: taskProvider.hasMyDay(),
+              isAllSelected: taskProvider.isAllTaskSelected(),
+              onStar: () => taskProvider.setSelecedTaskToMyDay(),
+              onSelectAll: () => taskProvider.setAllTaskToSelected(true),
               onClearAll: () {
                 if (!taskProvider.isAllTaskSelected()) _toggleIsSelect();
               },
-              onLongPressed: onLongPressed,
+              onCancel: onLongPressed,
               onDelete: () {
                 _removeSelectedItemsFromUi(
                   _listModel,

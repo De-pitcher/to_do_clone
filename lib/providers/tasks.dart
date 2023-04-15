@@ -102,6 +102,15 @@ class Tasks with ChangeNotifier {
     return hasStarred;
   }
 
+  bool hasMyDay() {
+    var hasMyDay = false;
+    final selectedTask = _tasks.where((tks) => tks.isSelected);
+    for (var task in selectedTask) {
+      hasMyDay = task.myDay;
+    }
+    return hasMyDay;
+  }
+
   bool isAllTaskSelected() {
     for (var item in _tasks) {
       if (!item.isSelected) return false;
@@ -109,7 +118,7 @@ class Tasks with ChangeNotifier {
     return true;
   }
 
-  void setSelectedTaskTo(bool value) {
+  void setAllTaskToSelected(bool value) {
     List<Task> tempTask = [];
     for (var i = 0; i < _tasks.length; i++) {
       _tasks[i].isSelected = value;
@@ -123,6 +132,15 @@ class Tasks with ChangeNotifier {
     for (var i = 0; i < _tasks.length; i++) {
       if (_tasks[i].isSelected) {
         _tasks[i].isStarred = true;
+      }
+    }
+    notifyListeners();
+  }
+
+  void setSelecedTaskToMyDay() {
+    for (var i = 0; i < _tasks.length; i++) {
+      if (_tasks[i].isSelected) {
+        _tasks[i].myDay = true;
       }
     }
     notifyListeners();
