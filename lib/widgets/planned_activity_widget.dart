@@ -12,6 +12,7 @@ import '../providers/tasks.dart';
 import 'animated_list_widget.dart';
 import 'animated_title.dart';
 import 'app_bars/default_app_bar.dart';
+import 'app_bars/select_app_bar.dart';
 import 'pop_up_menus/planned_pop_up_menu.dart';
 import 'task_tile.dart';
 
@@ -42,9 +43,11 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
   //* This is a GlobalKey for handling the [AnimatedListState] of the
   //* undone tasks.
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-
   //* Animated list of undone tasks
   late AnimatedListModel<Task> _listModel;
+  //* When true displays a special appbar and sets the task to
+  //*  list mode
+  var _isSelected = false;
 
   @override
   void didChangeDependencies() {
@@ -143,24 +146,49 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
     }
   }
 
-  /// Builds the undone [TaskTile].
-  Widget _buildTaskTile(BuildContext context, int index,
-      Animation<double> animation, AnimatedListModel<Task> listModel) {
-    return TaskTile(
-      id: listModel[index].id,
-      animation: animation,
-      color: widget.color,
-      onAddTaskFn: (task) => _insert(task, listModel, index),
-      onRemoveFn: (item) => _remove(item, index, listModel),
-      onRemoveFromUI: (item) => _removeFromUI(item, listModel),
-      activityType: ActivityType.planned,
-    );
+  /// [_onLongPressed] is executed when a [TaskTile] is long pressed.
+  void _onLongPressed([Task? task]) {
+    _toggleIsSelect();
+    if (!_isSelected) {
+      context.read<Tasks>().setAllTaskToSelected(false);
+    } else if (task != null) {
+      context.read<Tasks>().toggleIsSelected(task.id);
+    }
+  }
+
+  void _toggleIsSelect() {
+    setState(() {
+      _isSelected = !_isSelected;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final taskProvider = Provider.of<Tasks>(context, listen: false);
+
     return Scaffold(
-      appBar: defaultAppBar(context, widget.color),
+      appBar: _isSelected
+          ? selectAppBar(
+              context: context,
+              count: Provider.of<Tasks>(context, listen: false)
+                  .tasks
+                  .where((tks) => tks.isSelected)
+                  .length,
+              disMarkAsImpt: taskProvider.hasStarredTask(),
+              clearAll: taskProvider.isAllTaskSelected(),
+              hasMyDay: taskProvider.hasMyDay(),
+              isAllSelected: taskProvider.isAllTaskSelected(),
+              onStar: () => taskProvider.setSelecedTaskToMyDay(),
+              onSelectAll: () => taskProvider.setAllTaskToSelected(true),
+              onClearAll: () {
+                if (!taskProvider.isAllTaskSelected()) _toggleIsSelect();
+              },
+              onCancel: _onLongPressed,
+              onDelete: () {
+                _toggleIsSelect();
+                Navigator.of(context).pop();
+              })
+          : defaultAppBar(context, widget.color),
       body: Container(
         width: double.infinity,
         decoration: widget.bgImage != null
@@ -204,6 +232,22 @@ class _PlannedActivityWidgetState extends State<PlannedActivityWidget> {
           ),
         ),
       ),
+    );
+  }
+
+  /// Builds the undone [TaskTile].
+  Widget _buildTaskTile(BuildContext context, int index,
+      Animation<double> animation, AnimatedListModel<Task> listModel) {
+    return TaskTile(
+      id: listModel[index].id,
+      animation: animation,
+      color: widget.color,
+      onAddTaskFn: (task) => _insert(task, listModel, index),
+      onRemoveFn: (item) => _remove(item, index, listModel),
+      onRemoveFromUI: (item) => _removeFromUI(item, listModel),
+      isSelected: _isSelected,
+      onLongPress: _onLongPressed,
+      activityType: ActivityType.planned,
     );
   }
 }

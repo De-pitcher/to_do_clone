@@ -106,7 +106,8 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   var _liftTitle = false;
   //* Handles the animated of the [CompletedTaskHeader].
   var _isExpanded = true;
-  //*
+  //* When true displays a special appbar and sets the task to 
+  //*  list mode
   var _isSelected = false;
 
   @override
@@ -191,8 +192,8 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     }
   }
 
-  /// [onLongPressed] is executed when a [TaskTile] is long pressed.
-  void onLongPressed([Task? task]) {
+  /// [_onLongPressed] is executed when a [TaskTile] is long pressed.
+  void _onLongPressed([Task? task]) {
     _toggleIsSelect();
     if (!_isSelected) {
       context.read<Tasks>().setAllTaskToSelected(false);
@@ -238,7 +239,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
               onClearAll: () {
                 if (!taskProvider.isAllTaskSelected()) _toggleIsSelect();
               },
-              onCancel: onLongPressed,
+              onCancel: _onLongPressed,
               onDelete: () {
                 _removeSelectedItemsFromUi(
                   _listModel,
@@ -376,7 +377,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       onRemoveFromUI: (item) => _removeFromUI(item, _listModel),
       activityType: widget.activityType,
       isSelected: _isSelected,
-      onLongPress: onLongPressed,
+      onLongPress: _onLongPressed,
     );
   }
 
@@ -397,7 +398,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       onRemoveFromUI: (item) => _removeFromUI(item, _completedListModel),
       activityType: widget.activityType,
       isSelected: _isSelected,
-      onLongPress: onLongPressed,
+      onLongPress: _onLongPressed,
     );
   }
 
