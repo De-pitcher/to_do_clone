@@ -35,7 +35,11 @@ class Activities extends ChangeNotifier {
   }
 
   void addActivityAtIndex(int index, Activity activity) {
-    _activities.insert(index, activity);
+    if (_activities.isEmpty) {
+      _activities.add(activity);
+    } else {
+      _activities.insert(index, activity);
+    }
     notifyListeners();
   }
 

@@ -29,29 +29,4 @@ class _PlannedScreenState extends State<PlannedScreen> {
       remove: (index) => context.read<Tasks>().removeTask(index),
     );
   }
-
-  Center _buildEmptyWidget(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(height: MediaQuery.of(context).size.height * 0.25),
-          Image.asset(
-            'assets/images/empty_image.png',
-          ),
-          SizedBox(
-            width: 210,
-            child: Text(
-              'Tasks show up here if they aren\'t part of any'
-              ' list you\'ve created.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: Colors.deepPurple,
-                  ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
 }

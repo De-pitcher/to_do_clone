@@ -13,9 +13,8 @@ import '../providers/activities.dart';
 import '../providers/groups.dart';
 
 class DraggableListWidget extends StatefulWidget {
-
-/// [DraggableListWidget] displays the list and group of lists widgets where
-/// an actual task tile can be created. And this list is draggable
+  /// [DraggableListWidget] displays the list and group of lists widgets where
+  /// an actual task tile can be created. And this list is draggable
   const DraggableListWidget({super.key});
 
   @override
@@ -25,8 +24,10 @@ class DraggableListWidget extends StatefulWidget {
 class _DraggableListWidgetState extends State<DraggableListWidget> {
   /// [_contents] holds both the [_listContents] and [_groupContents]
   late List<DragAndDropList> _contents;
+
   /// [_listContents] holds the list of task tiles
   late List<DragAndDropList> _listContents;
+
   /// [_groupContents] holds the list of [_listContents]
   late List<DragAndDropList> _groupContents;
 
@@ -68,9 +69,9 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
 
   @override
   void didChangeDependencies() {
-    //* [_listContents], [_groupContents] and [_contents] is initialized 
+    //* [_listContents], [_groupContents] and [_contents] is initialized
     //* here
-    
+
     final activities = Provider.of<Activities>(context).activities;
     _listContents = [
       DragAndDropList(
@@ -212,8 +213,14 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
         groupsProvider.removeList(oldListIndex - 1, oldItemIndex);
       }
 
-      if (oldListIndex == 0 && oldListIndex == newListIndex) {
+      if (oldListIndex > 0) {
         activitiesProvider.addActivityAtIndex(newItemIndex, currentActivitiy);
+      } else if (oldListIndex > 0 && newListIndex > 0) {
+        groupsProvider.addListUsingIndexs(
+          newListIndex - 1,
+          newItemIndex,
+          currentActivitiy,
+        );
       } else {
         groupsProvider.addListUsingIndexs(
           newListIndex - 1,
