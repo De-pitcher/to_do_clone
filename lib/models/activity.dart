@@ -2,17 +2,19 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import 'task.dart';
+
 class Activity {
-  final DateTime key;
+  final String id;
   final String title;
   final Color color;
   final String? image;
   final File? fileImage;
-  final List<String> tasks;
+  final List<Task> tasks;
   bool isSelected;
-  
+
   Activity({
-    required this.key,
+    required this.id,
     required this.title,
     required this.color,
     required this.tasks,
@@ -22,16 +24,16 @@ class Activity {
   });
 
   Activity copyWith({
-    DateTime? key,
+    String? id,
     String? title,
     Color? color,
     String? image,
     File? fileImage,
-    List<String>? tasks,
+    List<Task>? tasks,
     bool? isSelected,
   }) {
     return Activity(
-      key: key ?? this.key,
+      id: id ?? this.id,
       title: title ?? this.title,
       color: color ?? this.color,
       image: image ?? this.image,

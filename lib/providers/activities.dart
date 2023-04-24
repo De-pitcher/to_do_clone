@@ -1,24 +1,66 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '../models/activity.dart';
+import '../models/task.dart';
 
 class Activities extends ChangeNotifier {
   List<Activity> _activities = [];
 
   List<Activity> get activities => [..._activities];
 
+  List<Task> undoneTasks(String title) => _activities
+      .firstWhere(
+        (tks) => tks.title == title,
+        orElse: () => Activity(
+          color: Colors.blue,
+          id: const Uuid().v1(),
+          title: 'Untitled',
+          tasks: [],
+        ),
+      )
+      .tasks
+      .where((tks) => !tks.isDone)
+      .toList();
+
+  List<Task> completedTasks(String title) => _activities
+      .firstWhere(
+        (tks) => tks.title == title,
+        orElse: () => Activity(
+          color: Colors.blue,
+          id: const Uuid().v1(),
+          title: 'Untitled',
+          tasks: [],
+        ),
+      )
+      .tasks
+      .where((tks) => tks.isDone)
+      .toList();
+  // .firstWhere((tks) => tks.title == title)
+  // .tasks
+  // .where((tks) => !tks.isDone)
+  // .toList();
+
+  void insert(Task task, String title, [int? index]) {
+    final indexWhere = _activities.indexWhere((e) => e.title == title);
+    int cIndex = index ?? _activities[indexWhere].tasks.length;
+    _activities[indexWhere].tasks.insert(cIndex, task);
+    notifyListeners();
+  }
+
   void addListActivity({
+    required String id,
     required String title,
-    required List<String> tasks,
+    required List<Task> tasks,
     required Color color,
     String? image,
     File? fileImage,
   }) {
     _activities.add(
       Activity(
-        key: DateTime.now(),
+        id: id,
         title: title,
         color: color,
         image: image,
@@ -26,11 +68,6 @@ class Activities extends ChangeNotifier {
         tasks: tasks,
       ),
     );
-    notifyListeners();
-  }
-
-  void addActivityFromScreen(Activity activity) {
-    _activities.add(activity);
     notifyListeners();
   }
 
@@ -61,7 +98,7 @@ class Activities extends ChangeNotifier {
 
   void removeListOfActivities(List<Activity> activities) {
     for (var activity in activities) {
-      _activities.removeWhere((e) => e.key == activity.key);
+      _activities.removeWhere((e) => e.id == activity.id);
     }
     notifyListeners();
   }

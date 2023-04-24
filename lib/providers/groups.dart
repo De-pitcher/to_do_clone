@@ -68,7 +68,7 @@ class Groups extends ChangeNotifier {
     for (var activity in activities) {
       _groups[currentActivityIndex]
           .lists
-          .removeWhere((e) => e.key == activity.key);
+          .removeWhere((e) => e.id == activity.id);
     }
     // currentList.removeAt(currentActivityIndex);
     _groups[currentActivityIndex] =

@@ -1,8 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/activities.dart';
+import '../providers/tasks.dart';
 import '../utils/constants/pop_menu_items.dart';
+import 'activity_widget.dart';
+import 'buttons/special_button.dart';
 
 class ListWidget extends StatelessWidget {
   /// This is the title of the [ListWidget]
@@ -18,7 +23,7 @@ class ListWidget extends StatelessWidget {
   /// must be specified
   final File? fileImage;
 
-  /// Background color of the [ListWidget] 
+  /// Background color of the [ListWidget]
   final Color bgColor;
 
   /// A widget that holds the list of [TaskTile]s that contains
@@ -50,44 +55,81 @@ class ListWidget extends StatelessWidget {
         )
       ],
     );
+    final height = appBar.preferredSize.height + 10;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 25, 48, 74),
       extendBodyBehindAppBar: true,
-      appBar: appBar,
-      body: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          image: image != null
-              ? DecorationImage(
-                  image: AssetImage(image!),
-                  fit: BoxFit.cover,
-                )
-              : fileImage != null
-                  ? DecorationImage(
-                      image: FileImage(fileImage!),
-                      fit: BoxFit.cover,
-                    )
-                  : null,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: appBar.preferredSize.height + 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.headline4!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: bgColor,
-                    ),
-              ),
-            ),
-          ],
-        ),
+      // appBar: appBar,
+      // body: buildEmptyWidget(height, context),
+      body: ActivityWidget(
+        title: title,
+        displaySubtitle: false,
+        appBar: appBar,
+        unDoneListModel: [],
+        // Provider.of<Activities>(context).undoneTasks(title),
+        completedListModel:
+            Provider.of<Activities>(context).completedTasks(title),
+        color: bgColor,
+        insert: (item, index) =>
+            // context.read<Tasks>().insert(item, index),
+            context.read<Activities>().insert(item, title, index),
+        remove: (index) => context.read<Tasks>().removeTask(index),
+        emptyWidget: _buildEmptyWidget(height, context),
+        isExtended: false,
+        fabIcon: const Icon(Icons.add, size: 32),
+        specialButtons: const [
+          SpecialButton(
+            label: 'Set due date',
+            icon: Icons.calendar_month_rounded,
+          ),
+          SpecialButton(
+            label: 'Remind me',
+            icon: Icons.notifications_on_outlined,
+          ),
+          SpecialButton(
+            label: 'Repeat',
+            icon: Icons.repeat,
+          ),
+        ],
       ),
+    );
+  }
+
+  Container _buildEmptyWidget(double height, BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        image: image != null
+            ? DecorationImage(
+                image: AssetImage(image!),
+                fit: BoxFit.cover,
+              )
+            : fileImage != null
+                ? DecorationImage(
+                    image: FileImage(fileImage!),
+                    fit: BoxFit.cover,
+                  )
+                : null,
+      ),
+      // child: Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     SizedBox(
+      //       height: height,
+      //     ),
+      //     Padding(
+      //       padding: const EdgeInsets.only(left: 16.0),
+      //       child: Text(
+      //         title,
+      //         style: Theme.of(context).textTheme.headline4!.copyWith(
+      //               fontWeight: FontWeight.bold,
+      //               color: bgColor,
+      //             ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 }

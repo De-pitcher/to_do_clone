@@ -23,9 +23,9 @@ class _AddOrRemoveDialogState extends State<AddOrRemoveDialog> {
   @override
   Widget build(BuildContext context) {
     final allList = [...widget.activities, ...widget.group.lists];
-    List<DateTime> listOfKeys = [];
+    List<String> listOfKeys = [];
     for (var e in widget.group.lists) {
-      listOfKeys.add(e.key);
+      listOfKeys.add(e.id);
     }
     final height = 70 * allList.length.toDouble();
     return SizedBox(

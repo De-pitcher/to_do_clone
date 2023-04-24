@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../enums/new_list_theme_value.dart';
 import '../../providers/activities.dart';
@@ -38,6 +39,7 @@ class _ListDialogContentState extends State<ListDialogContent> {
     final listProvider = Provider.of<Activities>(context, listen: false);
     //* Adds a new activity 
     listProvider.addListActivity(
+      id: const Uuid().v1(),
       title: _listTitle,
       tasks: [],
       color: colorsProvider.selectedColor,

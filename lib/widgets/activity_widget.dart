@@ -65,6 +65,9 @@ class ActivityWidget extends StatefulWidget {
   /// to be created.
   final ActivityType activityType;
 
+  /// When not null is displayed instaed of the default appbar
+  final AppBar? appBar;
+
   /// [ActivityWidget] is a widget that is used to create different
   /// activities that tasks can be grouped in.
   const ActivityWidget({
@@ -83,7 +86,7 @@ class ActivityWidget extends StatefulWidget {
     this.bgImage,
     required this.specialButtons,
     this.activityType = ActivityType.non,
-    this.completedListModel = const <Task>[],
+    this.completedListModel = const <Task>[], this.appBar,
   });
 
   @override
@@ -106,7 +109,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   var _liftTitle = false;
   //* Handles the animated of the [CompletedTaskHeader].
   var _isExpanded = true;
-  //* When true displays a special appbar and sets the task to 
+  //* When true displays a special appbar and sets the task to
   //*  list mode
   var _isSelected = false;
 
@@ -249,7 +252,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                 _toggleIsSelect();
                 Navigator.of(context).pop();
               })
-          : defaultAppBar(context, widget.color),
+          : widget.appBar ?? defaultAppBar(context, widget.color),
       body: Container(
         width: double.infinity,
         decoration: widget.bgImage != null

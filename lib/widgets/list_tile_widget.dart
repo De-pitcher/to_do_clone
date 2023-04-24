@@ -19,14 +19,14 @@ class ListTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      key: Key(activity.key.toString()),
+      key: Key(activity.id.toString()),
       leading: const Icon(Icons.list),
       title: Text(activity.title),
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => ListWidget(
-              key: Key(activity.key.toString()),
+              key: Key(activity.id.toString()),
               title: activity.title,
               bgColor: activity.color,
               image: activity.image,
