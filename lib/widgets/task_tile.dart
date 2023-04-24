@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 
 import '../enums/activity_type.dart';
 import '../models/task.dart';
+import '../providers/activities.dart';
 import '../providers/add_due_date_list.dart';
+import '../providers/list_theme.dart';
 import '../providers/remind_me_list.dart';
 import '../providers/tasks.dart';
 import '../utils/res/app_snackbar.dart';
@@ -21,6 +23,10 @@ const duration = Duration(seconds: 3);
 class TaskTile extends StatelessWidget {
   /// This parameter is used fetch a task from the [Tasks] class.
   final String id;
+
+  /// This parameter when [id] is not found is used fetch a task from the
+  /// [Activities] class.
+  final String? activityId;
 
   /// This handles the animation of the [TaskTile]
   final Animation<double> animation;
@@ -66,6 +72,7 @@ class TaskTile extends StatelessWidget {
     this.isSelected = false,
     required this.color,
     this.onRemoveFromUI,
+    this.activityId,
   }) : super(key: key);
 
   @override
@@ -73,7 +80,9 @@ class TaskTile extends StatelessWidget {
     //* Handles the display of scaffold in this context
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final tksProvider = context.read<Tasks>();
-    final taskData = Provider.of<Tasks>(context).getTaskById(id);
+    final activityProvider = context.read<Activities>();
+    final taskData = Provider.of<Tasks>(context).getTaskById(id,
+        orElse: () => activityProvider.getTaskById(activityId!, id));
     final remindMe =
         Provider.of<RemindMeList>(context, listen: false).getReminderById(id);
     final addDueDate =

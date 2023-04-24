@@ -42,6 +42,7 @@ class ListWidget extends StatelessWidget {
       backgroundColor: Colors.transparent,
       foregroundColor: bgColor,
       elevation: 0,
+      toolbarHeight: 40,
       actions: [
         IconButton(
           onPressed: () {},
@@ -56,43 +57,42 @@ class ListWidget extends StatelessWidget {
       ],
     );
     final height = appBar.preferredSize.height + 10;
+    final activityId = context.read<Activities>().getActivityByTitle(title);
 
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 25, 48, 74),
-      extendBodyBehindAppBar: true,
-      // appBar: appBar,
-      // body: buildEmptyWidget(height, context),
-      body: ActivityWidget(
-        title: title,
-        displaySubtitle: false,
-        appBar: appBar,
-        unDoneListModel: [],
-        // Provider.of<Activities>(context).undoneTasks(title),
-        completedListModel:
-            Provider.of<Activities>(context).completedTasks(title),
-        color: bgColor,
-        insert: (item, index) =>
-            // context.read<Tasks>().insert(item, index),
-            context.read<Activities>().insert(item, title, index),
-        remove: (index) => context.read<Tasks>().removeTask(index),
-        emptyWidget: _buildEmptyWidget(height, context),
-        isExtended: false,
-        fabIcon: const Icon(Icons.add, size: 32),
-        specialButtons: const [
-          SpecialButton(
-            label: 'Set due date',
-            icon: Icons.calendar_month_rounded,
-          ),
-          SpecialButton(
-            label: 'Remind me',
-            icon: Icons.notifications_on_outlined,
-          ),
-          SpecialButton(
-            label: 'Repeat',
-            icon: Icons.repeat,
-          ),
-        ],
-      ),
+    // return Scaffold(
+    //   backgroundColor: const Color.fromARGB(255, 25, 48, 74),
+    //   extendBodyBehindAppBar: true,
+    //   body: );
+    return ActivityWidget(
+      title: title,
+      activityId: activityId.id,
+      displaySubtitle: false,
+      appBar: appBar,
+      unDoneListModel: Provider.of<Activities>(context).undoneTasks(title),
+      completedListModel: const [],
+      // Provider.of<Activities>(context).completedTasks(title),
+      color: bgColor,
+      insert: (item, index) =>
+          // context.read<Tasks>().insert(item, index),
+          context.read<Activities>().insert(item, title, index),
+      remove: (index) => context.read<Tasks>().removeTask(index),
+      emptyWidget: _buildEmptyWidget(height, context),
+      isExtended: false,
+      fabIcon: const Icon(Icons.add, size: 32),
+      specialButtons: const [
+        SpecialButton(
+          label: 'Set due date',
+          icon: Icons.calendar_month_rounded,
+        ),
+        SpecialButton(
+          label: 'Remind me',
+          icon: Icons.notifications_on_outlined,
+        ),
+        SpecialButton(
+          label: 'Repeat',
+          icon: Icons.repeat,
+        ),
+      ],
     );
   }
 

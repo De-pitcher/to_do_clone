@@ -17,6 +17,10 @@ class ActivityWidget extends StatefulWidget {
   /// This is the title of the [ActivityWidget].
   final String title;
 
+  /// This is the id of the activity which could be null if
+  /// The [ActivityWidget] is not used in [ListScreen]
+  final String? activityId;
+
   /// This is the subtitle of the [ActivityWidget] which can
   /// be null.
   final String? subtitle;
@@ -86,7 +90,9 @@ class ActivityWidget extends StatefulWidget {
     this.bgImage,
     required this.specialButtons,
     this.activityType = ActivityType.non,
-    this.completedListModel = const <Task>[], this.appBar,
+    this.completedListModel = const <Task>[],
+    this.appBar,
+    this.activityId,
   });
 
   @override
@@ -272,12 +278,16 @@ class _ActivityWidgetState extends State<ActivityWidget> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
-                  child: AnimatedTitle(
-                    driveAnimation: _liftTitle,
-                    title: widget.title,
-                    displaySubtitle: widget.displaySubtitle,
-                    titleColor: widget.color,
-                    subtitle: widget.subtitle,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    margin: EdgeInsets.only(left: _liftTitle ? 36.0 : 0.0),
+                    child: AnimatedTitle(
+                      driveAnimation: _liftTitle,
+                      title: widget.title,
+                      displaySubtitle: widget.displaySubtitle,
+                      titleColor: widget.color,
+                      subtitle: widget.subtitle,
+                    ),
                   ),
                 ),
                 if (widget.unDoneListModel.isEmpty &&
@@ -371,6 +381,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   ) {
     return TaskTile(
       id: _listModel[index].id,
+      activityId: widget.activityId,
       animation: animation,
       color: widget.color,
       onAddTaskFn: (item) => _insert(item, _listModel, index),
@@ -392,6 +403,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   ) {
     return TaskTile(
       id: _completedListModel[index].id,
+      activityId: widget.activityId,
       animation: animation,
       color: widget.color,
       onAddTaskFn: (item) => _insert(item, _completedListModel, null),

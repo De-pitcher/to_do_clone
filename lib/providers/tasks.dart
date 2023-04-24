@@ -31,7 +31,8 @@ class Tasks with ChangeNotifier {
     notifyListeners();
   }
 
-  Task getTaskById(String id) => _tasks.firstWhere((tks) => tks.id == id);
+  Task getTaskById(String id, {Task Function()? orElse}) =>
+      _tasks.firstWhere((tks) => tks.id == id, orElse: orElse);
 
   void renameTask(String id, String newTaskName) {
     final currentIndex = _tasks.indexWhere((e) => e.id == id);

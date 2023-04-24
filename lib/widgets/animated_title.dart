@@ -20,32 +20,34 @@ class AnimatedTitle extends StatefulWidget {
 }
 
 class _AnimatedTitleState extends State<AnimatedTitle>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late final AnimationController _controller;
-  late final Future myFuture;
-  late final Animation<Offset> position;
+  late final Animation<Offset> _position;
 
-  Future myAnimation() async {
+  @override
+  void initState() {
     _controller = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
     setState(() {
-      position = Tween<Offset>(
+      _position = Tween<Offset>(
         begin: const Offset(0.0, 0.0),
         end: widget.displaySubtitle
-            ? const Offset(0.35, -1.0)
-            : const Offset(0.6, -1.5),
+            ? const Offset(
+                0.0,
+                -1,
+              )
+            : const Offset(
+                0.0,
+                -1.5,
+              ),
       ).animate(
         CurvedAnimation(curve: Curves.ease, parent: _controller),
       );
     });
-  }
 
-  @override
-  void initState() {
     super.initState();
-    myFuture = myAnimation();
   }
 
   @override
@@ -60,7 +62,7 @@ class _AnimatedTitleState extends State<AnimatedTitle>
       if (widget.driveAnimation) _controller.forward();
     });
     return SlideTransition(
-      position: position,
+      position: _position,
       child: widget.displaySubtitle
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,

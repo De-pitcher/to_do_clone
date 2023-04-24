@@ -11,19 +11,36 @@ class Activities extends ChangeNotifier {
 
   List<Activity> get activities => [..._activities];
 
-  List<Task> undoneTasks(String title) => _activities
-      .firstWhere(
-        (tks) => tks.title == title,
+  Activity getActivityByTitle(String title) => _activities.firstWhere(
+        (e) => e.title == title,
         orElse: () => Activity(
+          id: '',
+          title: '',
           color: Colors.blue,
-          id: const Uuid().v1(),
-          title: 'Untitled',
           tasks: [],
         ),
-      )
-      .tasks
-      .where((tks) => !tks.isDone)
-      .toList();
+      );
+
+  Task getTaskById(String activityId, String taskId,
+          {Task Function()? orElse}) =>
+      _activities
+          .firstWhere((tks) => tks.id == activityId)
+          .tasks
+          .firstWhere((e) => e.id == taskId, orElse: orElse);
+
+  List<Task> undoneTasks(String title) {
+    final activity = _activities.firstWhere(
+      (tks) => tks.title == title,
+      orElse: () => Activity(
+        color: Colors.blue,
+        id: const Uuid().v1(),
+        title: 'Untitled',
+        tasks: [],
+      ),
+    );
+    final result = activity.tasks.where((tks) => !tks.isDone).toList();
+    return result;
+  }
 
   List<Task> completedTasks(String title) => _activities
       .firstWhere(
@@ -46,7 +63,8 @@ class Activities extends ChangeNotifier {
   void insert(Task task, String title, [int? index]) {
     final indexWhere = _activities.indexWhere((e) => e.title == title);
     int cIndex = index ?? _activities[indexWhere].tasks.length;
-    _activities[indexWhere].tasks.insert(cIndex, task);
+    _activities[indexWhere] = _activities[indexWhere]
+      ..tasks.insert(cIndex, task);
     notifyListeners();
   }
 
