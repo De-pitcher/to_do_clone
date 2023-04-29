@@ -199,6 +199,17 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
     final listActivities = activitiesProvider.activities;
     final groups = groupsProvider.groups;
     setState(() {
+      // print('Debug oldlistItemIndex: $oldItemIndex');
+      // print('Debug oldListIndex: $oldListIndex');
+      // print('Debug newItemIndex: $newItemIndex');
+      // print('Debug newListIndex: $newListIndex');
+      if (oldItemIndex == 0 &&
+              oldListIndex == 0 &&
+              newItemIndex == 0 &&
+              newListIndex == 0 ||
+          (oldListIndex == newListIndex && oldItemIndex == newItemIndex)) {
+        return;
+      }
       if (oldListIndex == 0 && _listContents.isNotEmpty) {
         currentActivitiy = listActivities[oldItemIndex];
         activitiesProvider.removeActivity(oldItemIndex);
@@ -207,14 +218,9 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
         groupsProvider.removeList(oldListIndex - 1, oldItemIndex);
       }
 
-      if (oldListIndex > 0) {
+      if (oldListIndex == newItemIndex && newListIndex == 0 ||
+          (oldListIndex > 0 && newListIndex == 0)) {
         activitiesProvider.addActivityAtIndex(newItemIndex, currentActivitiy);
-      } else if (oldListIndex > 0 && newListIndex > 0) {
-        groupsProvider.addListUsingIndexs(
-          newListIndex - 1,
-          newItemIndex,
-          currentActivitiy,
-        );
       } else {
         groupsProvider.addListUsingIndexs(
           newListIndex - 1,
