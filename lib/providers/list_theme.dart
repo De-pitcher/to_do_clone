@@ -68,14 +68,10 @@ class ListTheme extends ChangeNotifier {
 
         listOfSelectedColors =
             tempColor[i].listOfColors.isEmpty ? [] : tempColor[i].listOfColors;
-
-        selectedImage = null;
       } else {
         tempColor[i].isSelected = false;
       }
     }
-    selectedImage = null;
-    selectedFileImage = null;
     _colors = tempColor;
 
     notifyListeners();
@@ -88,7 +84,6 @@ class ListTheme extends ChangeNotifier {
       if (cIndex == i) {
         selectedFileImage = null;
         selectedImage = _images[i];
-        // break;
       }
     }
     notifyListeners();
@@ -123,10 +118,13 @@ class ListTheme extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// [resetListTitle] resets the [listTitle] to "Untitle list". This method 
+  /// [resetListThemeData] sets the [ListTheme] data to the default value. This method
   /// is called after a [ListWidget] is created
-  void resetListTitle() {
+  void resetListThemeData() {
     listTitle = 'Untitle list';
+    selectedColor = Colors.blue;
+    selectedImage = null;
+    selectedFileImage = null;
     notifyListeners();
   }
 }

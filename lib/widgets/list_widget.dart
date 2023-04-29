@@ -24,14 +24,14 @@ class ListWidget extends StatelessWidget {
   final File? fileImage;
 
   /// Background color of the [ListWidget]
-  final Color bgColor;
+  final Color color;
 
   /// A widget that holds the list of [TaskTile]s that contains
   /// lists of tasks
   const ListWidget({
     Key? key,
     required this.title,
-    required this.bgColor,
+    required this.color,
     this.image,
     this.fileImage,
   }) : super(key: key);
@@ -40,7 +40,7 @@ class ListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final appBar = AppBar(
       backgroundColor: Colors.transparent,
-      foregroundColor: bgColor,
+      foregroundColor: color,
       elevation: 0,
       toolbarHeight: 40,
       actions: [
@@ -48,7 +48,7 @@ class ListWidget extends StatelessWidget {
           onPressed: () {},
           icon: Icon(
             Icons.person_add_alt,
-            color: bgColor,
+            color: color,
           ),
         ),
         PopupMenuButton(
@@ -71,11 +71,14 @@ class ListWidget extends StatelessWidget {
       unDoneListModel: Provider.of<Activities>(context).undoneTasks(title),
       completedListModel: const [],
       // Provider.of<Activities>(context).completedTasks(title),
-      color: bgColor,
+      color: color,
+      bgColor: const Color.fromARGB(255, 25, 48, 74),
       insert: (item, index) =>
           // context.read<Tasks>().insert(item, index),
           context.read<Activities>().insert(item, title, index),
       remove: (index) => context.read<Tasks>().removeTask(index),
+      bgImage: image,
+      fileImage: fileImage,
       emptyWidget: _buildEmptyWidget(height, context),
       isExtended: false,
       fabIcon: const Icon(Icons.add, size: 32),

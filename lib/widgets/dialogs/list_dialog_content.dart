@@ -11,8 +11,8 @@ import '../circular_image_card.dart';
 import '../new_list_theme_card.dart';
 import '../picker.dart';
 
+/// [ListDialogContent] a dialog for creating [ListWidget]s
 class ListDialogContent extends StatefulWidget {
-  /// [ListDialogContent] a dialog for creating [ListWidget]s
   const ListDialogContent({super.key});
 
   @override
@@ -20,7 +20,7 @@ class ListDialogContent extends StatefulWidget {
 }
 
 class _ListDialogContentState extends State<ListDialogContent> {
-  /// sets the color [NewListThemeValue] to true 
+  /// sets the color [NewListThemeValue] to true
   /// and is updated when anomther[NewListThemeValue] is selected
   var _color = true;
   var _photo = false;
@@ -31,13 +31,13 @@ class _ListDialogContentState extends State<ListDialogContent> {
 
   String _listTitle = '';
 
-  /// [onSubmitted] updates the [_listTitle] and adds a new 
-  /// [Activities] object to the [Activities] state 
+  /// [onSubmitted] updates the [_listTitle] and adds a new
+  /// [Activities] object to the [Activities] state
   void onSubmitted(ListTheme colorsProvider) {
     //* Updates the title
     colorsProvider.updateListTitle(_listTitle);
     final listProvider = Provider.of<Activities>(context, listen: false);
-    //* Adds a new activity 
+    //* Adds a new activity
     listProvider.addListActivity(
       id: const Uuid().v1(),
       title: _listTitle,
@@ -53,7 +53,7 @@ class _ListDialogContentState extends State<ListDialogContent> {
   Widget build(BuildContext context) {
     final colorsProvider = Provider.of<ListTheme>(context);
     return SizedBox(
-      width: 600,
+      width: double.infinity,
       height: 230,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,8 +85,8 @@ class _ListDialogContentState extends State<ListDialogContent> {
     );
   }
 
-  /// [_actionButtonBuild] builds two buttons in a row that handles the 
-  /// what happens if a user decides to create a ListWidget or cancle the 
+  /// [_actionButtonBuild] builds two buttons in a row that handles the
+  /// what happens if a user decides to create a ListWidget or cancle the
   /// creation
   Row _actionButtonBuild(BuildContext context, ListTheme colorsProvider) {
     return Row(
@@ -134,6 +134,7 @@ class _ListDialogContentState extends State<ListDialogContent> {
               return CircularImageCard(
                 image: colorsProvider.images[i],
                 onTap: () {
+                  // print('Debug: it was pressed');
                   colorsProvider.selectImage(i);
                 },
                 isPickedImage: false,
@@ -170,7 +171,7 @@ class _ListDialogContentState extends State<ListDialogContent> {
   }
 
   /// [_newListThemeCardBuild] builds a horizonal list of [NewListThemeCard]
-  Row _newListThemeCardBuild(ListTheme colorsProvider) {
+  Widget _newListThemeCardBuild(ListTheme colorsProvider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -187,6 +188,7 @@ class _ListDialogContentState extends State<ListDialogContent> {
             });
           },
         ),
+        const SizedBox(width: 10),
         NewListThemeCard(
           color: colorsProvider.listOfSelectedColors.isNotEmpty
               ? colorsProvider.listOfSelectedColors.last
@@ -202,6 +204,7 @@ class _ListDialogContentState extends State<ListDialogContent> {
             });
           },
         ),
+        const SizedBox(width: 10),
         NewListThemeCard(
           color: colorsProvider.listOfSelectedColors.isNotEmpty
               ? colorsProvider.listOfSelectedColors.last
@@ -217,7 +220,7 @@ class _ListDialogContentState extends State<ListDialogContent> {
             });
           },
         ),
-        const SizedBox(width: 70),
+        const Spacer()
       ],
     );
   }

@@ -28,7 +28,7 @@ class ListTileWidget extends StatelessWidget {
             builder: (_) => ListWidget(
               key: Key(activity.id.toString()),
               title: activity.title,
-              bgColor: activity.color,
+              color: activity.color,
               image: activity.image,
               fileImage: activity.fileImage,
             ),

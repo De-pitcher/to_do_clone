@@ -22,7 +22,7 @@ class _ListScreenState extends State<ListScreen> {
     super.initState();
 
     Timer.run(() {
-      Provider.of<ListTheme>(context, listen: false).resetListTitle();
+      Provider.of<ListTheme>(context, listen: false).resetListThemeData();
 
       showDialog(
           context: context,
@@ -47,7 +47,7 @@ class _ListScreenState extends State<ListScreen> {
       title: colorProvider.listTitle,
       fileImage: colorProvider.selectedFileImage,
       image: colorProvider.selectedImage,
-      bgColor: colorProvider.selectedColor,
+      color: colorProvider.selectedColor,
     );
   }
 }

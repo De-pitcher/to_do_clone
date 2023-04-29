@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +30,10 @@ class ActivityWidget extends StatefulWidget {
   /// [bgImage] is the background image of the activity screen.
   final String? bgImage;
 
+  /// [fileImage] is the background image of the activity screen
+  /// and can be null when nnot provided
+  final File? fileImage;
+
   /// Checks if [subtitle] should be displayed.
   final bool displaySubtitle;
 
@@ -36,6 +42,9 @@ class ActivityWidget extends StatefulWidget {
 
   /// List of tasks that is completed
   final List<Task>? completedListModel;
+
+  /// This is background color of the widget and can also be null
+  final Color? bgColor;
 
   /// This is the color of the icons in the activity screen.
   final Color color;
@@ -93,6 +102,7 @@ class ActivityWidget extends StatefulWidget {
     this.completedListModel = const <Task>[],
     this.appBar,
     this.activityId,
+    this.fileImage, this.bgColor,
   });
 
   @override
@@ -229,7 +239,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   Widget build(BuildContext context) {
     final taskProvider = Provider.of<Tasks>(context, listen: false);
     return Scaffold(
-      backgroundColor: Colors.black54,
+      backgroundColor: widget.bgColor ?? Colors.black54,
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: _isSelected
@@ -261,14 +271,28 @@ class _ActivityWidgetState extends State<ActivityWidget> {
           : widget.appBar ?? defaultAppBar(context, widget.color),
       body: Container(
         width: double.infinity,
-        decoration: widget.bgImage != null
-            ? BoxDecoration(
-                image: DecorationImage(
+        // decoration: widget.bgImage != null
+        //     ? BoxDecoration(
+        //         image: DecorationImage(
+        //           image: AssetImage(widget.bgImage!),
+        //           fit: BoxFit.cover,
+        //         ),
+        //       )
+        //     : null,
+
+        decoration: BoxDecoration(
+          image: widget.bgImage != null
+              ? DecorationImage(
                   image: AssetImage(widget.bgImage!),
                   fit: BoxFit.cover,
-                ),
-              )
-            : null,
+                )
+              : widget.fileImage != null
+                  ? DecorationImage(
+                      image: FileImage(widget.fileImage!),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+        ),
         child: SafeArea(
           child: SizedBox(
             height: MediaQuery.of(context).size.height,
