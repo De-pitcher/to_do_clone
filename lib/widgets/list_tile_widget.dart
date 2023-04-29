@@ -20,7 +20,10 @@ class ListTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       key: Key(activity.id.toString()),
-      leading: const Icon(Icons.list),
+      leading: Icon(
+        Icons.list,
+        color: activity.color,
+      ),
       title: Text(activity.title),
       onTap: () {
         Navigator.of(context).push(
