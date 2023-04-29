@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 
 import './forgot_password.dart';
 import '../../service/auth.dart';
-import '../landing.dart';
+import '../main_page.dart';
 import './sign_up.dart';
 
 class Login extends StatefulWidget {

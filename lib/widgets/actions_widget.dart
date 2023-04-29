@@ -46,8 +46,10 @@ class _ActionWidgetState extends State<ActionWidget> {
       trailing: Text(
         widget.counter == 0 ? '' : '${widget.counter}',
         style: ThemeMode.system == ThemeMode.light
-            ? AppTheme.lightTheme.textTheme.bodySmall
-            : AppTheme.darkTheme.textTheme.bodySmall,
+            ? AppTheme.lightTheme.textTheme.bodySmall!
+                .copyWith(color: Colors.grey)
+            : AppTheme.darkTheme.textTheme.bodySmall!
+                .copyWith(color: Colors.grey),
       ),
     );
   }

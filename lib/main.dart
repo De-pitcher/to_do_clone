@@ -14,7 +14,7 @@ import 'providers/my_day_tasks.dart';
 import 'utils/routes/routes.dart';
 import './utils/res/theme.dart';
 import '../screens/intro/login.dart';
-import '../screens/landing.dart';
+import 'screens/main_page.dart';
 import '../service/auth.dart';
 import './providers/remind_me_list.dart';
 import 'providers/planned_tasks.dart';

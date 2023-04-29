@@ -9,7 +9,7 @@ import '../../screens/activities/my_day_screen.dart';
 import '../../screens/activities/planned_screen.dart';
 import '../../screens/activities/tasks_screen.dart';
 import '../../screens/intro/forgot_password.dart';
-import '../../screens/landing.dart';
+import '../../screens/main_page.dart';
 import '../../screens/list_screen.dart';
 import '../../screens/profile.dart';
 

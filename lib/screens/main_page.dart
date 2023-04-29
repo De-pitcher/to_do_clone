@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/important_tasks.dart';
+import '../providers/my_day_tasks.dart';
+import '../providers/planned_tasks.dart';
+import '../providers/tasks.dart';
 import './profile.dart';
 import './list_screen.dart';
 import '../screens/activities/assigned_to_me.dart';
@@ -53,6 +57,8 @@ class MainPage extends StatelessWidget {
                     iconColor: Colors.cyanAccent[100],
                     activity: 'My Day',
                     routeName: MyDayScreen.id,
+                    counter:
+                        Provider.of<MyDayTasks>(context).undoneTasks.length,
                   ),
                   //* [Important] tile
                   ActionWidget(
@@ -60,6 +66,9 @@ class MainPage extends StatelessWidget {
                     iconColor: Colors.pink[200],
                     activity: 'Important',
                     routeName: ImportantScreen.id,
+                    counter: Provider.of<ImportantTasks>(context)
+                        .undoneTasks
+                        .length,
                   ),
                   //* [Planned] tile
                   ActionWidget(
@@ -67,6 +76,7 @@ class MainPage extends StatelessWidget {
                     iconColor: Colors.cyan[300],
                     activity: 'Planned',
                     routeName: PlannedScreen.id,
+                    counter: Provider.of<PlannedTasks>(context).tasks.length,
                   ),
                   //* [Assigned to me] tile
                   ActionWidget(
@@ -81,6 +91,7 @@ class MainPage extends StatelessWidget {
                     iconColor: Colors.deepPurple[300],
                     activity: 'Tasks',
                     routeName: TasksScreen.id,
+                    counter: Provider.of<Tasks>(context).undoneTasks.length,
                   ),
                   const Divider(
                     color: Colors.grey,
