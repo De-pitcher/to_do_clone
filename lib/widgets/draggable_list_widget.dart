@@ -154,10 +154,7 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
       return DragAndDropItem(
         child: SizedBox(
           height: 50,
-          child: ListTileWidget(
-            activity: activity,
-            showTrailingIcon: false,
-          ),
+          child: ListTileWidget(activity),
         ),
       );
     }).toList();
@@ -180,10 +177,7 @@ class _DraggableListWidgetState extends State<DraggableListWidget> {
                 ),
               ),
               Expanded(
-                child: ListTileWidget(
-                  activity: activity,
-                  showTrailingIcon: false,
-                ),
+                child: ListTileWidget(activity),
               ),
             ],
           ),
