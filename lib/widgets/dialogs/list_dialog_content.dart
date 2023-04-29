@@ -138,6 +138,8 @@ class _ListDialogContentState extends State<ListDialogContent> {
                   colorsProvider.selectImage(i);
                 },
                 isPickedImage: false,
+                isSelected:
+                    colorsProvider.images[i] == colorsProvider.selectedImage,
               );
             case NewListThemeValue.custom:
               if (i == 0) {
@@ -152,6 +154,8 @@ class _ListDialogContentState extends State<ListDialogContent> {
                   colorsProvider.selectFileImage(i - 1);
                 },
                 isPickedImage: true,
+                isSelected: colorsProvider.fileImages[i] ==
+                    colorsProvider.selectedFileImage,
               );
             default:
               return CircularColorCard(

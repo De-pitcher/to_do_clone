@@ -79,7 +79,6 @@ class ListWidget extends StatelessWidget {
       remove: (index) => context.read<Tasks>().removeTask(index),
       bgImage: image,
       fileImage: fileImage,
-      emptyWidget: _buildEmptyWidget(height, context),
       isExtended: false,
       fabIcon: const Icon(Icons.add, size: 32),
       specialButtons: const [
@@ -96,43 +95,6 @@ class ListWidget extends StatelessWidget {
           icon: Icons.repeat,
         ),
       ],
-    );
-  }
-
-  Container _buildEmptyWidget(double height, BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        image: image != null
-            ? DecorationImage(
-                image: AssetImage(image!),
-                fit: BoxFit.cover,
-              )
-            : fileImage != null
-                ? DecorationImage(
-                    image: FileImage(fileImage!),
-                    fit: BoxFit.cover,
-                  )
-                : null,
-      ),
-      // child: Column(
-      //   crossAxisAlignment: CrossAxisAlignment.start,
-      //   children: [
-      //     SizedBox(
-      //       height: height,
-      //     ),
-      //     Padding(
-      //       padding: const EdgeInsets.only(left: 16.0),
-      //       child: Text(
-      //         title,
-      //         style: Theme.of(context).textTheme.headline4!.copyWith(
-      //               fontWeight: FontWeight.bold,
-      //               color: bgColor,
-      //             ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

@@ -73,7 +73,8 @@ class ListTheme extends ChangeNotifier {
       }
     }
     _colors = tempColor;
-
+    selectedImage = null;
+    selectedFileImage = null;
     notifyListeners();
   }
 

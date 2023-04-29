@@ -7,15 +7,16 @@ class CircularImageCard extends StatelessWidget {
   final File? fileImage;
   final Function()? onTap;
   final bool isPickedImage;
+  final bool isSelected;
 
   /// A widget that displays either a circular [File] image or an
-  /// image from the asset folder file 
+  /// image from the asset folder file
   const CircularImageCard({
     super.key,
     this.image,
     this.fileImage,
     this.onTap,
-    required this.isPickedImage,
+    required this.isPickedImage, required this.isSelected,
   });
 
   @override
@@ -37,6 +38,25 @@ class CircularImageCard extends StatelessWidget {
                   image: AssetImage(image!),
                   fit: BoxFit.fill,
                 ),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          splashColor: Colors.grey,
+          borderRadius: BorderRadius.circular(10),
+          radius: 50,
+          child: isSelected
+              ? Center(
+                  child: Container(
+                    height: 20,
+                    width: 20,
+                    margin: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : null,
         ),
       ),
     );
